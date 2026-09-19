@@ -2,7 +2,7 @@ import { countryForType, DetectedItem, PageText, SensitiveType } from './types.j
 
 const PATTERNS: Array<{ type: SensitiveType; regex: RegExp }> = [
   { type: 'email', regex: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi },
-  { type: 'upi', regex: /\b[A-Z0-9._-]{2,64}@(?:okaxis|okhdfcbank|okicici|oksbi|ybl|apl|axl|paytm|upi|ibl|yesbank|okbizaxis|axisbank|jupiteraxis|airtel|waicici|freecharge|ibl)\b/gi },
+  { type: 'upi', regex: /\b[A-Z0-9._-]{2,64}@(?:okaxis|okhdfcbank|okicici|oksbi|ybl|apl|axl|paytm|upi|ibl|yesbank|okbizaxis|axisbank|jupiteraxis|airtel|waicici|freecharge)\b/gi },
   { type: 'phone', regex: /(?:\+?\d{1,3}[\s.-]?)?(?:\(?\d{2,4}\)?[\s.-]?){2,4}\d{3,4}\b/g },
   { type: 'credit_card', regex: /\b(?:\d[ -]*?){13,19}\b/g },
   { type: 'iban', regex: /\b[A-Z]{2}\d{2}[A-Z0-9]{10,30}\b/gi },
@@ -14,7 +14,7 @@ const PATTERNS: Array<{ type: SensitiveType; regex: RegExp }> = [
   { type: 'ssn', regex: /\b[1-8]\d{2}[-\s]?\d{2}[-\s]?\d{4}\b/g },
   { type: 'nino', regex: /\b[A-CEGHJ-PR-TW-Z]{2}\s?\d{6}\s?[A-D]\b/gi },
   { type: 'nhs', regex: /\b\d{3}\s\d{3}\s\d{4}\b/g },
-  { type: 'sin', regex: /\b\d{3}[-\s]\d{3}[-\s]\d{3}\b/g },
+  { type: 'sin', regex: /\b\d{3}-\d{3}-\d{3}\b/g },
   { type: 'tfn', regex: /\b\d{3}\s\d{3}\s\d{3}\b/g },
   { type: 'abn', regex: /\b\d{2}\s\d{3}\s\d{3}\s\d{3}\b/g },
   { type: 'cpf', regex: /\b\d{3}\.\d{3}\.\d{3}-\d{2}\b/g },
@@ -27,8 +27,8 @@ const PATTERNS: Array<{ type: SensitiveType; regex: RegExp }> = [
   { type: 'cnic', regex: /\b\d{5}-\d{7}-\d\b/g },
   { type: 'my_number', regex: /\b\d{4}\s\d{4}\s\d{4}\b/g },
   { type: 'rrn', regex: /\b\d{6}-\d{7}\b/g },
-  { type: 'cn_id', regex: /\b\d{17}[\dXx]\b/g },
-  { type: 'bsn', regex: /\b\d{3}[\s.]\d{3}[\s.]\d{3}\b/g },
+  { type: 'cn_id', regex: /\b\d{17}\s?[\dXx]\b/g },
+  { type: 'bsn', regex: /\b\d{3}\.\d{3}\.\d{3}\b(?!-)/g },
   { type: 'personnummer', regex: /\b\d{6}[-+]\d{4}\b/g },
   { type: 'codice_fiscale', regex: /\b[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]\b/gi },
   { type: 'dni', regex: /\b\d{8}[A-Z]\b/g },
@@ -74,7 +74,9 @@ function isRealMatch(type: SensitiveType, value: string): boolean {
   if (type === 'gstin') return value.length === 15;
   if (type === 'ifsc') return value.length === 11 && value[4] === '0';
   if (type === 'ssn' || type === 'itin') return digits.length === 9;
-  if (type === 'nhs' || type === 'nin') return digits.length === 10;
+  if (type === 'nino') return /^[A-CEGHJ-PR-TW-Z]{2}\s?\d{6}\s?[A-D]$/i.test(value);
+  if (type === 'nhs') return digits.length === 10;
+  if (type === 'nin') return digits.length === 11;
   if (type === 'sin' || type === 'tfn' || type === 'bsn') return digits.length === 9;
   if (type === 'abn') return digits.length === 11;
   if (type === 'cpf') return digits.length === 11;
@@ -86,7 +88,7 @@ function isRealMatch(type: SensitiveType, value: string): boolean {
   if (type === 'cnic') return digits.length === 13;
   if (type === 'my_number') return digits.length === 12;
   if (type === 'rrn') return digits.length === 13;
-  if (type === 'cn_id') return digits.length === 18;
+  if (type === 'cn_id') return /^\d{17}[\dXx]$/i.test(value.replace(/\s/g, ''));
   if (type === 'personnummer') return digits.length === 10;
   if (type === 'codice_fiscale') return value.length === 16;
   if (type === 'dni') return /^\d{8}[A-Z]$/i.test(value);
@@ -164,12 +166,25 @@ export function detectOnPages(pages: PageText[]): DetectedItem[] {
 }
 
 function dropOverlaps(items: DetectedItem[]): DetectedItem[] {
-  const strong = items.filter((item) => item.type !== 'phone' && item.type !== 'iqama');
-  return items.filter((item, index) => {
+  const strong = items.filter((item) => item.type !== 'phone');
+  return items.filter((item) => {
     const digits = digitsOf(item.value);
-    if (item.type === 'phone' || item.type === 'iqama') {
+    if (item.type === 'phone') {
       return !strong.some(
         (other) => other.page === item.page && digits && digitsOf(other.value).includes(digits) && other.id !== item.id
+      );
+    }
+    if (item.type === 'credit_card') {
+      return !items.some((other) =>
+        ['emirates_id', 'cn_id', 'rrn', 'cnic', 'aadhaar'].includes(other.type)
+        && other.page === item.page
+        && digits
+        && digitsOf(other.value).includes(digits)
+      );
+    }
+    if (item.type === 'aadhaar') {
+      return !items.some(
+        (other) => other.type === 'credit_card' && other.page === item.page && digits && digitsOf(other.value).includes(digits)
       );
     }
     if (item.type === 'my_number') {
@@ -178,8 +193,18 @@ function dropOverlaps(items: DetectedItem[]): DetectedItem[] {
     if (item.type === 'ssn') {
       return !items.some((other) => other.type === 'itin' && other.page === item.page && digitsOf(other.value) === digits);
     }
-    if (item.type === 'tfn' || item.type === 'sin' || item.type === 'bsn') {
-      return !items.slice(0, index).some((other) => other.page === item.page && digitsOf(other.value) === digits);
+    if (item.type === 'bsn') {
+      return !items.some((other) =>
+        (other.type === 'cpf' || other.type === 'cnpj')
+        && other.page === item.page
+        && digits
+        && digitsOf(other.value).includes(digits)
+      );
+    }
+    if (item.type === 'tfn') {
+      return !items.some((other) =>
+        other.type === 'abn' && other.page === item.page && digits && digitsOf(other.value).includes(digits)
+      );
     }
     return true;
   });

@@ -1,7 +1,14 @@
 import { PDFDocument, rgb } from 'pdf-lib';
 import { detectOnPages } from '../lib/detect.js';
 import { extractPageText } from '../lib/pdfText.js';
-import { DetectedItem, SENSITIVE_TYPES, SensitiveType, TYPE_LABELS } from '../lib/types.js';
+import {
+  COUNTRIES,
+  DetectedItem,
+  SENSITIVE_TYPES,
+  SensitiveType,
+  TYPE_LABELS,
+  countryForType
+} from '../lib/types.js';
 
 export function inspectPdf(buffer: Buffer) {
   return extractPageText(buffer).then((pages) => {
@@ -18,8 +25,15 @@ export function inspectPdf(buffer: Buffer) {
       types: SENSITIVE_TYPES.map((type) => ({
         id: type,
         label: TYPE_LABELS[type],
+        country: countryForType(type),
         count: counts[type],
         default_on: true
+      })),
+      countries: COUNTRIES.map((country) => ({
+        id: country.id,
+        label: country.label,
+        types: [...country.types],
+        count: items.filter((item) => item.country === country.id).length
       })),
       items: items.map(({ value: _value, ...safe }) => safe)
     };

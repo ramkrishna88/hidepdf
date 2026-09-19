@@ -1,22 +1,7 @@
-import { FastifyReply, FastifyRequest } from 'fastify';
-import { SensitiveType, SENSITIVE_TYPES } from './types.js';
+import { FastifyRequest } from 'fastify';
+import { COUNTRIES, SensitiveType, SENSITIVE_TYPES, typesForCountries } from './types.js';
 
 const MAX_BYTES = Number(process.env.MAX_FILE_SIZE_MB || 25) * 1024 * 1024;
-
-export function requireApiKey(request: FastifyRequest, reply: FastifyReply, done: () => void) {
-  const expected = process.env.API_KEY;
-  if (!expected) return done();
-  const provided = request.headers['x-api-key'];
-  if (provided !== expected) {
-    reply.status(401).send({
-      status: 'error',
-      error_code: 'UNAUTHORIZED',
-      message: 'Missing or invalid X-API-Key.'
-    });
-    return;
-  }
-  done();
-}
 
 function fieldValue(body: unknown, key: string): unknown {
   if (!body || typeof body !== 'object') return undefined;
@@ -28,11 +13,18 @@ function fieldValue(body: unknown, key: string): unknown {
   return raw;
 }
 
-export function readSelection(request: FastifyRequest): { itemIds: string[]; types: SensitiveType[] } {
+export function readSelection(request: FastifyRequest): {
+  itemIds: string[];
+  types: SensitiveType[];
+  countries: string[];
+} {
   const body = request.body;
+  const countries = parseCountries(fieldValue(body, 'countries'));
+  const types = uniqueTypes([...parseTypes(fieldValue(body, 'types')), ...typesForCountries(countries)]);
   return {
     itemIds: parseIds(fieldValue(body, 'item_ids')),
-    types: parseTypes(fieldValue(body, 'types'))
+    types,
+    countries
   };
 }
 
@@ -94,8 +86,19 @@ export function parseTypes(raw: unknown): SensitiveType[] {
     .filter((value): value is SensitiveType => SENSITIVE_TYPES.includes(value as SensitiveType));
 }
 
+export function parseCountries(raw: unknown): string[] {
+  if (!raw) return [];
+  const allowed = new Set(COUNTRIES.map((country) => country.id));
+  const list = Array.isArray(raw) ? raw : String(raw).split(',');
+  return list.map((value) => String(value).trim().toUpperCase()).filter((value) => allowed.has(value as never));
+}
+
 export function parseIds(raw: unknown): string[] {
   if (!raw) return [];
   const list = Array.isArray(raw) ? raw : String(raw).split(',');
   return list.map((value) => String(value).trim()).filter(Boolean);
+}
+
+function uniqueTypes(types: SensitiveType[]): SensitiveType[] {
+  return [...new Set(types)];
 }

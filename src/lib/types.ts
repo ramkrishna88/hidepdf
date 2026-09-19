@@ -34,6 +34,29 @@ export const COUNTRY_ID_TYPES = [
 
 export const SENSITIVE_TYPES = [...GLOBAL_TYPES, ...COUNTRY_ID_TYPES] as const;
 export type SensitiveType = (typeof SENSITIVE_TYPES)[number];
+
+export const COUNTRIES = [
+  { id: 'IN', label: 'India', types: ['aadhaar', 'pan', 'upi', 'gstin', 'ifsc'] },
+  { id: 'US', label: 'United States', types: ['ssn', 'itin'] },
+  { id: 'GB', label: 'United Kingdom', types: ['nino', 'nhs'] },
+  { id: 'CA', label: 'Canada', types: ['sin'] },
+  { id: 'AU', label: 'Australia', types: ['tfn', 'abn'] },
+  { id: 'BR', label: 'Brazil', types: ['cpf', 'cnpj'] },
+  { id: 'MX', label: 'Mexico', types: ['rfc', 'curp'] },
+  { id: 'AE', label: 'United Arab Emirates', types: ['emirates_id'] },
+  { id: 'SA', label: 'Saudi Arabia', types: ['iqama'] },
+  { id: 'SG', label: 'Singapore', types: ['nric'] },
+  { id: 'PK', label: 'Pakistan', types: ['cnic'] },
+  { id: 'JP', label: 'Japan', types: ['my_number'] },
+  { id: 'KR', label: 'South Korea', types: ['rrn'] },
+  { id: 'CN', label: 'China', types: ['cn_id'] },
+  { id: 'NL', label: 'Netherlands', types: ['bsn'] },
+  { id: 'SE', label: 'Sweden', types: ['personnummer'] },
+  { id: 'IT', label: 'Italy', types: ['codice_fiscale'] },
+  { id: 'ES', label: 'Spain', types: ['dni', 'nie'] },
+  { id: 'NG', label: 'Nigeria', types: ['nin'] }
+] as const;
+
 export type CountryCode = (typeof COUNTRIES)[number]['id'];
 
 export type TextItem = {
@@ -97,28 +120,6 @@ export const TYPE_LABELS: Record<SensitiveType, string> = {
   nin: 'NIN'
 };
 
-export const COUNTRIES = [
-  { id: 'IN', label: 'India', types: ['aadhaar', 'pan', 'upi', 'gstin', 'ifsc'] },
-  { id: 'US', label: 'United States', types: ['ssn', 'itin'] },
-  { id: 'GB', label: 'United Kingdom', types: ['nino', 'nhs'] },
-  { id: 'CA', label: 'Canada', types: ['sin'] },
-  { id: 'AU', label: 'Australia', types: ['tfn', 'abn'] },
-  { id: 'BR', label: 'Brazil', types: ['cpf', 'cnpj'] },
-  { id: 'MX', label: 'Mexico', types: ['rfc', 'curp'] },
-  { id: 'AE', label: 'United Arab Emirates', types: ['emirates_id'] },
-  { id: 'SA', label: 'Saudi Arabia', types: ['iqama'] },
-  { id: 'SG', label: 'Singapore', types: ['nric'] },
-  { id: 'PK', label: 'Pakistan', types: ['cnic'] },
-  { id: 'JP', label: 'Japan', types: ['my_number'] },
-  { id: 'KR', label: 'South Korea', types: ['rrn'] },
-  { id: 'CN', label: 'China', types: ['cn_id'] },
-  { id: 'NL', label: 'Netherlands', types: ['bsn'] },
-  { id: 'SE', label: 'Sweden', types: ['personnummer'] },
-  { id: 'IT', label: 'Italy', types: ['codice_fiscale'] },
-  { id: 'ES', label: 'Spain', types: ['dni', 'nie'] },
-  { id: 'NG', label: 'Nigeria', types: ['nin'] }
-] as const;
-
 export function typesForCountries(codes: string[]): SensitiveType[] {
   const allow = new Set(codes);
   return COUNTRIES.filter((country) => allow.has(country.id)).flatMap((country) => [
@@ -130,4 +131,20 @@ export function countryForType(type: SensitiveType): CountryCode | 'global' {
   if ((GLOBAL_TYPES as readonly string[]).includes(type)) return 'global';
   const match = COUNTRIES.find((country) => (country.types as readonly string[]).includes(type));
   return match?.id ?? 'global';
+}
+
+export function hideTypesCatalog() {
+  return {
+    global: GLOBAL_TYPES.map((id) => ({ id, label: TYPE_LABELS[id], country: 'global' as const })),
+    countries: COUNTRIES.map((country) => ({
+      id: country.id,
+      label: country.label,
+      types: country.types.map((id) => ({ id, label: TYPE_LABELS[id] }))
+    })),
+    types: SENSITIVE_TYPES.map((id) => ({
+      id,
+      label: TYPE_LABELS[id],
+      country: countryForType(id)
+    }))
+  };
 }

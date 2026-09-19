@@ -1,9 +1,14 @@
 import { FastifyInstance } from 'fastify';
 
 export async function healthRoutes(fastify: FastifyInstance) {
-  fastify.get('/v1/health', async () => ({
-    status: 'ok',
-    service: 'hidepdf',
-    time: new Date().toISOString()
-  }));
+  fastify.get('/v1/health', async (_request, reply) => {
+    reply.header('Cache-Control', 'no-store');
+    return {
+      status: 'healthy',
+      service: 'HidePDF',
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      uptime_seconds: process.uptime()
+    };
+  });
 }

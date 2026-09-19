@@ -1,9 +1,18 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { readPdfUpload, readSelection, requireApiKey } from '../lib/request.js';
+import { requireApiAuth } from '../lib/apiAuth.js';
+import { readPdfUpload, readSelection } from '../lib/request.js';
 import { redactPdf } from '../services/redactor.js';
 
 export async function redactRoutes(fastify: FastifyInstance) {
-  fastify.post('/v1/redact', { preHandler: requireApiKey }, async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.post('/v1/redact', {
+    config: {
+      rateLimit: {
+        max: 20,
+        timeWindow: '1 minute'
+      }
+    },
+    preHandler: requireApiAuth
+  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const buffer = await readPdfUpload(request);
       const { itemIds, types } = readSelection(request);

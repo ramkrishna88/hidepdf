@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HidePDF — Hide sensitive data in PDFs</title>
-  <meta name="description" content="Upload a PDF, pick what to hide, or let HidePDF cover emails, phones, and other sensitive fields automatically.">
+  <meta name="description" content="Upload a PDF, pick emails, phones, cards, or country IDs like Aadhaar, PAN, and UPI. If you pick nothing, HidePDF covers every sensitive field it finds.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2310b981'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='14' fill='white'%3EH%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,6 +41,8 @@
       position: sticky;
       top: 0;
       z-index: 5;
+      gap: 0.75rem;
+      flex-wrap: wrap;
     }
     .brand { display: flex; align-items: center; gap: 0.75rem; }
     .mark {
@@ -49,6 +51,9 @@
       display: grid; place-items: center; font-weight: 700;
     }
     .brand h1 { font-size: 1.2rem; letter-spacing: -0.03em; }
+    .header-links { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .header-links a { color: var(--muted); font-size: 0.82rem; font-weight: 600; text-decoration: none; }
+    .header-links a:hover { color: var(--text); }
     .badge {
       border: 1px solid rgba(16, 185, 129, 0.4);
       background: var(--green-soft);
@@ -58,15 +63,8 @@
       font-size: 0.75rem;
       font-weight: 600;
     }
-    main {
-      max-width: 1100px;
-      margin: 1.5rem auto 3rem;
-      padding: 0 1.25rem;
-      display: grid;
-      gap: 1rem;
-    }
-    .hero { margin-bottom: 0.25rem; }
-    .hero p { color: var(--muted); margin-top: 0.4rem; max-width: 42rem; }
+    main { max-width: 1100px; margin: 1.5rem auto 3rem; padding: 0 1.25rem; display: grid; gap: 1rem; }
+    .hero p { color: var(--muted); margin-top: 0.4rem; max-width: 44rem; }
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .card {
       background: var(--card);
@@ -97,15 +95,30 @@
     .primary { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
     .ghost { background: rgba(255,255,255,0.06); color: var(--text); }
     button:disabled { opacity: 0.45; cursor: not-allowed; }
-    .types { display: grid; gap: 0.5rem; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.85rem; }
+    .chip {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .chip.on { border-color: rgba(16,185,129,0.5); background: var(--green-soft); color: var(--green); }
+    .chip .n { color: var(--muted); font-weight: 500; }
+    .chip.on .n { color: var(--green); }
+    .group { margin-bottom: 0.85rem; }
+    .group h3 { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.45rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .types { display: grid; gap: 0.45rem; max-height: 340px; overflow: auto; }
     .type {
       display: flex; justify-content: space-between; align-items: center;
-      gap: 0.75rem; padding: 0.65rem 0.75rem;
+      gap: 0.75rem; padding: 0.55rem 0.7rem;
       border: 1px solid var(--border); border-radius: 10px;
     }
     .type label { display: flex; align-items: center; gap: 0.55rem; cursor: pointer; }
     .count { color: var(--muted); font-size: 0.8rem; }
-    .items { display: grid; gap: 0.45rem; max-height: 280px; overflow: auto; }
+    .items { display: grid; gap: 0.45rem; max-height: 320px; overflow: auto; }
     .item {
       display: flex; justify-content: space-between; gap: 0.75rem;
       padding: 0.55rem 0.7rem; border: 1px solid var(--border); border-radius: 10px;
@@ -115,7 +128,12 @@
     .tag {
       font-size: 0.72rem; color: var(--green);
       background: var(--green-soft); border-radius: 999px; padding: 0.15rem 0.45rem;
+      white-space: nowrap;
     }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-bottom: 0.85rem; }
+    .stat { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem; text-align: center; }
+    .stat b { display: block; color: var(--green); font-size: 1.1rem; }
+    .stat span { color: var(--muted); font-size: 0.75rem; }
     .status { min-height: 1.3rem; color: var(--muted); font-size: 0.88rem; margin-top: 0.75rem; }
     .status.ok { color: var(--green); }
     .status.err { color: #f43f5e; }
@@ -130,19 +148,24 @@
       <div class="mark">H</div>
       <h1>HidePDF</h1>
     </div>
-    <span class="badge">Hide sensitive fields</span>
+    <div class="header-links">
+      <a href="/sample.pdf">Sample PDF</a>
+      <a href="/v1/hide-types">Hide types</a>
+      <a href="/openapi.json">OpenAPI</a>
+      <span class="badge">Playground</span>
+    </div>
   </header>
   <main>
     <section class="hero">
-      <h2>Upload a PDF, choose what to hide</h2>
-      <p>Pick emails, phones, cards, or individual fields. If you pick nothing, HidePDF covers every sensitive field it finds.</p>
+      <h2>Upload a PDF, hide emails, phones, and country IDs</h2>
+      <p>Pick India Aadhaar, PAN, and UPI, or any other country ID. Leave the boxes empty and HidePDF hides every sensitive field it finds. Same-origin preview — no API key in the browser.</p>
     </section>
     <section class="grid">
       <div class="card">
         <h2>1. PDF</h2>
         <div class="drop" id="drop">
           <strong>Drop a PDF here or click to choose</strong>
-          <span id="fileName">Try the sample invoice if you want a quick demo.</span>
+          <span id="fileName">Try the multi-country sample for a one-click demo.</span>
         </div>
         <input id="file" type="file" accept="application/pdf" hidden>
         <div class="row">
@@ -152,13 +175,19 @@
         <p class="status" id="inspectStatus"></p>
       </div>
       <div class="card">
-        <h2>2. What to hide</h2>
+        <h2>2. Countries and types</h2>
+        <div class="chips" id="countries"></div>
         <div class="types" id="types"></div>
-        <p class="hint">Leave every box unchecked to hide all detected sensitive info automatically.</p>
+        <p class="hint">Country chips turn that country’s IDs on or off. Uncheck a type to leave it visible. Leave every box unchecked to hide all detected fields.</p>
       </div>
     </section>
     <section class="card">
       <h2>3. Fields found</h2>
+      <div class="stats">
+        <div class="stat"><b id="statFound">0</b><span>fields found</span></div>
+        <div class="stat"><b id="statCountries">0</b><span>countries</span></div>
+        <div class="stat"><b id="statPages">0</b><span>pages</span></div>
+      </div>
       <div class="items" id="items"><p class="hint">Nothing scanned yet.</p></div>
       <div class="row">
         <button class="ghost" id="selectAll" type="button">Select all fields</button>
@@ -167,23 +196,28 @@
       </div>
       <p class="status" id="redactStatus"></p>
     </section>
-    <footer>Uploads are not stored. Text-layer PDFs only. Visual black-bar hide on detected values.</footer>
+    <footer>Uploads are not stored. Text-layer PDFs only. Visual black-bar hide on detected values. API clients send X-API-Key.</footer>
   </main>
   <script>
-    const state = { file: null, items: [], types: [] };
+    const state = { file: null, items: [], catalog: { global: [], countries: [] }, counts: {} };
+
     const els = {
       drop: document.getElementById('drop'),
       file: document.getElementById('file'),
       fileName: document.getElementById('fileName'),
       inspectBtn: document.getElementById('inspectBtn'),
       sampleBtn: document.getElementById('sampleBtn'),
+      countries: document.getElementById('countries'),
       types: document.getElementById('types'),
       items: document.getElementById('items'),
       inspectStatus: document.getElementById('inspectStatus'),
       redactStatus: document.getElementById('redactStatus'),
       redactBtn: document.getElementById('redactBtn'),
       selectAll: document.getElementById('selectAll'),
-      clearAll: document.getElementById('clearAll')
+      clearAll: document.getElementById('clearAll'),
+      statFound: document.getElementById('statFound'),
+      statCountries: document.getElementById('statCountries'),
+      statPages: document.getElementById('statPages')
     };
 
     function setStatus(el, text, kind) {
@@ -193,9 +227,91 @@
 
     function setFile(file) {
       state.file = file;
-      els.fileName.textContent = file ? file.name : 'Try the sample invoice if you want a quick demo.';
+      els.fileName.textContent = file ? file.name : 'Try the multi-country sample for a one-click demo.';
       els.inspectBtn.disabled = !file;
       els.redactBtn.disabled = !file;
+    }
+
+    function typeOn(id) {
+      const box = document.querySelector('[data-type="' + id + '"]');
+      return Boolean(box && box.checked);
+    }
+
+    function setType(id, on) {
+      const box = document.querySelector('[data-type="' + id + '"]');
+      if (box) box.checked = on;
+    }
+
+    function selectedTypes() {
+      return [...document.querySelectorAll('[data-type]:checked')].map((box) => box.value);
+    }
+
+    function selectedItems() {
+      return [...document.querySelectorAll('[data-item]:checked')].map((box) => box.value);
+    }
+
+    function syncItemsToTypes() {
+      const on = new Set(selectedTypes());
+      document.querySelectorAll('[data-item]').forEach((box) => {
+        const type = box.getAttribute('data-item-type');
+        if (type && on.size) box.checked = on.has(type);
+      });
+    }
+
+    function countryOn(country) {
+      return country.types.every((type) => typeOn(type.id));
+    }
+
+    function renderCountries() {
+      const chips = [{ id: 'GLOBAL', label: 'Global', types: state.catalog.global }, ...state.catalog.countries];
+      els.countries.innerHTML = chips.map((country) => {
+        const count = country.id === 'GLOBAL'
+          ? (state.counts.email || 0) + (state.counts.phone || 0) + (state.counts.credit_card || 0) + (state.counts.iban || 0)
+          : (state.countryCounts && state.countryCounts[country.id]) || 0;
+        const on = country.types.length && country.types.every((type) => typeOn(type.id));
+        return `<button type="button" class="chip${on ? ' on' : ''}" data-country="${country.id}">
+          ${country.label} <span class="n">${count}</span>
+        </button>`;
+      }).join('');
+    }
+
+    function renderTypes() {
+      const groups = [
+        { title: 'Global', types: state.catalog.global },
+        ...state.catalog.countries.map((country) => ({ title: country.label, types: country.types }))
+      ];
+      els.types.innerHTML = groups.map((group) => `
+        <div class="group">
+          <h3>${group.title}</h3>
+          ${group.types.map((type) => `
+            <div class="type">
+              <label><input type="checkbox" data-type="${type.id}" value="${type.id}" checked> ${type.label}</label>
+              <span class="count">${state.counts[type.id] || 0} found</span>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+      renderCountries();
+    }
+
+    function renderItems(items) {
+      state.items = items;
+      const countrySet = new Set(items.map((item) => item.country).filter((code) => code && code !== 'global'));
+      els.statFound.textContent = String(items.length);
+      els.statCountries.textContent = String(countrySet.size);
+      if (!items.length) {
+        els.items.innerHTML = '<p class="hint">No sensitive fields found. Hide will still run the default email, phone, card, and country ID rules.</p>';
+        return;
+      }
+      els.items.innerHTML = items.map((item) => `
+        <div class="item">
+          <label>
+            <input type="checkbox" data-item value="${item.id}" data-item-type="${item.type}" checked>
+            <span class="mono">${item.preview}</span>
+          </label>
+          <span class="tag">${item.country || 'global'} · ${item.type} · p${item.page}</span>
+        </div>
+      `).join('');
     }
 
     els.drop.addEventListener('click', () => els.file.click());
@@ -211,10 +327,32 @@
       if (els.file.files[0]) setFile(els.file.files[0]);
     });
 
+    els.countries.addEventListener('click', (event) => {
+      const chip = event.target.closest('[data-country]');
+      if (!chip) return;
+      const id = chip.getAttribute('data-country');
+      const country = id === 'GLOBAL'
+        ? { types: state.catalog.global }
+        : state.catalog.countries.find((item) => item.id === id);
+      if (!country) return;
+      const next = !country.types.every((type) => typeOn(type.id));
+      country.types.forEach((type) => setType(type.id, next));
+      syncItemsToTypes();
+      renderCountries();
+    });
+
+    els.types.addEventListener('change', (event) => {
+      if (!event.target.matches('[data-type]')) return;
+      const type = event.target.value;
+      const on = event.target.checked;
+      document.querySelectorAll('[data-item-type="' + type + '"]').forEach((box) => { box.checked = on; });
+      renderCountries();
+    });
+
     els.sampleBtn.addEventListener('click', async () => {
       const res = await fetch('/sample.pdf');
       const blob = await res.blob();
-      setFile(new File([blob], 'sample.pdf', { type: 'application/pdf' }));
+      setFile(new File([blob], 'hidepdf-sample.pdf', { type: 'application/pdf' }));
       await inspect();
     });
 
@@ -225,40 +363,6 @@
 
     function toggleItems(on) {
       document.querySelectorAll('[data-item]').forEach((box) => { box.checked = on; });
-    }
-
-    function selectedTypes() {
-      return [...document.querySelectorAll('[data-type]:checked')].map((box) => box.value);
-    }
-    function selectedItems() {
-      return [...document.querySelectorAll('[data-item]:checked')].map((box) => box.value);
-    }
-
-    function renderTypes(types) {
-      state.types = types;
-      els.types.innerHTML = types.map((type) => `
-        <div class="type">
-          <label><input type="checkbox" data-type value="${type.id}" checked> ${type.label}</label>
-          <span class="count">${type.count} found</span>
-        </div>
-      `).join('');
-    }
-
-    function renderItems(items) {
-      state.items = items;
-      if (!items.length) {
-        els.items.innerHTML = '<p class="hint">No sensitive fields found. Hide will still run the default email/phone/card rules.</p>';
-        return;
-      }
-      els.items.innerHTML = items.map((item) => `
-        <div class="item">
-          <label>
-            <input type="checkbox" data-item value="${item.id}" checked>
-            <span class="mono">${item.preview}</span>
-          </label>
-          <span class="tag">${item.type} · p${item.page}</span>
-        </div>
-      `).join('');
     }
 
     async function inspect() {
@@ -272,7 +376,10 @@
         setStatus(els.inspectStatus, data.message || 'Inspect failed', 'err');
         return;
       }
-      renderTypes(data.types || []);
+      state.counts = data.counts || {};
+      state.countryCounts = Object.fromEntries((data.countries || []).map((country) => [country.id, country.count]));
+      els.statPages.textContent = String(data.total_pages || 0);
+      renderTypes();
       renderItems(data.items || []);
       setStatus(els.inspectStatus, data.message, 'ok');
     }
@@ -303,13 +410,19 @@
       setStatus(els.redactStatus, `Hidden ${hidden} field(s). Download started.`, 'ok');
     }
 
-    renderTypes([
-      { id: 'email', label: 'Email addresses', count: 0 },
-      { id: 'phone', label: 'Phone numbers', count: 0 },
-      { id: 'credit_card', label: 'Credit cards', count: 0 },
-      { id: 'ssn', label: 'National IDs / SSNs', count: 0 },
-      { id: 'iban', label: 'Bank accounts (IBAN)', count: 0 }
-    ]);
+    async function loadCatalog() {
+      const res = await fetch('/v1/hide-types');
+      const data = await res.json();
+      state.catalog = {
+        global: data.global || [],
+        countries: data.countries || []
+      };
+      renderTypes();
+    }
+
+    loadCatalog().catch(() => {
+      setStatus(els.inspectStatus, 'Could not load hide types.', 'err');
+    });
   </script>
 </body>
 </html>
