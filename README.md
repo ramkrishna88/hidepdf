@@ -4,7 +4,7 @@ Live playground: https://hidepdf-production.up.railway.app
 
 Upload a PDF, choose what to hide, and download a redacted file. If the user picks nothing, HidePDF hides every detected sensitive field: emails, phones, cards, IBANs, and country IDs such as India Aadhaar, PAN, and UPI.
 
-Playground requests from this site do not need an API key. Direct API, RapidAPI, and Zapier clients send `X-API-Key` or `Authorization: Bearer <key>`.
+The playground has no country or field picker. It hides every detected value automatically and shows the redacted PDF. Playground requests from this site do not need an API key. Direct API clients send `X-API-Key` or `Authorization: Bearer <key>`.
 
 ## Run locally
 
