@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HidePDF — Hide sensitive data in PDFs</title>
+  <meta name="description" content="Upload a PDF, pick what to hide, or let HidePDF cover emails, phones, and other sensitive fields automatically.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2310b981'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='14' fill='white'%3EH%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: rgba(17, 24, 39, 0.78);
+      --border: rgba(255, 255, 255, 0.08);
+      --green: #10b981;
+      --green-soft: rgba(16, 185, 129, 0.16);
+      --blue: #3b82f6;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(circle at 12% 10%, rgba(59, 130, 246, 0.14), transparent 42%),
+        radial-gradient(circle at 88% 90%, rgba(16, 185, 129, 0.14), transparent 42%);
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(11, 15, 25, 0.86);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    .brand { display: flex; align-items: center; gap: 0.75rem; }
+    .mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      display: grid; place-items: center; font-weight: 700;
+    }
+    .brand h1 { font-size: 1.2rem; letter-spacing: -0.03em; }
+    .badge {
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      background: var(--green-soft);
+      color: var(--green);
+      border-radius: 999px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    main {
+      max-width: 1100px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.25rem;
+      display: grid;
+      gap: 1rem;
+    }
+    .hero { margin-bottom: 0.25rem; }
+    .hero p { color: var(--muted); margin-top: 0.4rem; max-width: 42rem; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.15rem;
+    }
+    .card h2 { font-size: 1rem; margin-bottom: 0.85rem; }
+    .drop {
+      border: 1.5px dashed rgba(255,255,255,0.16);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .drop.drag { border-color: var(--green); background: var(--green-soft); }
+    .drop strong { color: var(--text); display: block; margin-bottom: 0.3rem; }
+    .row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.85rem; }
+    button, .link-btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 0.7rem 0.95rem;
+      font-weight: 650;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .primary { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
+    .ghost { background: rgba(255,255,255,0.06); color: var(--text); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .types { display: grid; gap: 0.5rem; }
+    .type {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 0.75rem; padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border); border-radius: 10px;
+    }
+    .type label { display: flex; align-items: center; gap: 0.55rem; cursor: pointer; }
+    .count { color: var(--muted); font-size: 0.8rem; }
+    .items { display: grid; gap: 0.45rem; max-height: 280px; overflow: auto; }
+    .item {
+      display: flex; justify-content: space-between; gap: 0.75rem;
+      padding: 0.55rem 0.7rem; border: 1px solid var(--border); border-radius: 10px;
+    }
+    .item label { display: flex; align-items: center; gap: 0.5rem; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
+    .tag {
+      font-size: 0.72rem; color: var(--green);
+      background: var(--green-soft); border-radius: 999px; padding: 0.15rem 0.45rem;
+    }
+    .status { min-height: 1.3rem; color: var(--muted); font-size: 0.88rem; margin-top: 0.75rem; }
+    .status.ok { color: var(--green); }
+    .status.err { color: #f43f5e; }
+    .hint { color: var(--muted); font-size: 0.82rem; margin-top: 0.7rem; line-height: 1.45; }
+    footer { color: var(--muted); font-size: 0.8rem; text-align: center; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="mark">H</div>
+      <h1>HidePDF</h1>
+    </div>
+    <span class="badge">Hide sensitive fields</span>
+  </header>
+  <main>
+    <section class="hero">
+      <h2>Upload a PDF, choose what to hide</h2>
+      <p>Pick emails, phones, cards, or individual fields. If you pick nothing, HidePDF covers every sensitive field it finds.</p>
+    </section>
+    <section class="grid">
+      <div class="card">
+        <h2>1. PDF</h2>
+        <div class="drop" id="drop">
+          <strong>Drop a PDF here or click to choose</strong>
+          <span id="fileName">Try the sample invoice if you want a quick demo.</span>
+        </div>
+        <input id="file" type="file" accept="application/pdf" hidden>
+        <div class="row">
+          <button class="ghost" id="sampleBtn" type="button">Use sample PDF</button>
+          <button class="primary" id="inspectBtn" type="button" disabled>Find sensitive fields</button>
+        </div>
+        <p class="status" id="inspectStatus"></p>
+      </div>
+      <div class="card">
+        <h2>2. What to hide</h2>
+        <div class="types" id="types"></div>
+        <p class="hint">Leave every box unchecked to hide all detected sensitive info automatically.</p>
+      </div>
+    </section>
+    <section class="card">
+      <h2>3. Fields found</h2>
+      <div class="items" id="items"><p class="hint">Nothing scanned yet.</p></div>
+      <div class="row">
+        <button class="ghost" id="selectAll" type="button">Select all fields</button>
+        <button class="ghost" id="clearAll" type="button">Clear field picks</button>
+        <button class="primary" id="redactBtn" type="button" disabled>Hide and download PDF</button>
+      </div>
+      <p class="status" id="redactStatus"></p>
+    </section>
+    <footer>Uploads are not stored. Text-layer PDFs only. Visual black-bar hide on detected values.</footer>
+  </main>
+  <script>
+    const state = { file: null, items: [], types: [] };
+    const els = {
+      drop: document.getElementById('drop'),
+      file: document.getElementById('file'),
+      fileName: document.getElementById('fileName'),
+      inspectBtn: document.getElementById('inspectBtn'),
+      sampleBtn: document.getElementById('sampleBtn'),
+      types: document.getElementById('types'),
+      items: document.getElementById('items'),
+      inspectStatus: document.getElementById('inspectStatus'),
+      redactStatus: document.getElementById('redactStatus'),
+      redactBtn: document.getElementById('redactBtn'),
+      selectAll: document.getElementById('selectAll'),
+      clearAll: document.getElementById('clearAll')
+    };
+
+    function setStatus(el, text, kind) {
+      el.textContent = text;
+      el.className = 'status' + (kind ? ' ' + kind : '');
+    }
+
+    function setFile(file) {
+      state.file = file;
+      els.fileName.textContent = file ? file.name : 'Try the sample invoice if you want a quick demo.';
+      els.inspectBtn.disabled = !file;
+      els.redactBtn.disabled = !file;
+    }
+
+    els.drop.addEventListener('click', () => els.file.click());
+    els.drop.addEventListener('dragover', (e) => { e.preventDefault(); els.drop.classList.add('drag'); });
+    els.drop.addEventListener('dragleave', () => els.drop.classList.remove('drag'));
+    els.drop.addEventListener('drop', (e) => {
+      e.preventDefault();
+      els.drop.classList.remove('drag');
+      const file = e.dataTransfer.files[0];
+      if (file) setFile(file);
+    });
+    els.file.addEventListener('change', () => {
+      if (els.file.files[0]) setFile(els.file.files[0]);
+    });
+
+    els.sampleBtn.addEventListener('click', async () => {
+      const res = await fetch('/sample.pdf');
+      const blob = await res.blob();
+      setFile(new File([blob], 'sample.pdf', { type: 'application/pdf' }));
+      await inspect();
+    });
+
+    els.inspectBtn.addEventListener('click', inspect);
+    els.redactBtn.addEventListener('click', redact);
+    els.selectAll.addEventListener('click', () => toggleItems(true));
+    els.clearAll.addEventListener('click', () => toggleItems(false));
+
+    function toggleItems(on) {
+      document.querySelectorAll('[data-item]').forEach((box) => { box.checked = on; });
+    }
+
+    function selectedTypes() {
+      return [...document.querySelectorAll('[data-type]:checked')].map((box) => box.value);
+    }
+    function selectedItems() {
+      return [...document.querySelectorAll('[data-item]:checked')].map((box) => box.value);
+    }
+
+    function renderTypes(types) {
+      state.types = types;
+      els.types.innerHTML = types.map((type) => `
+        <div class="type">
+          <label><input type="checkbox" data-type value="${type.id}" checked> ${type.label}</label>
+          <span class="count">${type.count} found</span>
+        </div>
+      `).join('');
+    }
+
+    function renderItems(items) {
+      state.items = items;
+      if (!items.length) {
+        els.items.innerHTML = '<p class="hint">No sensitive fields found. Hide will still run the default email/phone/card rules.</p>';
+        return;
+      }
+      els.items.innerHTML = items.map((item) => `
+        <div class="item">
+          <label>
+            <input type="checkbox" data-item value="${item.id}" checked>
+            <span class="mono">${item.preview}</span>
+          </label>
+          <span class="tag">${item.type} · p${item.page}</span>
+        </div>
+      `).join('');
+    }
+
+    async function inspect() {
+      if (!state.file) return;
+      setStatus(els.inspectStatus, 'Scanning PDF…');
+      const body = new FormData();
+      body.append('file', state.file);
+      const res = await fetch('/v1/inspect', { method: 'POST', body });
+      const data = await res.json();
+      if (!res.ok) {
+        setStatus(els.inspectStatus, data.message || 'Inspect failed', 'err');
+        return;
+      }
+      renderTypes(data.types || []);
+      renderItems(data.items || []);
+      setStatus(els.inspectStatus, data.message, 'ok');
+    }
+
+    async function redact() {
+      if (!state.file) return;
+      setStatus(els.redactStatus, 'Hiding selected data…');
+      const body = new FormData();
+      body.append('file', state.file);
+      const types = selectedTypes();
+      const items = selectedItems();
+      if (types.length) body.append('types', types.join(','));
+      if (items.length) body.append('item_ids', items.join(','));
+      const res = await fetch('/v1/redact', { method: 'POST', body });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setStatus(els.redactStatus, data.message || 'Hide failed', 'err');
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'hidden.pdf';
+      a.click();
+      URL.revokeObjectURL(url);
+      const hidden = res.headers.get('x-hidepdf-hidden') || '0';
+      setStatus(els.redactStatus, `Hidden ${hidden} field(s). Download started.`, 'ok');
+    }
+
+    renderTypes([
+      { id: 'email', label: 'Email addresses', count: 0 },
+      { id: 'phone', label: 'Phone numbers', count: 0 },
+      { id: 'credit_card', label: 'Credit cards', count: 0 },
+      { id: 'ssn', label: 'National IDs / SSNs', count: 0 },
+      { id: 'iban', label: 'Bank accounts (IBAN)', count: 0 }
+    ]);
+  </script>
+</body>
+</html>
