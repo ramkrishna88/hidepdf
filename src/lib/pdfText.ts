@@ -1,4 +1,4 @@
-import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { openPdfDocument } from './openPdf.js';
 import { PageText, TextItem } from './types.js';
 
 type PdfTextItem = {
@@ -9,13 +9,7 @@ type PdfTextItem = {
 };
 
 export async function extractPageText(buffer: Buffer): Promise<PageText[]> {
-  const doc = await getDocument({
-    data: new Uint8Array(buffer),
-    useSystemFonts: true,
-    isEvalSupported: false,
-    disableFontFace: true,
-    verbosity: 0
-  }).promise;
+  const doc = await openPdfDocument(buffer);
 
   const pages: PageText[] = [];
   try {

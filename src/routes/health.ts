@@ -5,7 +5,7 @@ export async function healthRoutes(fastify: FastifyInstance) {
     reply.header('Cache-Control', 'no-store');
     return {
       status: 'healthy',
-      service: 'HidePDF',
+      service: 'HidePDF Content',
       version: '1.0.0',
       timestamp: new Date().toISOString(),
       uptime_seconds: process.uptime()

@@ -36,6 +36,7 @@ doc.text('PAN: ABCDE1234F');
 doc.text('UPI: rivera@okaxis');
 doc.text('GSTIN: 27ABCDE1234F1Z5');
 doc.text('IFSC: HDFC0001234');
+doc.text('Amount: INR 48,000');
 
 heading('United States');
 doc.text('SSN: 123-45-6789');

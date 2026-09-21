@@ -1,0 +1,20 @@
+{
+  "name": "hidepdf-zapier",
+  "version": "1.0.0",
+  "description": "HidePDF Content is a tool that burns emails, phones, IDs, and other secrets out of PDFs so they cannot be extracted.",
+  "main": "index.js",
+  "scripts": {
+    "test": "zapier test"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=10"
+  },
+  "dependencies": {
+    "zapier-platform-core": "15.19.0"
+  },
+  "private": true,
+  "devDependencies": {
+    "zapier-platform-cli": "^15.19.0"
+  }
+}

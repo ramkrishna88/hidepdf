@@ -33,7 +33,37 @@ const PATTERNS: Array<{ type: SensitiveType; regex: RegExp }> = [
   { type: 'codice_fiscale', regex: /\b[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]\b/gi },
   { type: 'dni', regex: /\b\d{8}[A-Z]\b/g },
   { type: 'nie', regex: /\b[XYZ]\d{7}[A-Z]\b/gi },
-  { type: 'nin', regex: /\b\d{4}\s\d{3}\s\d{4}\b/g }
+  { type: 'nin', regex: /\b\d{4}\s\d{3}\s\d{4}\b/g },
+  { type: 'amount', regex: /(?:[$£€¥₹]|USD|GBP|EUR|INR|Rs\.?)\s*-?\s*\d{1,3}(?:[, ]\d{2,3})*(?:\.\d{2})?/gi },
+  { type: 'amount', regex: /\b\d{1,3}(?:,\d{3})+\.\d{2}\b/g }
+];
+
+const LABELED_FIELDS: Array<{ type: SensitiveType; label: RegExp; value: RegExp }> = [
+  {
+    type: 'person_name',
+    label: /^(?:bill\s*to|billed\s*to|employee|customer|client|patient|name|attn|attention|sold\s*to)\s*[:\-]/i,
+    value: /^[A-Z][A-Za-z.'’-]+(?:\s+[A-Z][A-Za-z.'’-]+){0,4}$/
+  },
+  {
+    type: 'address',
+    label: /^(?:address|addr|residence|shipping address|billing address|registered office)\s*[:\-]/i,
+    value: /^.{8,80}$/
+  },
+  {
+    type: 'amount',
+    label: /^(?:amount(?:\s*due)?|total|subtotal|grand\s*total|net\s*pay|gross\s*pay|net\s*amount|balance\s*due|salary|price|invoice\s*total|paid|due)\s*[:\-]/i,
+    value: /^(?:[$£€¥₹]|USD|GBP|EUR|INR|Rs\.?)?\s*-?\s*\d{1,3}(?:[, ]\d{2,3})*(?:\.\d{2})?\s*$/i
+  }
+];
+
+const NEXT_LINE_ID_LABELS: Array<{ type: SensitiveType; label: RegExp }> = [
+  { type: 'aadhaar', label: /\baadhaar\b/i },
+  { type: 'pan', label: /\bpan\b/i },
+  { type: 'upi', label: /\bupi\b/i },
+  { type: 'gstin', label: /\bgstin\b/i },
+  { type: 'ifsc', label: /\bifsc\b/i },
+  { type: 'ssn', label: /\bssn\b/i },
+  { type: 'itin', label: /\bitin\b/i }
 ];
 
 export function maskValue(type: SensitiveType, value: string): string {
@@ -41,6 +71,17 @@ export function maskValue(type: SensitiveType, value: string): string {
     const [user, domain] = value.split('@');
     if (!domain) return '***';
     return `${user.slice(0, 1)}***@${domain}`;
+  }
+  if (type === 'person_name') {
+    const parts = value.split(/\s+/).filter(Boolean);
+    if (parts.length === 1) return `${parts[0].slice(0, 1)}***`;
+    return `${parts[0].slice(0, 1)}*** ${parts.slice(1).join(' ')}`;
+  }
+  if (type === 'address') {
+    return `${value.slice(0, 3)}***${value.slice(-4)}`;
+  }
+  if (type === 'amount') {
+    return value.length <= 4 ? '****' : `***${value.slice(-4)}`;
   }
   if (value.length <= 4) return '****';
   return `${'*'.repeat(Math.max(4, value.length - 4))}${value.slice(-4)}`;
@@ -65,14 +106,76 @@ function digitsOf(value: string): string {
   return value.replace(/\D/g, '');
 }
 
+export function completeAadhaar(first11: string): string {
+  const base = first11.replace(/\D/g, '').slice(0, 11);
+  for (let digit = 0; digit <= 9; digit += 1) {
+    const value = `${base}${digit}`;
+    if (verhoeffOk(value)) {
+      return `${value.slice(0, 4)} ${value.slice(4, 8)} ${value.slice(8)}`;
+    }
+  }
+  throw new Error('Could not complete a valid Aadhaar checksum.');
+}
+
+function verhoeffOk(digits: string): boolean {
+  const d = [
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    [1, 2, 3, 4, 0, 6, 7, 8, 9, 5],
+    [2, 3, 4, 0, 1, 8, 9, 5, 6, 7],
+    [3, 4, 0, 1, 2, 9, 5, 6, 7, 8],
+    [4, 0, 1, 2, 3, 5, 6, 7, 8, 9],
+    [5, 9, 8, 7, 6, 0, 4, 3, 2, 1],
+    [6, 5, 9, 8, 7, 1, 0, 4, 3, 2],
+    [7, 6, 5, 9, 8, 2, 1, 0, 4, 3],
+    [8, 7, 6, 5, 9, 3, 2, 1, 0, 4],
+    [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+  ];
+  const p = [
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    [1, 5, 7, 6, 2, 8, 3, 0, 9, 4],
+    [5, 8, 0, 3, 7, 9, 6, 1, 4, 2],
+    [8, 9, 1, 6, 0, 4, 3, 5, 2, 7],
+    [9, 4, 5, 3, 1, 2, 6, 8, 7, 0],
+    [4, 2, 8, 6, 5, 7, 3, 9, 0, 1],
+    [2, 7, 9, 3, 8, 0, 6, 4, 1, 5],
+    [7, 0, 4, 6, 9, 1, 3, 2, 5, 8]
+  ];
+  let c = 0;
+  const rev = digits.split('').reverse().map(Number);
+  for (let i = 0; i < rev.length; i += 1) {
+    c = d[c][p[i % 8][rev[i]]];
+  }
+  return c === 0;
+}
+
+function ibanOk(value: string): boolean {
+  const compact = value.replace(/\s/g, '').toUpperCase();
+  if (compact.length < 15 || compact.length > 34) return false;
+  const rearranged = compact.slice(4) + compact.slice(0, 4);
+  const nums = rearranged.replace(/[A-Z]/g, (ch) => String(ch.charCodeAt(0) - 55));
+  let remainder = 0;
+  for (const ch of nums) remainder = (remainder * 10 + Number(ch)) % 97;
+  return remainder === 1;
+}
+
 function isRealMatch(type: SensitiveType, value: string): boolean {
   const digits = digitsOf(value);
   if (type === 'credit_card') return digits.length >= 13 && digits.length <= 19 && luhnOk(digits);
+  if (type === 'iban') return ibanOk(value);
   if (type === 'phone') return digits.length >= 10 && digits.length <= 15;
-  if (type === 'aadhaar') return digits.length === 12 && /^[2-9]/.test(digits);
-  if (type === 'pan') return /^[A-Z]{5}\d{4}[A-Z]$/i.test(value);
+  if (type === 'aadhaar') return digits.length === 12 && /^[2-9]/.test(digits) && verhoeffOk(digits);
+  if (type === 'pan') return /^[A-Z]{3}[PCHFATBLJG][A-Z]\d{4}[A-Z]$/i.test(value);
   if (type === 'gstin') return value.length === 15;
   if (type === 'ifsc') return value.length === 11 && value[4] === '0';
+  if (type === 'person_name') return LABELED_FIELDS[0].value.test(value);
+  if (type === 'address') return value.length >= 8;
+  if (type === 'amount') {
+    if (digits.length < 1 || digits.length > 12) return false;
+    const hasCurrency = /[$£€¥₹]|USD|GBP|EUR|INR|Rs\.?/i.test(value);
+    const hasGrouping = /[,\s]\d{2,3}/.test(value);
+    const hasCents = /\.\d{2}\b/.test(value);
+    return hasCurrency || hasGrouping || hasCents;
+  }
   if (type === 'ssn' || type === 'itin') return digits.length === 9;
   if (type === 'nino') return /^[A-CEGHJ-PR-TW-Z]{2}\s?\d{6}\s?[A-D]$/i.test(value);
   if (type === 'nhs') return digits.length === 10;
@@ -160,9 +263,73 @@ export function detectOnPages(pages: PageText[]): DetectedItem[] {
         }
       }
     }
+
+    const groups = [...lines.values()].map((items) => {
+      const ordered = [...items].sort((a, b) => a.x - b.x);
+      return {
+        items: ordered,
+        text: ordered.map((item) => item.str).join(' '),
+        y: Math.min(...ordered.map((item) => item.y))
+      };
+    }).sort((a, b) => b.y - a.y);
+
+    for (let i = 0; i < groups.length; i += 1) {
+      const group = groups[i];
+      const next = groups[i + 1];
+      for (const field of LABELED_FIELDS) {
+        if (!field.label.test(group.text)) continue;
+        const sameLine = group.text.replace(field.label, '').trim();
+        const nextValue = next?.text.trim() ?? '';
+        const value = field.value.test(sameLine) ? sameLine : (field.value.test(nextValue) ? nextValue : '');
+        const valueItems = value === sameLine ? group.items : next?.items;
+        if (!value || !valueItems?.length) continue;
+        counter += 1;
+        found.push(itemFromBoxes(`item_${counter}`, field.type, value, page.pageNumber, valueItems));
+      }
+      if (!next) continue;
+      for (const field of NEXT_LINE_ID_LABELS) {
+        if (!field.label.test(group.text)) continue;
+        const pattern = PATTERNS.find((entry) => entry.type === field.type);
+        if (pattern) {
+          pattern.regex.lastIndex = 0;
+          if (pattern.regex.test(group.text)) continue;
+        }
+        const candidate = next.text.trim();
+        if (!isRealMatch(field.type, candidate)) continue;
+        counter += 1;
+        found.push(itemFromBoxes(`item_${counter}`, field.type, candidate, page.pageNumber, next.items));
+      }
+    }
   }
 
   return dropOverlaps(dedupe(found));
+}
+
+function itemFromBoxes(
+  id: string,
+  type: SensitiveType,
+  value: string,
+  page: number,
+  boxes: PageText['items']
+): DetectedItem {
+  const x = Math.min(...boxes.map((box) => box.x));
+  const y = Math.min(...boxes.map((box) => box.y));
+  const right = Math.max(...boxes.map((box) => box.x + box.width));
+  const top = Math.max(...boxes.map((box) => box.y + box.height));
+  return {
+    id,
+    type,
+    country: countryForType(type),
+    value,
+    preview: maskValue(type, value),
+    page,
+    box: {
+      x: Math.max(0, x - 1),
+      y: Math.max(0, y - 1),
+      width: Math.max(8, right - x + 2),
+      height: Math.max(8, top - y + 2)
+    }
+  };
 }
 
 function dropOverlaps(items: DetectedItem[]): DetectedItem[] {
@@ -188,7 +355,12 @@ function dropOverlaps(items: DetectedItem[]): DetectedItem[] {
       );
     }
     if (item.type === 'my_number') {
-      return !items.some((other) => other.type === 'aadhaar' && other.page === item.page && digitsOf(other.value) === digits);
+      return !items.some((other) =>
+        (other.type === 'aadhaar' || other.type === 'credit_card')
+        && other.page === item.page
+        && digits
+        && digitsOf(other.value).includes(digits)
+      );
     }
     if (item.type === 'ssn') {
       return !items.some((other) => other.type === 'itin' && other.page === item.page && digitsOf(other.value) === digits);
@@ -204,6 +376,22 @@ function dropOverlaps(items: DetectedItem[]): DetectedItem[] {
     if (item.type === 'tfn') {
       return !items.some((other) =>
         other.type === 'abn' && other.page === item.page && digits && digitsOf(other.value).includes(digits)
+      );
+    }
+    if (item.type === 'amount') {
+      const nested = items.some((other) =>
+        other.type === 'amount'
+        && other.id !== item.id
+        && other.page === item.page
+        && other.value.includes(item.value)
+        && other.value.length > item.value.length
+      );
+      if (nested) return false;
+      return !items.some((other) =>
+        other.type !== 'amount'
+        && other.page === item.page
+        && digits.length >= 8
+        && digitsOf(other.value).includes(digits)
       );
     }
     return true;

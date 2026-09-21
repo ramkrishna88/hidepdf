@@ -2,6 +2,88 @@ import { FastifyRequest } from 'fastify';
 import { COUNTRIES, SensitiveType, SENSITIVE_TYPES, typesForCountries } from './types.js';
 
 const MAX_BYTES = Number(process.env.MAX_FILE_SIZE_MB || 25) * 1024 * 1024;
+const MAX_DOWNLOAD_BYTES = MAX_BYTES;
+
+function fileUrlFromBody(body: unknown): string | undefined {
+  const file = fieldValue(body, 'file');
+  if (typeof file !== 'string') {
+    return undefined;
+  }
+
+  const trimmed = file.trim();
+  return isAllowedPdfUrl(trimmed) ? trimmed : undefined;
+}
+
+function isAllowedPdfUrl(value: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(value);
+  } catch {
+    return false;
+  }
+
+  if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+    return false;
+  }
+
+  const host = parsed.hostname.toLowerCase();
+  if (
+    host === 'localhost' ||
+    host === '0.0.0.0' ||
+    host.endsWith('.local') ||
+    host === '169.254.169.254' ||
+    host === 'metadata.google.internal'
+  ) {
+    return false;
+  }
+
+  if (/^(127|10|0)\./.test(host) || /^192\.168\./.test(host) || /^172\.(1[6-9]|2\d|3[0-1])\./.test(host)) {
+    return false;
+  }
+
+  return true;
+}
+
+async function downloadPdfFromUrl(fileUrl: string): Promise<Buffer> {
+  const response = await fetch(fileUrl, {
+    redirect: 'follow',
+    headers: {
+      Accept: 'application/pdf,*/*'
+    }
+  });
+
+  if (!response.ok) {
+    throw Object.assign(new Error(`Could not download PDF (${response.status}).`), {
+      statusCode: 400,
+      errorCode: 'DOWNLOAD_FAILED'
+    });
+  }
+
+  const length = Number(response.headers.get('content-length') || 0);
+  if (length > MAX_DOWNLOAD_BYTES) {
+    throw Object.assign(new Error(`The PDF URL is larger than the ${process.env.MAX_FILE_SIZE_MB || 25}MB limit.`), {
+      statusCode: 413,
+      errorCode: 'FILE_TOO_LARGE'
+    });
+  }
+
+  const buffer = Buffer.from(await response.arrayBuffer());
+  if (buffer.length === 0) {
+    throw Object.assign(new Error('The PDF URL returned an empty file.'), {
+      statusCode: 400,
+      errorCode: 'EMPTY_FILE'
+    });
+  }
+  if (buffer.length > MAX_DOWNLOAD_BYTES) {
+    throw Object.assign(new Error(`The PDF URL is larger than the ${process.env.MAX_FILE_SIZE_MB || 25}MB limit.`), {
+      statusCode: 413,
+      errorCode: 'FILE_TOO_LARGE'
+    });
+  }
+
+  assertPdf(buffer);
+  return buffer;
+}
 
 function fieldValue(body: unknown, key: string): unknown {
   if (!body || typeof body !== 'object') return undefined;
@@ -17,6 +99,7 @@ export function readSelection(request: FastifyRequest): {
   itemIds: string[];
   types: SensitiveType[];
   countries: string[];
+  hideAmounts: boolean;
 } {
   const body = request.body;
   const countries = parseCountries(fieldValue(body, 'countries'));
@@ -24,11 +107,17 @@ export function readSelection(request: FastifyRequest): {
   return {
     itemIds: parseIds(fieldValue(body, 'item_ids')),
     types,
-    countries
+    countries,
+    hideAmounts: parseBool(fieldValue(body, 'hide_amounts'))
   };
 }
 
 export async function readPdfUpload(request: FastifyRequest): Promise<Buffer> {
+  const fileUrl = fileUrlFromBody(request.body);
+  if (fileUrl) {
+    return downloadPdfFromUrl(fileUrl);
+  }
+
   const attached = (request.body as { file?: { toBuffer?: () => Promise<Buffer> } } | undefined)?.file;
   if (attached?.toBuffer) {
     const buffer = await attached.toBuffer();
@@ -37,7 +126,7 @@ export async function readPdfUpload(request: FastifyRequest): Promise<Buffer> {
   }
 
   if (!request.isMultipart()) {
-    throw Object.assign(new Error('Upload the PDF as multipart field "file".'), {
+    throw Object.assign(new Error('Send a PDF as multipart field "file", or JSON {"file":"https://example.com/file.pdf"}.'), {
       statusCode: 400,
       errorCode: 'NOT_MULTIPART'
     });
@@ -101,4 +190,10 @@ export function parseIds(raw: unknown): string[] {
 
 function uniqueTypes(types: SensitiveType[]): SensitiveType[] {
   return [...new Set(types)];
+}
+
+export function parseBool(raw: unknown): boolean {
+  if (raw === true || raw === 1) return true;
+  const value = String(raw ?? '').trim().toLowerCase();
+  return value === '1' || value === 'true' || value === 'yes' || value === 'on';
 }

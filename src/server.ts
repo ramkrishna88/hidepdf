@@ -4,6 +4,7 @@ import multipart from '@fastify/multipart';
 import rateLimit from '@fastify/rate-limit';
 import fastifyStatic from '@fastify/static';
 import dotenv from 'dotenv';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isFileTooLargeError, isNotMultipartError } from './lib/errors.js';
@@ -26,7 +27,15 @@ const fastify = Fastify({
   requestTimeout: 180_000
 });
 
-await fastify.register(cors, { origin: true });
+await fastify.register(cors, {
+  origin: true,
+  exposedHeaders: [
+    'x-hidepdf-hidden',
+    'x-hidepdf-mode',
+    'x-hidepdf-text-removed',
+    'x-hidepdf-extractable'
+  ]
+});
 await fastify.register(rateLimit, {
   global: false,
   errorResponseBuilder: (_request, context) => ({
@@ -40,9 +49,33 @@ await fastify.register(multipart, {
   limits: { fileSize: MAX_FILE_SIZE_BYTES },
   attachFieldsToBody: true
 });
+fastify.addHook('onSend', async (request, reply) => {
+  const proto = String(request.headers['x-forwarded-proto'] || request.protocol || '');
+  if (proto.split(',')[0].trim() === 'https') {
+    reply.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
+});
+
+fastify.get('/ads.txt', async (_request, reply) => {
+  const body = fs.readFileSync(path.join(__dirname, 'public', 'ads.txt'), 'utf8');
+  return reply
+    .header('Content-Type', 'text/plain')
+    .header('Cache-Control', 'public, max-age=0, must-revalidate')
+    .send(body);
+});
+
+fastify.get('/.well-known/security.txt', async (_request, reply) => {
+  const body = fs.readFileSync(path.join(__dirname, 'public', '.well-known', 'security.txt'), 'utf8');
+  return reply
+    .type('text/plain; charset=utf-8')
+    .header('Cache-Control', 'public, max-age=86400')
+    .send(body);
+});
+
 await fastify.register(fastifyStatic, {
   root: path.join(__dirname, 'public'),
   prefix: '/',
+  dotfiles: 'allow',
   setHeaders(res, filePath) {
     if (filePath.endsWith('.html')) {
       res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
@@ -51,6 +84,16 @@ await fastify.register(fastifyStatic, {
     if (filePath.endsWith('.pdf')) {
       res.setHeader('Cache-Control', 'public, max-age=3600');
       res.setHeader('Content-Disposition', 'inline; filename="hidepdf-sample.pdf"');
+      return;
+    }
+    if (filePath.endsWith('.webmanifest')) {
+      res.setHeader('Content-Type', 'application/manifest+json; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      return;
+    }
+    if (filePath.endsWith('.ico')) {
+      res.setHeader('Content-Type', 'image/x-icon');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
     }
   }
 });
@@ -69,7 +112,7 @@ fastify.setErrorHandler((error, request, reply) => {
     return reply.status(400).send({
       status: 'error',
       error_code: 'NOT_MULTIPART',
-      message: 'This endpoint requires multipart/form-data with a PDF file field named "file".'
+      message: 'Send a PDF as multipart/form-data field "file", or JSON {"file":"https://example.com/file.pdf"}.'
     });
   }
 
@@ -84,6 +127,11 @@ fastify.setErrorHandler((error, request, reply) => {
   });
 });
 
+const sitePages = ['about', 'privacy', 'contact', 'terms'] as const;
+for (const page of sitePages) {
+  fastify.get(`/${page}`, async (_request, reply) => reply.sendFile(`${page}.html`));
+}
+
 await healthRoutes(fastify);
 await exampleRoutes(fastify);
 await inspectRoutes(fastify);
@@ -91,28 +139,39 @@ await redactRoutes(fastify);
 
 fastify.get('/v1/hide-types', async () => ({
   status: 'ok',
-  default_if_empty: 'If the user does not pick fields or types, every detected sensitive type is hidden.',
+  default_if_empty: 'If the user does not pick fields or types, every detected sensitive type is hidden except amounts. Send hide_amounts=true or types=amount to hide money values.',
   ...hideTypesCatalog()
 }));
 
 fastify.get('/openapi.json', async () => ({
   openapi: '3.0.3',
   info: {
-    title: 'HidePDF — Hide sensitive data in PDFs',
-    description: 'Upload a text-layer PDF, inspect emails, phones, cards, and country IDs (Aadhaar, PAN, UPI, SSN, and more), then download a visually redacted file. Playground is same-origin and does not need an API key.',
+    title: 'HidePDF Content — Hide sensitive data in PDFs',
+    description: 'Upload a PDF, review emails, phones, cards, country IDs (Aadhaar, PAN, UPI, SSN, and more), and optional amounts, then download a burned file with hidden text removed so it cannot be extracted. Amounts stay visible unless hide_amounts is set. Scanned pages use OCR. Playground is same-origin and does not need an API key.',
     version: '1.0.0',
     contact: {
-      name: 'HidePDF',
-      url: PUBLIC_BASE_URL
-    }
+      name: 'HidePDF Content',
+      url: PUBLIC_BASE_URL,
+      email: 'hello@hidepdfcontent.com'
+    },
+    'x-category': 'Data',
+    'x-website': 'https://hidepdfcontent.com'
   },
-  servers: [{ url: PUBLIC_BASE_URL }],
+  servers: [{ url: PUBLIC_BASE_URL, description: 'Production' }],
   paths: {
     '/v1/health': {
       get: {
         summary: 'Health check',
         security: [],
         responses: { '200': { description: 'Service is healthy' } }
+      }
+    },
+    '/v1/example': {
+      get: {
+        summary: 'Example hide inspect response',
+        description: 'No file required. Returns a small inspect JSON sample so RapidAPI Hub testers can click Run without uploading a PDF.',
+        security: [],
+        responses: { '200': { description: 'Sample inspect JSON' } }
       }
     },
     '/v1/hide-types': {
@@ -125,6 +184,7 @@ fastify.get('/openapi.json', async () => ({
     '/v1/inspect': {
       post: {
         summary: 'Find sensitive fields in a PDF',
+        security: [],
         requestBody: {
           required: true,
           content: {
@@ -142,7 +202,8 @@ fastify.get('/openapi.json', async () => ({
     },
     '/v1/redact': {
       post: {
-        summary: 'Hide selected or all detected fields',
+        summary: 'Hide selected or all detected fields and remove the text',
+        security: [],
         requestBody: {
           required: true,
           content: {
@@ -152,24 +213,23 @@ fastify.get('/openapi.json', async () => ({
                 required: ['file'],
                 properties: {
                   file: { type: 'string', format: 'binary' },
-                  types: { type: 'string', description: 'Comma-separated hide types' },
+                  types: { type: 'string', description: 'Comma-separated hide types. Include amount to hide money values.' },
                   countries: { type: 'string', description: 'Comma-separated country codes such as IN,US' },
-                  item_ids: { type: 'string', description: 'Comma-separated item IDs from inspect' }
+                  item_ids: { type: 'string', description: 'Comma-separated item IDs from inspect' },
+                  hide_amounts: { type: 'boolean', description: 'Set true to also hide amounts. Amounts stay visible by default.' }
                 }
               }
             }
           }
         },
-        responses: { '200': { description: 'Redacted PDF' } }
+        responses: { '200': { description: 'PDF with hidden text removed' } }
       }
     }
   },
   components: {
-    securitySchemes: {
-      apiKey: { type: 'apiKey', in: 'header', name: 'X-API-Key' }
-    }
+    securitySchemes: {}
   },
-  security: [{ apiKey: [] }]
+  security: []
 }));
 
 try {

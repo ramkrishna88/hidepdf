@@ -19,7 +19,7 @@ export async function inspectRoutes(fastify: FastifyInstance) {
       return {
         status: 'ok',
         message: result.items_found
-          ? `Found ${result.items_found} sensitive field${result.items_found === 1 ? '' : 's'}.`
+          ? `Found ${result.items_found} field${result.items_found === 1 ? '' : 's'} to review.`
           : 'No sensitive fields found. You can still run hide with the default types.',
         ...result
       };

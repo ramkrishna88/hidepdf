@@ -15,10 +15,12 @@ export async function redactRoutes(fastify: FastifyInstance) {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const buffer = await readPdfUpload(request);
-      const { itemIds, types } = readSelection(request);
-      const result = await redactPdf(buffer, { itemIds, types });
+      const { itemIds, types, hideAmounts } = readSelection(request);
+      const result = await redactPdf(buffer, { itemIds, types, hideAmounts });
       reply.header('x-hidepdf-hidden', String(result.hidden));
       reply.header('x-hidepdf-mode', result.mode);
+      reply.header('x-hidepdf-text-removed', result.text_removed ? '1' : '0');
+      reply.header('x-hidepdf-extractable', String(result.leftover_matches));
       return reply
         .type('application/pdf')
         .header('content-disposition', 'attachment; filename="hidden.pdf"')

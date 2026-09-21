@@ -2,13 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1210860150241703" crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HidePDF — Hide sensitive data in PDFs</title>
-  <meta name="description" content="Upload a PDF and HidePDF automatically covers emails, phones, cards, and country IDs such as Aadhaar, PAN, and UPI. See the hidden fields on the PDF.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2310b981'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='14' fill='white'%3EH%3C/text%3E%3C/svg%3E">
+  <title>HidePDF Content — Hide sensitive data in PDFs</title>
+  <meta name="description" content="Upload a PDF, review fields to hide, preview the redacted pages, then download JSON or the hidden PDF.">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:image" content="https://hidepdfcontent.com/og.png">
+  <meta name="theme-color" content="#0b0f19">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0b0f19;
@@ -25,6 +32,8 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
       background-image:
         radial-gradient(circle at 12% 10%, rgba(59, 130, 246, 0.14), transparent 42%),
         radial-gradient(circle at 88% 90%, rgba(16, 185, 129, 0.14), transparent 42%);
@@ -33,6 +42,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 1rem;
       padding: 1.1rem 1.75rem;
       border-bottom: 1px solid var(--border);
       background: rgba(11, 15, 25, 0.86);
@@ -40,13 +50,15 @@
       position: sticky;
       top: 0;
       z-index: 5;
-      gap: 0.75rem;
     }
-    .brand { display: flex; align-items: center; gap: 0.75rem; }
+    .brand { display: flex; align-items: center; gap: 0.75rem; color: inherit; text-decoration: none; }
+    .header-end { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: flex-end; }
+    .nav { display: flex; flex-wrap: wrap; gap: 0.35rem 0.9rem; }
+    .nav a { color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 600; }
+    .nav a:hover { color: var(--text); }
     .mark {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: linear-gradient(135deg, #10b981, #3b82f6);
-      display: grid; place-items: center; font-weight: 700;
+      width: 36px; height: 36px;
+      object-fit: contain; display: block;
     }
     .brand h1 { font-size: 1.2rem; letter-spacing: -0.03em; }
     .badge {
@@ -59,31 +71,39 @@
       font-weight: 600;
     }
     main {
-      max-width: 1100px;
-      margin: 1.5rem auto 3rem;
-      padding: 0 1.25rem;
+      width: 100%;
+      margin: 1.25rem auto 2rem;
+      padding: 0 1.5rem;
       display: grid;
+      grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+      grid-template-areas:
+        "upload fields"
+        "preview preview";
       gap: 1rem;
+      flex: 1;
     }
-    .hero p { color: var(--muted); margin-top: 0.4rem; max-width: 44rem; }
-    .card {
+    .panel {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 1.15rem;
+      padding: 1.2rem;
+      min-width: 0;
     }
-    .card h2 { font-size: 1rem; margin-bottom: 0.85rem; }
+    .upload { grid-area: upload; }
+    .fields-panel { grid-area: fields; display: flex; flex-direction: column; min-height: 420px; }
+    .preview-panel { grid-area: preview; }
+    .panel h2 { font-size: 1rem; margin-bottom: 0.85rem; }
     .drop {
       border: 1.5px dashed rgba(255,255,255,0.16);
       border-radius: 12px;
-      padding: 1.6rem 1rem;
+      padding: 2rem 1rem;
       text-align: center;
       color: var(--muted);
       cursor: pointer;
     }
     .drop.drag { border-color: var(--green); background: var(--green-soft); }
     .drop strong { color: var(--text); display: block; margin-bottom: 0.3rem; }
-    .row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.85rem; }
+    .row { display: flex; gap: 0.55rem; flex-wrap: wrap; margin-top: 0.85rem; }
     button {
       border: 0;
       border-radius: 10px;
@@ -93,33 +113,73 @@
       cursor: pointer;
     }
     .primary { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
+    .upload .primary { width: 100%; }
     .ghost { background: rgba(255,255,255,0.06); color: var(--text); }
     button:disabled { opacity: 0.45; cursor: not-allowed; }
-    .status { min-height: 1.3rem; color: var(--muted); font-size: 0.88rem; margin-top: 0.75rem; }
+    .status { min-height: 1.3rem; color: var(--muted); font-size: 0.86rem; margin-top: 0.75rem; }
     .status.ok { color: var(--green); }
     .status.err { color: #f43f5e; }
+    .hint { color: var(--muted); font-size: 0.82rem; margin-bottom: 0.7rem; line-height: 1.45; }
+    #amountToggleWrap { display: flex; gap: 0.55rem; align-items: center; margin: 0.2rem 0 0.75rem; }
+    #amountToggleWrap[hidden] { display: none; }
+    .fields { display: grid; gap: 0.4rem; overflow: auto; flex: 1; max-height: 460px; }
+    .field {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .field.off { opacity: 0.5; }
+    .field label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .tag {
+      font-size: 0.7rem;
+      color: var(--green);
+      background: var(--green-soft);
+      border-radius: 999px;
+      padding: 0.15rem 0.45rem;
+      white-space: nowrap;
+    }
+    .tabs { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .tab {
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      padding: 0.4rem 0.75rem;
+      font-size: 0.82rem;
+    }
+    .tab.on { background: rgba(255,255,255,0.12); color: var(--text); }
     .preview-wrap {
-      min-height: 72vh;
+      min-height: 420px;
       background: #060911;
       border: 1px solid var(--border);
       border-radius: 12px;
       overflow: auto;
       padding: 1rem;
     }
-    .pages {
-      display: grid;
-      gap: 1rem;
-      justify-items: center;
-    }
+    .pages { display: grid; gap: 1rem; justify-items: center; }
     .pages canvas {
       width: min(100%, 820px);
       height: auto;
       background: #fff;
       border-radius: 8px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
     }
+    .json {
+      display: none;
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #d1d5db;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+    .preview-wrap.json-on .pages, .preview-wrap.json-on .empty { display: none !important; }
+    .preview-wrap.json-on .json { display: block; }
     .empty {
-      min-height: 64vh;
+      min-height: 360px;
       display: grid;
       place-items: center;
       color: var(--muted);
@@ -127,125 +187,432 @@
       padding: 2rem;
     }
     .empty[hidden], .pages[hidden] { display: none !important; }
-    footer { color: var(--muted); font-size: 0.8rem; text-align: center; }
+    footer { color: var(--muted); font-size: 0.8rem; text-align: center; padding: 0 1rem 1.5rem; }
+    footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem 0.9rem; margin-bottom: 0.55rem; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    @media (max-width: 860px) {
+      main {
+        grid-template-columns: 1fr;
+        grid-template-areas: "upload" "fields" "preview";
+        padding: 0 0.85rem;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
-    <div class="brand">
-      <div class="mark">H</div>
-      <h1>HidePDF</h1>
+    <a class="brand" href="/">
+      <img class="mark" src="/icon-192.png" width="36" height="36" alt="HidePDF Content">
+      <h1>HidePDF Content</h1>
+    </a>
+    <div class="header-end">
+      <nav class="nav">
+        <a href="/about">About</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="/contact">Contact</a>
+      </nav>
+      <span class="badge">API playground</span>
     </div>
-    <span class="badge">Automatic hide</span>
   </header>
   <main>
-    <section class="hero">
-      <h2>Upload a PDF. Sensitive fields are hidden on the page.</h2>
-      <p>No country or field picker. HidePDF finds emails, phones, cards, and country IDs such as India PAN, Aadhaar, and UPI, then shows the blacked-out PDF.</p>
-    </section>
-    <section class="card">
+    <section class="panel upload">
+      <h2>Upload</h2>
       <div class="drop" id="drop">
-        <strong>Drop a PDF here or click to choose</strong>
-        <span id="fileName">Or use the sample to see PAN and other IDs hidden on the document.</span>
+        <strong>Drop a PDF here</strong>
+        <span id="fileName">Or click Upload here. We list fields before anything is hidden.</span>
       </div>
       <input id="file" type="file" accept="application/pdf" hidden>
       <div class="row">
+        <button class="primary" id="uploadBtn" type="button">Upload here</button>
+      </div>
+      <div class="row">
         <button class="ghost" id="sampleBtn" type="button">Use sample PDF</button>
-        <button class="primary" id="downloadBtn" type="button" disabled>Download hidden PDF</button>
+        <button class="ghost" id="indiaBtn" type="button">India dummy</button>
+        <button class="ghost" id="usBtn" type="button">US dummy</button>
       </div>
       <p class="status" id="status"></p>
-    </section>
-    <section class="card">
-      <h2>Hidden PDF</h2>
-      <div class="preview-wrap" id="previewWrap">
-        <div class="empty" id="empty">The redacted PDF opens here. Hidden values appear as black bars on the page.</div>
-        <div class="pages" id="pages" hidden></div>
+      <div class="row">
+        <button class="ghost" id="jsonBtn" type="button" disabled>Download JSON</button>
+        <button class="primary" id="downloadBtn" type="button" disabled>Download PDF</button>
       </div>
     </section>
-    <footer>Uploads are not stored. Text-layer PDFs only. Country IDs are detected automatically.</footer>
+
+    <section class="panel fields-panel">
+      <h2>Fields we will hide</h2>
+      <p class="hint">Review each field first. Checked fields are burned out of the PDF so the value cannot be copied or extracted. Amounts stay visible unless you tick them or turn on Hide amounts.</p>
+      <label class="hint" id="amountToggleWrap" hidden>
+        <input type="checkbox" id="hideAmounts">
+        Hide amounts (totals, salary, invoice values)
+      </label>
+      <div class="fields" id="fields"><p class="hint">Upload a PDF to see the planned hide list.</p></div>
+      <div class="row">
+        <button class="ghost" id="hideAllBtn" type="button">Hide all</button>
+        <button class="ghost" id="showAllBtn" type="button">Show all</button>
+        <button class="primary" id="applyBtn" type="button" disabled>Hide selected</button>
+      </div>
+    </section>
+
+    <section class="panel preview-panel">
+      <div class="tabs">
+        <button class="tab on" id="tabPreview" type="button">PDF preview</button>
+        <button class="tab" id="tabJson" type="button">JSON</button>
+      </div>
+      <div class="preview-wrap" id="previewWrap">
+        <div class="empty" id="empty">Upload a PDF, review the hide list, then preview. Hidden values are removed from the file, not only covered.</div>
+        <div class="pages" id="pages" hidden></div>
+        <pre class="json" id="jsonView">{}</pre>
+      </div>
+    </section>
   </main>
+  <footer>
+    <nav>
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <p>Uploads are not stored. Hide removes the text so hidden values cannot be extracted. Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
+  </footer>
   <script>
-    const state = { file: null, hiddenUrl: null, hiddenBlob: null };
+    const state = { file: null, items: [], labels: {}, inspect: null, result: null, hiddenUrl: null };
 
     const els = {
       drop: document.getElementById('drop'),
       file: document.getElementById('file'),
       fileName: document.getElementById('fileName'),
+      uploadBtn: document.getElementById('uploadBtn'),
       sampleBtn: document.getElementById('sampleBtn'),
-      downloadBtn: document.getElementById('downloadBtn'),
+      indiaBtn: document.getElementById('indiaBtn'),
+      usBtn: document.getElementById('usBtn'),
       status: document.getElementById('status'),
+      fields: document.getElementById('fields'),
+      hideAllBtn: document.getElementById('hideAllBtn'),
+      showAllBtn: document.getElementById('showAllBtn'),
+      hideAmounts: document.getElementById('hideAmounts'),
+      amountToggleWrap: document.getElementById('amountToggleWrap'),
+      applyBtn: document.getElementById('applyBtn'),
+      jsonBtn: document.getElementById('jsonBtn'),
+      downloadBtn: document.getElementById('downloadBtn'),
       empty: document.getElementById('empty'),
-      pages: document.getElementById('pages')
+      pages: document.getElementById('pages'),
+      jsonView: document.getElementById('jsonView'),
+      previewWrap: document.getElementById('previewWrap'),
+      tabPreview: document.getElementById('tabPreview'),
+      tabJson: document.getElementById('tabJson')
     };
-
-    async function renderHiddenPdf(blob) {
-      const pdfjs = await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs');
-      pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs';
-      const doc = await pdfjs.getDocument({ data: await blob.arrayBuffer() }).promise;
-      els.pages.innerHTML = '';
-      for (let pageNumber = 1; pageNumber <= doc.numPages; pageNumber += 1) {
-        const page = await doc.getPage(pageNumber);
-        const viewport = page.getViewport({ scale: 1.35 });
-        const canvas = document.createElement('canvas');
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        canvas.setAttribute('aria-label', 'Hidden PDF page ' + pageNumber);
-        await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
-        els.pages.appendChild(canvas);
-      }
-      els.empty.hidden = true;
-      els.pages.hidden = false;
-    }
 
     function setStatus(text, kind) {
       els.status.textContent = text;
       els.status.className = 'status' + (kind ? ' ' + kind : '');
     }
 
-    async function showPreview(blob) {
-      if (state.hiddenUrl) URL.revokeObjectURL(state.hiddenUrl);
-      state.hiddenBlob = blob;
-      state.hiddenUrl = URL.createObjectURL(blob);
-      els.downloadBtn.disabled = false;
-      await renderHiddenPdf(blob);
+    function selectedIds() {
+      return [...document.querySelectorAll('[data-item]:checked')].map((box) => box.value);
     }
 
-    async function hideFile(file) {
+    function amountBoxes() {
+      return [...document.querySelectorAll('[data-item]')].filter((box) => {
+        const item = state.items.find((row) => row.id === box.value);
+        return item && item.type === 'amount';
+      });
+    }
+
+    function setAmountBoxes(on) {
+      amountBoxes().forEach((box) => { box.checked = on; });
+      if (els.hideAmounts) els.hideAmounts.checked = on;
+      syncFieldLooks();
+    }
+
+    function setAll(on) {
+      document.querySelectorAll('[data-item]').forEach((box) => { box.checked = on; });
+      if (els.hideAmounts) els.hideAmounts.checked = on;
+      syncFieldLooks();
+    }
+
+    function syncFieldLooks() {
+      document.querySelectorAll('.field').forEach((row) => {
+        const box = row.querySelector('[data-item]');
+        row.classList.toggle('off', box && !box.checked);
+      });
+    }
+
+    function publicItem(item) {
+      return {
+        id: item.id,
+        type: item.type,
+        country: item.country,
+        preview: item.preview,
+        page: item.page
+      };
+    }
+
+    function currentJson() {
+      return state.result || state.inspect || {};
+    }
+
+    function showJson(data) {
+      els.jsonView.textContent = JSON.stringify(data, null, 2);
+      els.jsonBtn.disabled = false;
+    }
+
+    function renderFields(items) {
+      state.items = items;
+      els.applyBtn.disabled = items.length === 0;
+      if (!items.length) {
+        els.fields.innerHTML = '<p class="hint">No sensitive fields found.</p>';
+        return;
+      }
+      const hasAmounts = items.some((item) => item.type === 'amount');
+      if (els.amountToggleWrap) els.amountToggleWrap.hidden = !hasAmounts;
+      if (els.hideAmounts) els.hideAmounts.checked = false;
+      els.fields.innerHTML = items.map((item) => {
+        const label = state.labels[item.type] || item.type;
+        const country = item.country && item.country !== 'global' ? item.country : 'global';
+        const checked = item.type === 'amount' ? '' : 'checked';
+        return `
+          <div class="field">
+            <label>
+              <input type="checkbox" data-item value="${item.id}" ${checked}>
+              <span class="mono">${item.preview}</span>
+            </label>
+            <span class="tag">${label} · ${country} · p${item.page}</span>
+          </div>
+        `;
+      }).join('');
+      syncFieldLooks();
+    }
+
+    function withTimeout(promise, ms) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('preview timeout')), ms))
+      ]);
+    }
+
+    async function renderPdf(blob) {
+      try {
+        await withTimeout(drawPdfPages(blob), 8000);
+      } catch {
+        els.pages.innerHTML = state.hiddenUrl
+          ? '<iframe title="Hidden PDF" src="' + state.hiddenUrl + '" style="width:100%;min-height:70vh;border:0;background:#fff"></iframe>'
+          : '';
+        els.empty.hidden = els.pages.innerHTML !== '';
+        els.pages.hidden = els.pages.innerHTML === '';
+        if (!els.pages.innerHTML) {
+          els.empty.textContent = 'The hidden PDF is ready to download. Preview could not draw in this browser.';
+          els.empty.hidden = false;
+        }
+      }
+    }
+
+    async function drawPdfPages(blob) {
+      const pdfjs = await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs');
+      pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs';
+      const doc = await pdfjs.getDocument({ data: await blob.arrayBuffer() }).promise;
+      els.pages.innerHTML = '';
+      for (let pageNumber = 1; pageNumber <= doc.numPages; pageNumber += 1) {
+        const page = await doc.getPage(pageNumber);
+        const canvas = document.createElement('canvas');
+        const drawn = await drawEmbeddedImage(page, canvas);
+        if (!drawn) {
+          const viewport = page.getViewport({ scale: 1.25 });
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+        }
+        els.pages.appendChild(canvas);
+      }
+      els.empty.hidden = true;
+      els.pages.hidden = false;
+    }
+
+    async function drawEmbeddedImage(page, canvas) {
+      const ops = await page.getOperatorList();
+      let image = null;
+      for (let i = 0; i < ops.fnArray.length; i += 1) {
+        if (ops.fnArray[i] !== 85 && ops.fnArray[i] !== 86) continue;
+        const raw = ops.argsArray[i] && ops.argsArray[i][0];
+        const img = typeof raw === 'string' ? await getPageObject(page, raw) : raw;
+        if (img && img.width && img.data && (!image || img.width * img.height > image.width * image.height)) {
+          image = img;
+        }
+      }
+      if (!image) return false;
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const ctx = canvas.getContext('2d');
+      const imageData = ctx.createImageData(image.width, image.height);
+      copyImageToRgba(image, imageData.data);
+      ctx.putImageData(imageData, 0, 0);
+      return true;
+    }
+
+    function getPageObject(page, name) {
+      return new Promise((resolve) => {
+        const timer = setTimeout(() => resolve(null), 1500);
+        const value = page.objs.get(name, (img) => {
+          clearTimeout(timer);
+          resolve(img);
+        });
+        if (value) {
+          clearTimeout(timer);
+          resolve(value);
+        }
+      });
+    }
+
+    function copyImageToRgba(img, dest) {
+      const src = img.data;
+      if (src.length === img.width * img.height * 4) {
+        dest.set(src);
+        return;
+      }
+      if (src.length === img.width * img.height * 3) {
+        let di = 0;
+        for (let si = 0; si < src.length; si += 3) {
+          dest[di++] = src[si];
+          dest[di++] = src[si + 1];
+          dest[di++] = src[si + 2];
+          dest[di++] = 255;
+        }
+        return;
+      }
+      if (src.length === img.width * img.height) {
+        let di = 0;
+        for (let si = 0; si < src.length; si += 1) {
+          dest[di++] = src[si];
+          dest[di++] = src[si];
+          dest[di++] = src[si];
+          dest[di++] = 255;
+        }
+      }
+    }
+
+    async function showPreview(blob) {
+      if (state.hiddenUrl) URL.revokeObjectURL(state.hiddenUrl);
+      state.hiddenUrl = URL.createObjectURL(blob);
+      els.downloadBtn.disabled = false;
+      await renderPdf(blob);
+    }
+
+    function setTab(which) {
+      const jsonOn = which === 'json';
+      els.previewWrap.classList.toggle('json-on', jsonOn);
+      els.tabJson.classList.toggle('on', jsonOn);
+      els.tabPreview.classList.toggle('on', !jsonOn);
+    }
+
+    async function inspectFile(file) {
       state.file = file;
+      state.result = null;
       els.fileName.textContent = file.name;
       els.downloadBtn.disabled = true;
-      setStatus('Finding country IDs and hiding them on the PDF…');
+      els.applyBtn.disabled = true;
+      els.pages.hidden = true;
+      els.empty.hidden = false;
+      setStatus('Finding fields we can hide…');
       const body = new FormData();
       body.append('file', file);
+      const res = await fetch('/v1/inspect', { method: 'POST', body });
+      const data = await res.json();
+      if (!res.ok) {
+        setStatus(data.message || 'Inspect failed', 'err');
+        return;
+      }
+      state.inspect = data;
+      state.labels = Object.fromEntries((data.types || []).map((type) => [type.id, type.label]));
+      renderFields(data.items || []);
+      showJson(data);
+      setStatus((data.message || 'Fields found.') + ' Amounts stay visible unless you tick them.', 'ok');
+    }
+
+    async function hideSelected() {
+      if (!state.file) return;
+      const ids = selectedIds();
+      const selectedItems = state.items.filter((item) => ids.includes(item.id));
+      setStatus('Hiding the selected fields on the PDF…');
+      if (ids.length === 0) {
+        state.result = { status: 'ok', hidden: 0, text_removed: false, items: [] };
+        showJson(state.result);
+        await showPreview(state.file);
+        setStatus('Nothing selected, so the original PDF is shown.', 'ok');
+        return;
+      }
+      const body = new FormData();
+      body.append('file', state.file);
+      body.append('item_ids', ids.join(','));
       const res = await fetch('/v1/redact', { method: 'POST', body });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         setStatus(data.message || 'Hide failed', 'err');
         return;
       }
-      const blob = await res.blob();
-      await showPreview(blob);
-      const hidden = res.headers.get('x-hidepdf-hidden') || '0';
-      setStatus('Hidden ' + hidden + ' field(s) on the PDF, including country IDs such as PAN when they appear.', 'ok');
+      const hidden = Number(res.headers.get('x-hidepdf-hidden') || ids.length);
+      const textRemoved = res.headers.get('x-hidepdf-text-removed') === '1';
+      state.result = {
+        status: 'ok',
+        hidden,
+        mode: res.headers.get('x-hidepdf-mode') || 'selected_fields',
+        text_removed: textRemoved,
+        extractable_matches: Number(res.headers.get('x-hidepdf-extractable') || 0),
+        items: selectedItems.map(publicItem)
+      };
+      showJson(state.result);
+      setStatus(
+        textRemoved
+          ? 'Hidden ' + hidden + ' field(s) and removed the text. Nothing left to extract. Download JSON or the PDF.'
+          : 'Hidden ' + hidden + ' selected field(s). Download JSON or the PDF.',
+        'ok'
+      );
+      await showPreview(await res.blob());
+    }
+
+    function downloadJson() {
+      const blob = new Blob([JSON.stringify(currentJson(), null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'hidepdf.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function loadNamed(path, name) {
+      const res = await fetch(path);
+      await inspectFile(new File([await res.blob()], name, { type: 'application/pdf' }));
     }
 
     els.drop.addEventListener('click', () => els.file.click());
+    els.uploadBtn.addEventListener('click', () => els.file.click());
     els.drop.addEventListener('dragover', (e) => { e.preventDefault(); els.drop.classList.add('drag'); });
     els.drop.addEventListener('dragleave', () => els.drop.classList.remove('drag'));
     els.drop.addEventListener('drop', (e) => {
       e.preventDefault();
       els.drop.classList.remove('drag');
-      const file = e.dataTransfer.files[0];
-      if (file) hideFile(file);
+      if (e.dataTransfer.files[0]) inspectFile(e.dataTransfer.files[0]);
     });
     els.file.addEventListener('change', () => {
-      if (els.file.files[0]) hideFile(els.file.files[0]);
+      if (els.file.files[0]) inspectFile(els.file.files[0]);
     });
-    els.sampleBtn.addEventListener('click', async () => {
-      const res = await fetch('/sample.pdf');
-      const blob = await res.blob();
-      await hideFile(new File([blob], 'hidepdf-sample.pdf', { type: 'application/pdf' }));
+    els.sampleBtn.addEventListener('click', () => loadNamed('/sample.pdf', 'hidepdf-sample.pdf'));
+    els.indiaBtn.addEventListener('click', () => loadNamed('/dummy-india-invoice.pdf', 'dummy-india-invoice.pdf'));
+    els.usBtn.addEventListener('click', () => loadNamed('/dummy-us-payroll.pdf', 'dummy-us-payroll.pdf'));
+    els.fields.addEventListener('change', () => {
+      const amounts = amountBoxes();
+      if (els.hideAmounts && amounts.length) {
+        els.hideAmounts.checked = amounts.every((box) => box.checked);
+      }
+      syncFieldLooks();
     });
+    if (els.hideAmounts) {
+      els.hideAmounts.addEventListener('change', () => setAmountBoxes(els.hideAmounts.checked));
+    }
+    els.hideAllBtn.addEventListener('click', () => setAll(true));
+    els.showAllBtn.addEventListener('click', () => setAll(false));
+    els.applyBtn.addEventListener('click', hideSelected);
+    els.jsonBtn.addEventListener('click', downloadJson);
     els.downloadBtn.addEventListener('click', () => {
       if (!state.hiddenUrl) return;
       const a = document.createElement('a');
@@ -253,6 +620,8 @@
       a.download = 'hidden.pdf';
       a.click();
     });
+    els.tabPreview.addEventListener('click', () => setTab('preview'));
+    els.tabJson.addEventListener('click', () => setTab('json'));
   </script>
 </body>
 </html>

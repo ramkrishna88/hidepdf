@@ -1,4 +1,4 @@
-export const GLOBAL_TYPES = ['email', 'phone', 'credit_card', 'iban'] as const;
+export const GLOBAL_TYPES = ['email', 'phone', 'credit_card', 'iban', 'person_name', 'address'] as const;
 
 export const COUNTRY_ID_TYPES = [
   'aadhaar',
@@ -32,8 +32,18 @@ export const COUNTRY_ID_TYPES = [
   'nin'
 ] as const;
 
-export const SENSITIVE_TYPES = [...GLOBAL_TYPES, ...COUNTRY_ID_TYPES] as const;
+export const OPTIONAL_TYPES = ['amount'] as const;
+export const SENSITIVE_TYPES = [...GLOBAL_TYPES, ...COUNTRY_ID_TYPES, ...OPTIONAL_TYPES] as const;
 export type SensitiveType = (typeof SENSITIVE_TYPES)[number];
+export type OptionalType = (typeof OPTIONAL_TYPES)[number];
+
+export function isOptionalType(type: string): type is OptionalType {
+  return (OPTIONAL_TYPES as readonly string[]).includes(type);
+}
+
+export function isDefaultHiddenType(type: string): boolean {
+  return !isOptionalType(type);
+}
 
 export const COUNTRIES = [
   { id: 'IN', label: 'India', types: ['aadhaar', 'pan', 'upi', 'gstin', 'ifsc'] },
@@ -89,6 +99,9 @@ export const TYPE_LABELS: Record<SensitiveType, string> = {
   phone: 'Phone numbers',
   credit_card: 'Credit cards',
   iban: 'IBAN / international bank accounts',
+  person_name: 'Person names',
+  address: 'Addresses',
+  amount: 'Amounts',
   aadhaar: 'Aadhaar',
   pan: 'PAN',
   upi: 'UPI ID',
@@ -128,23 +141,38 @@ export function typesForCountries(codes: string[]): SensitiveType[] {
 }
 
 export function countryForType(type: SensitiveType): CountryCode | 'global' {
-  if ((GLOBAL_TYPES as readonly string[]).includes(type)) return 'global';
+  if ((GLOBAL_TYPES as readonly string[]).includes(type) || isOptionalType(type)) return 'global';
   const match = COUNTRIES.find((country) => (country.types as readonly string[]).includes(type));
   return match?.id ?? 'global';
 }
 
 export function hideTypesCatalog() {
   return {
-    global: GLOBAL_TYPES.map((id) => ({ id, label: TYPE_LABELS[id], country: 'global' as const })),
+    global: GLOBAL_TYPES.map((id) => ({
+      id,
+      label: TYPE_LABELS[id],
+      country: 'global' as const,
+      optional: false,
+      default_hidden: true
+    })),
+    optional: OPTIONAL_TYPES.map((id) => ({
+      id,
+      label: TYPE_LABELS[id],
+      country: 'global' as const,
+      optional: true,
+      default_hidden: false
+    })),
     countries: COUNTRIES.map((country) => ({
       id: country.id,
       label: country.label,
-      types: country.types.map((id) => ({ id, label: TYPE_LABELS[id] }))
+      types: country.types.map((id) => ({ id, label: TYPE_LABELS[id], optional: false, default_hidden: true }))
     })),
     types: SENSITIVE_TYPES.map((id) => ({
       id,
       label: TYPE_LABELS[id],
-      country: countryForType(id)
+      country: countryForType(id),
+      optional: isOptionalType(id),
+      default_hidden: isDefaultHiddenType(id)
     }))
   };
 }

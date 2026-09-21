@@ -12,20 +12,29 @@
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "sample": "tsx scripts/generate-sample-pdf.ts",
+    "dummy": "tsx scripts/generate-dummy-pdfs.ts",
     "test:redact": "tsx scripts/test-redact.ts"
   },
-  "keywords": ["pdf", "redact", "pii", "privacy", "api"],
+  "keywords": [
+    "pdf",
+    "redact",
+    "pii",
+    "privacy",
+    "api"
+  ],
   "license": "MIT",
   "dependencies": {
     "@fastify/cors": "^9.0.1",
     "@fastify/multipart": "^8.2.0",
     "@fastify/rate-limit": "^9.1.0",
     "@fastify/static": "^7.0.1",
+    "@napi-rs/canvas": "^1.0.9",
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.10.38",
-    "pdfkit": "^0.15.1"
+    "pdfkit": "^0.15.1",
+    "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
