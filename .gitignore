@@ -1,6 +1,15 @@
 node_modules/
 dist/
-.env
 *.log
 .DS_Store
 hidden.pdf
+
+# secrets — never commit real keys
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+.zapierrc
+**/secrets.*
