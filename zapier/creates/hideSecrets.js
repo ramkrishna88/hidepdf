@@ -12,7 +12,7 @@ module.exports = {
         label: 'PDF File URL',
         type: 'string',
         required: true,
-        helpText: 'Public HTTPS URL of the PDF to hide secrets in.'
+        helpText: 'Public HTTPS URL of the PDF to hide secrets in. See the [API docs](https://hidepdfcontent.com/docs).'
       },
       {
         key: 'hide_amounts',

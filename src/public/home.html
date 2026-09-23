@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1210860150241703" crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy — HidePDF Content</title>
-  <meta name="description" content="How HidePDF Content handles uploaded PDFs, detected fields, and contact email.">
+  <title>HidePDF Content — Hide secrets in PDFs</title>
+  <meta name="description" content="HidePDF Content burns emails, phones, IDs, and other secrets out of PDFs so they cannot be copied or extracted. Playground, API, and Zapier.">
   <link rel="icon" href="/favicon.ico?v=2" sizes="any">
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=2">
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=2">
@@ -25,28 +25,37 @@
       <h1>HidePDF Content</h1>
     </a>
     <nav class="nav">
-      <a href="/home">Home</a>
+      <a class="on" href="/home">Home</a>
       <a href="/">Playground</a>
       <a href="/docs">Docs</a>
       <a href="/about">About</a>
-      <a class="on" href="/privacy">Privacy</a>
+      <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
   <main class="legal">
-    <h2>Privacy</h2>
-    <p>Last updated: 19 September 2026</p>
-    <p>HidePDF Content processes PDFs you send to hidepdfcontent.com so we can find sensitive fields and return a hidden file or a review list. This page explains what that involves.</p>
-    <h3>Files you upload</h3>
-    <p>Playground and API requests send the PDF to our server for that request only. We read the file to detect fields, optionally run OCR on sparse pages, and return inspect JSON or a burned PDF. Uploads are not kept as a document library after the request finishes.</p>
-    <h3>What we look at</h3>
-    <p>Detection looks for emails, phones, cards, IBANs, labeled names and addresses, and country IDs. Inspect responses show masked previews so you can review fields before hide. The hide step burns selected values out of the page images and strips extractable text for those values.</p>
-    <h3>Accounts and keys</h3>
-    <p>The public playground on this site does not need an API key. Direct API use requires a key you configure. We do not sell upload contents. Server logs may include request time, status, and size for reliability.</p>
-    <h3>Contact</h3>
-    <p>Privacy questions go to the Cloudflare contact address for this domain.</p>
-    <a class="email" href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>
+    <h2>Hide secrets in PDFs — for real</h2>
+    <p>HidePDF Content finds emails, phones, cards, names, addresses, and country IDs, then burns them out of the page. Hidden text is removed, so those values cannot be copied or extracted from the download.</p>
+    <div class="cta-row">
+      <a class="cta" href="/">Open playground</a>
+      <a class="cta-ghost" href="/docs">API reference</a>
+    </div>
+    <h3>What we hide</h3>
+    <ul>
+      <li>Emails, phone numbers, credit cards, and IBANs</li>
+      <li>Labeled names and addresses</li>
+      <li>Country IDs such as India Aadhaar, PAN, UPI, and US SSN</li>
+      <li>Amounts only if you choose to hide them</li>
+    </ul>
+    <p>Scanned pages with little or no text are read with OCR before the hide list is shown. Uploads are not stored after the request.</p>
+    <h3>Ways to use it</h3>
+    <ul>
+      <li><a href="/">Playground</a> — review fields in the browser, no key required</li>
+      <li><a href="/docs">API</a> — inspect, then hide, or hide in one <code>POST /v1/redact</code> call</li>
+      <li>Zapier — connect a HidePDF key and hide secrets from a public PDF URL</li>
+    </ul>
+    <p>There is no customer login. API keys are issued to callers. This product is separate from TableJSON, which extracts tables into JSON. Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>.</p>
   </main>
   <footer>
     <nav>

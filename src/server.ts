@@ -127,7 +127,7 @@ fastify.setErrorHandler((error, request, reply) => {
   });
 });
 
-const sitePages = ['about', 'privacy', 'contact', 'terms'] as const;
+const sitePages = ['about', 'privacy', 'contact', 'terms', 'docs', 'home'] as const;
 for (const page of sitePages) {
   fastify.get(`/${page}`, async (_request, reply) => reply.sendFile(`${page}.html`));
 }
@@ -155,7 +155,7 @@ fastify.get('/openapi.json', async () => ({
       email: 'hello@hidepdfcontent.com'
     },
     'x-category': 'Data',
-    'x-website': 'https://hidepdfcontent.com'
+    'x-website': 'https://hidepdfcontent.com/home'
   },
   servers: [{ url: PUBLIC_BASE_URL, description: 'Production' }],
   paths: {
