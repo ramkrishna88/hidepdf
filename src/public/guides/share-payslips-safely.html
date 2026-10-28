@@ -21,14 +21,14 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
-      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
@@ -36,21 +36,22 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#rehearse-on-the-dummy">Rehearse on the dummy</a>
+        <a href="#what-to-cover-on-a-real-stub">What to cover on a real stub</a>
+        <a href="#why-a-marker-pen-on-a-printout-still-needs-a-second-look">Why a marker pen on a printout still needs a second look</a>
+        <a href="#check-rename-send-once">Check, rename, send once</a>
+      </nav>
+    <main class="legal">
     <p class="crumb"><a href="/guides">Guides</a></p>
     <h1>Sharing a payslip safely</h1>
     <p class="updated">28 October 2026</p>
     <p class="lead">A recruiter who asks for a payslip is usually checking that a salary you named is a salary you are paid. They need your name, the employer, the period, and the gross or net figure. They do not need a national identifier, a bank account, a home address, or an employee number that unlocks an HR portal. You can hide those and leave the money visible. The fake US pay stub on the playground is a safe place to practise the split before you touch your own.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#rehearse-on-the-dummy">Rehearse on the dummy</a></li>
-        <li><a href="#what-to-cover-on-a-real-stub">What to cover on a real stub</a></li>
-        <li><a href="#why-a-marker-pen-on-a-printout-still-needs-a-second-look">Why a marker pen on a printout still needs a second look</a></li>
-        <li><a href="#check-rename-send-once">Check, rename, send once</a></li>
-      </ol>
-    </nav>
+    
     <h2 id="rehearse-on-the-dummy">Rehearse on the dummy</h2>
     <p>Click US dummy on the <a href="/">playground</a>. The file is a made-up Northwind stub for Alex Rivera, period 1 to 15 September 2026. It has an email, a phone, the sample SSN 123-45-6789, a sample ITIN, the test card 4111 1111 1111 1111, gross pay USD 3,200.00, and net pay USD 2,540.18. The PDF says the values are invented. Treat the SSN as the thing you would never send, and the gross pay as the thing a recruiter asked for.</p>
     <p>The list should show the SSN, the ITIN, the card, the email, the phone, and the name if it was picked up from the "Employee:" label. Gross and net are amounts, so their boxes start empty. Leave them empty. Leave the identifier rows checked. Hide selected. In the preview, the SSN sits under a dark block and the gross pay is still readable. Download. Search the download for 123-45-6789 and for 4111. Those searches should fail. You can still see 3,200 with your eyes. You should not be able to select it, because the page is now a picture. That is the shape you want from your real stub: money legible, identifiers dead as text and covered as ink.</p>
@@ -88,8 +89,10 @@
         </a>
       </div>
     </aside>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -100,6 +103,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

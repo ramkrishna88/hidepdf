@@ -21,14 +21,14 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
-      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
@@ -36,22 +36,23 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#decide-what-the-next-person-is-allowed-to-know">Decide what the next person is allowed to know</a>
+        <a href="#what-this-tool-is-able-to-see">What this tool is able to see</a>
+        <a href="#what-you-still-have-to-read">What you still have to read</a>
+        <a href="#remove-it-from-the-file-not-from-the-screen">Remove it from the file, not from the screen</a>
+        <a href="#keep-the-original-send-the-minimum">Keep the original, send the minimum</a>
+      </nav>
+    <main class="legal">
     <p class="crumb"><a href="/guides">Guides</a></p>
     <h1>Removing personal data from a PDF</h1>
     <p class="updated">28 October 2026</p>
     <p class="lead">Personal data is bigger than a password. A name next to an address, a payslip, a photo of a passport, the email in an invoice header: if it identifies a person, or could with a second fact, think before you forward the PDF. This is a practical pass, not a legal opinion. GDPR and similar laws are why the habit matters. They are not something a website can apply for you.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#decide-what-the-next-person-is-allowed-to-know">Decide what the next person is allowed to know</a></li>
-        <li><a href="#what-this-tool-is-able-to-see">What this tool is able to see</a></li>
-        <li><a href="#what-you-still-have-to-read">What you still have to read</a></li>
-        <li><a href="#remove-it-from-the-file-not-from-the-screen">Remove it from the file, not from the screen</a></li>
-        <li><a href="#keep-the-original-send-the-minimum">Keep the original, send the minimum</a></li>
-      </ol>
-    </nav>
+    
     <h2 id="decide-what-the-next-person-is-allowed-to-know">Decide what the next person is allowed to know</h2>
     <p>Suppose you are a freelance designer and a new client wants "an example of a past proposal". The PDF in your archive is a real one. It names the old client, their office address, the account manager's mobile, a project fee, and a scanned signature. The new client needs to see the structure of the proposal. They do not need the old client's mobile, and they may not need the fee. Those are different decisions. Write them down in a sentence before you open a tool: "They may see the section headings and the timeline. They may not see contact details or the price."</p>
     <p>Data minimisation is that sentence. Collect and pass on what the purpose needs, and not the rest of the file because it was already in the file. A tool that hides every detected field except amounts is a reasonable default for a proposal you are turning into a sample. It is a bad default for a proposal you are sending back to the same client, who needs their own address to be right. The <a href="/">playground</a> shows you the list so you can uncheck. The API, with an empty selection, hides the detected sensitive types and leaves amounts. Know which one you are using. The <a href="/docs">API reference</a> spells out the empty-selection rule.</p>
@@ -91,8 +92,10 @@
         </a>
       </div>
     </aside>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -103,6 +106,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

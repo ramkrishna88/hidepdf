@@ -21,14 +21,14 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
-      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
@@ -36,21 +36,22 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#when-ocr-runs-and-when-it-does-not">When OCR runs, and when it does not</a>
+        <a href="#what-a-misread-looks-like">What a misread looks like</a>
+        <a href="#a-workable-way-to-redact-a-phone-photo">A workable way to redact a phone photo</a>
+        <a href="#limits-that-do-not-go-away-with-a-better-photo">Limits that do not go away with a better photo</a>
+      </nav>
+    <main class="legal">
     <p class="crumb"><a href="/guides">Guides</a></p>
     <h1>Redacting a scanned PDF with OCR</h1>
     <p class="updated">28 October 2026</p>
     <p class="lead">A scan is a picture that happens to be wrapped in a PDF. There are no letters to delete until something reads the picture. HidePDF Content runs Tesseract on pages that look empty of text, then puts whatever it managed to read into the same review list as a normal document. The list is a draft. Your eyes on the preview are the check.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#when-ocr-runs-and-when-it-does-not">When OCR runs, and when it does not</a></li>
-        <li><a href="#what-a-misread-looks-like">What a misread looks like</a></li>
-        <li><a href="#a-workable-way-to-redact-a-phone-photo">A workable way to redact a phone photo</a></li>
-        <li><a href="#limits-that-do-not-go-away-with-a-better-photo">Limits that do not go away with a better photo</a></li>
-      </ol>
-    </nav>
+    
     <h2 id="when-ocr-runs-and-when-it-does-not">When OCR runs, and when it does not</h2>
     <p>The server first pulls the real text layer, the same way a desktop viewer copies text. It counts characters that are not just whitespace. If a page has about 40 or more of those characters, it is treated as a digital page and OCR is skipped. The India dummy invoice and the US dummy pay stub are in that bucket. They have proper text. Clicking them will not show you OCR behaviour, and that is useful to know so you do not "test scans" on the wrong file.</p>
     <p>If a page is under that bar, it is treated as sparse. The page is rendered to a PNG. That PNG is written to the server's temporary directory, OCR'd, and deleted when the OCR step ends, including when OCR throws or returns nothing. The PDF you uploaded is not saved next to it. The privacy page states the same retention in the language of a policy. The practical effect is: a photo of a letter gets a chance to produce a field list; a normal invoice does not pay the OCR cost.</p>
@@ -87,8 +88,10 @@
         </a>
       </div>
     </aside>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -99,6 +102,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

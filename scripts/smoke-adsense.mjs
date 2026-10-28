@@ -250,7 +250,7 @@ try {
   });
   if (html404.status !== 404) fail(`html 404 status ${html404.status}`);
   if (!/text\/html/i.test(String(html404.headers['content-type'] || ''))) fail(`html 404 type ${html404.headers['content-type']}`);
-  if (!html404.body.includes('<h1>That page is not here</h1>')) fail('html 404 body');
+  if (!html404.body.includes('That page is not here')) fail('html 404 body');
   if (!hasAdsense(html404.body)) fail('html 404 missing AdSense meta');
 
   const api404 = await request({

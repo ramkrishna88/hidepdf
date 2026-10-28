@@ -21,14 +21,14 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
-      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
@@ -36,8 +36,10 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal wide">
-    <h1>Guides</h1>
+  <div class="shell">
+  <main class="plain">
+    <p class="kicker">Guides</p>
+    <h2>Guides</h2>
     <p class="lead">These are written for the moment before you attach a PDF to an email. Each one uses the fake sample files on the <a href="/">playground</a> where a concrete file helps, and says what HidePDF Content actually does to that file: render the page, paint over the fields you kept, and rebuild a PDF with no text layer.</p>
     <p>Read the one that matches the document in front of you. If you only have time for two, start with why a black box fails, then the checklist for proving a file is really redacted. None of this is legal advice. If a court, a bank, or a regulator has told you how redaction must be done, follow that instruction.</p>
     <div class="guide-grid">
@@ -76,7 +78,8 @@
     </div>
     <p>The tool is on the <a href="/">home page</a>. Endpoint parameters are in the <a href="/docs">API reference</a>. How uploads are handled is on the <a href="/privacy">privacy page</a>.</p>
   </main>
-    <footer>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -87,6 +90,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

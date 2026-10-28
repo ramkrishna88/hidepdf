@@ -21,14 +21,14 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
-      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
@@ -36,22 +36,23 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#where-the-extra-copies-live">Where the extra copies live</a>
+        <a href="#what-people-try-first">What people try first</a>
+        <a href="#what-hidepdf-s-burn-does-to-metadata">What HidePDF's burn does to metadata</a>
+        <a href="#when-flattening-is-the-wrong-scrub">When flattening is the wrong scrub</a>
+        <a href="#a-few-places-tools-never-scrub">A few places tools never scrub</a>
+      </nav>
+    <main class="legal">
     <p class="crumb"><a href="/guides">Guides</a></p>
     <h1>Removing metadata from a PDF</h1>
     <p class="updated">28 October 2026</p>
     <p class="lead">The page can be spotless and the file can still introduce you. Author, title, the company Word stamped in, a local file path, an embedded spreadsheet, the previous save of the same PDF: none of that is the paragraph you redacted. If you only needed the page text gone, read the other guides. If you also need the file to stop naming you, start here, and be honest about the cost.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#where-the-extra-copies-live">Where the extra copies live</a></li>
-        <li><a href="#what-people-try-first">What people try first</a></li>
-        <li><a href="#what-hidepdf-s-burn-does-to-metadata">What HidePDF's burn does to metadata</a></li>
-        <li><a href="#when-flattening-is-the-wrong-scrub">When flattening is the wrong scrub</a></li>
-        <li><a href="#a-few-places-tools-never-scrub">A few places tools never scrub</a></li>
-      </ol>
-    </nav>
+    
     <h2 id="where-the-extra-copies-live">Where the extra copies live</h2>
     <p>Open any PDF you exported from a word processor and look at document properties. Title is often the first heading. Author is often the name of the laptop account, which for a lot of people is their legal name. Creator and producer name the apps in the chain, which is usually harmless and sometimes is the name of an internal tool. Keywords and subject are whatever someone typed once and forgot. That block is the info dictionary. It is not painted on the page, so a black rectangle never touches it.</p>
     <p>Beside it there is often an XMP packet, XML metadata with the same facts and sometimes a history of edits. Thumbnails, bookmarks that quote a heading, form fields, comments, and attached files are more cupboards. Incremental updates are the nasty one. Some editors save by appending. The new page says the salary is gone. The bytes at the start of the file still contain the salary, and a text search of the raw file finds it. If your check is only "look at page one", you will bless that file. The <a href="/guides/check-a-pdf-is-really-redacted">checklist</a> tells you to search the bytes for that reason.</p>
@@ -92,8 +93,10 @@
         </a>
       </div>
     </aside>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -104,6 +107,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

@@ -21,36 +21,37 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a class="on" aria-current="page" href="/how-it-works">How it works</a>
+      <a href="/how-it-works" class="on" aria-current="page">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#what-it-looks-for">What it looks for</a>
+        <a href="#do-it-in-this-order">Do it in this order</a>
+        <a href="#situations-people-actually-bring-here">Situations people actually bring here</a>
+        <a href="#hiding-redaction-and-the-limits">Hiding, redaction, and the limits</a>
+        <a href="#scanned-pages">Scanned pages</a>
+        <a href="#what-happens-to-the-upload">What happens to the upload</a>
+      </nav>
+    <main class="legal">
     <h1>How it works</h1>
     <p class="lead">The <a href="/">tool</a> finds values that usually should not travel with a file, shows a masked list, and builds a new PDF where the fields you leave checked are covered on a picture of the page. The old text is not sitting under the block.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#what-it-looks-for">What it looks for</a></li>
-        <li><a href="#do-it-in-this-order">Do it in this order</a></li>
-        <li><a href="#situations-people-actually-bring-here">Situations people actually bring here</a></li>
-        <li><a href="#hiding-redaction-and-the-limits">Hiding, redaction, and the limits</a></li>
-        <li><a href="#scanned-pages">Scanned pages</a></li>
-        <li><a href="#what-happens-to-the-upload">What happens to the upload</a></li>
-      </ol>
-    </nav>
+    
     <section class="step" id="find">
       <div class="step-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.5-3.5"/></svg>
@@ -68,7 +69,7 @@
       </div>
       <div>
         <h2 id="do-it-in-this-order">Do it in this order</h2>
-        <ol>
+        <ol class="steps">
           <li>Drop a PDF on the upload panel, or click a dummy. A scan with almost no text takes longer, because those pages are read with OCR first.</li>
           <li>Read every row. Uncheck anything the recipient is supposed to see. Leave amounts unchecked unless the figure itself is the secret.</li>
           <li>Click Hide selected. The server paints a dark rectangle on the checked boxes and rebuilds the PDF from page images. If a hidden value is still extractable as text, you get an error and no file.</li>
@@ -120,8 +121,10 @@
     </section>
 
     <p>Short answers are on the <a href="/faq">FAQ</a>. Longer walkthroughs are in the <a href="/guides">guides</a>. Endpoint parameters are in the <a href="/docs">API reference</a>.</p>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -132,6 +135,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

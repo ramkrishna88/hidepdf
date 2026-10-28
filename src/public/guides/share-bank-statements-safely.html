@@ -21,14 +21,14 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
-      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
@@ -36,21 +36,22 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#write-down-the-purpose-before-you-export">Write down the purpose before you export</a>
+        <a href="#what-the-detector-will-catch-and-what-it-will-not">What the detector will catch, and what it will not</a>
+        <a href="#cover-the-number-then-prove-the-cover">Cover the number, then prove the cover</a>
+        <a href="#what-not-to-send-alongside">What not to send alongside</a>
+      </nav>
+    <main class="legal">
     <p class="crumb"><a href="/guides">Guides</a></p>
     <h1>Sharing a bank statement safely</h1>
     <p class="updated">28 October 2026</p>
     <p class="lead">A letting agent who asks for three months of statements is usually trying to check two things: that you are you, at an address, and that money arrives. They do not need the long number that can move money, and they do not need the name of every person you paid. Those are separate redactions. This page is the order to do them in. It is not advice about whether you should send a statement at all.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#write-down-the-purpose-before-you-export">Write down the purpose before you export</a></li>
-        <li><a href="#what-the-detector-will-catch-and-what-it-will-not">What the detector will catch, and what it will not</a></li>
-        <li><a href="#cover-the-number-then-prove-the-cover">Cover the number, then prove the cover</a></li>
-        <li><a href="#what-not-to-send-alongside">What not to send alongside</a></li>
-      </ol>
-    </nav>
+    
     <h2 id="write-down-the-purpose-before-you-export">Write down the purpose before you export</h2>
     <p>Say the agent wants proof of address and proof that rent-sized money lands in the account. Then the pages they need show your name, the address the bank prints, a few credits, and maybe a closing balance. They do not need the full account number, the sort code, the IBAN, the card PAN printed on some statements, or the row that says you paid a clinic or a relative. If a lender has a form that says "unredacted statements only", believe the form. Redacting against a written instruction gets applications rejected, and this site will not argue with the lender. For the ordinary agent email, redaction is reasonable and often overdue.</p>
     <p>Download the PDF from the bank. Do not photograph the screen unless the bank gave you no PDF. A photo is a scan, with all the OCR trouble in the <a href="/guides/redact-scanned-pdfs-with-ocr">scan guide</a>, plus your room in the background. Prefer the official PDF. Put the original in a folder you do not attach from. Work on a copy.</p>
@@ -87,8 +88,10 @@
         </a>
       </div>
     </aside>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -99,6 +102,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

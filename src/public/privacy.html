@@ -21,12 +21,12 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
       <a href="/how-it-works">How it works</a>
@@ -36,24 +36,25 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#files-you-upload">Files you upload</a>
+        <a href="#ocr-and-temporary-files">OCR and temporary files</a>
+        <a href="#how-long-anything-is-retained">How long anything is retained</a>
+        <a href="#api-keys">API keys</a>
+        <a href="#cookies">Cookies</a>
+        <a href="#advertising-and-google-adsense">Advertising and Google AdSense</a>
+        <a href="#what-we-do-not-do">What we do not do</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    <main class="legal">
     <h1>Privacy</h1>
     <p class="updated">Last updated: 28 October 2026</p>
     <p class="lead">HidePDF Content processes PDFs you send to hidepdfcontent.com so it can list sensitive fields and, if you ask, return a file with those fields burned out. This page is the plain description of that handling, plus cookies and advertising. You can reach the operator from the <a href="/contact">contact page</a>. There is no customer account.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#files-you-upload">Files you upload</a></li>
-        <li><a href="#ocr-and-temporary-files">OCR and temporary files</a></li>
-        <li><a href="#how-long-anything-is-retained">How long anything is retained</a></li>
-        <li><a href="#api-keys">API keys</a></li>
-        <li><a href="#cookies">Cookies</a></li>
-        <li><a href="#advertising-and-google-adsense">Advertising and Google AdSense</a></li>
-        <li><a href="#what-we-do-not-do">What we do not do</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ol>
-    </nav>
+    
     <h2 id="files-you-upload">Files you upload</h2>
     <p>A playground or API request sends the PDF to the server for that request. The bytes are read into memory, up to the 25 MB limit. The server looks for emails, phones, cards, IBANs, country IDs, labeled names and addresses, and amounts. It then either returns a review list or builds a new PDF.</p>
     <p>The upload is not written into a document library, a user folder, or a database. It is not kept after the response is sent. The contact form on this site does not upload a file at all. It opens your email app.</p>
@@ -96,8 +97,10 @@
 
     <h2 id="contact">Contact</h2>
     <p>Privacy questions, and requests about mail you have already sent, go through the <a href="/contact">contact page</a>.</p>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -108,6 +111,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

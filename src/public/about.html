@@ -21,35 +21,36 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
-      <a class="on" aria-current="page" href="/about">About</a>
+      <a href="/about" class="on" aria-current="page">About</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#why-it-exists">Why it exists</a>
+        <a href="#who-it-is-for">Who it is for</a>
+        <a href="#what-the-tool-will-and-will-not-claim">What the tool will and will not claim</a>
+        <a href="#how-to-reach-the-person-who-runs-it">How to reach the person who runs it</a>
+      </nav>
+    <main class="legal">
     <h1>About HidePDF Content</h1>
     <p class="updated">Updated 28 October 2026</p>
     <p class="lead">HidePDF Content is a one-person project run by the operator of hidepdfcontent.com. The way to reach the operator is the <a href="/contact">contact page</a>. There is no separate product company, no customer login, and no support desk hiding behind a ticket form.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#why-it-exists">Why it exists</a></li>
-        <li><a href="#who-it-is-for">Who it is for</a></li>
-        <li><a href="#what-the-tool-will-and-will-not-claim">What the tool will and will not claim</a></li>
-        <li><a href="#how-to-reach-the-person-who-runs-it">How to reach the person who runs it</a></li>
-      </ol>
-    </nav>
+    
     <h2 id="why-it-exists">Why it exists</h2>
     <p>People keep "redacting" a PDF by drawing a black rectangle in Preview, Word, or a browser extension. The page looks clean. The email, salary, or national ID is still in the file, and anyone who selects the box, or runs a text extractor, can read it. That failure mode is common enough that it needed a small tool aimed at it, not another editor with a highlighter.</p>
     <p>HidePDF Content takes a different route. It finds likely secrets, lets you review the list, paints a dark block over the ones you keep checked, and rebuilds every page as a picture in a new PDF. The old text layer is not copied across. Before the file is returned, the server reads the result back and refuses to send it if a value it just hid is still extractable as text. The <a href="/guides/why-black-boxes-dont-hide-pdf-text">black-box guide</a> shows the difference with a file you can try yourself.</p>
@@ -69,8 +70,10 @@
       <a class="cta" href="/">Open the playground</a>
       <a class="cta-ghost" href="/guides">Read the guides</a>
     </div>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -81,6 +84,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

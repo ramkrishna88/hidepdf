@@ -21,12 +21,12 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
       <a href="/how-it-works">How it works</a>
@@ -36,23 +36,24 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#the-service">The service</a>
+        <a href="#your-files">Your files</a>
+        <a href="#no-promise-that-every-secret-is-found">No promise that every secret is found</a>
+        <a href="#api-limits-and-keys">API, limits, and keys</a>
+        <a href="#acceptable-use">Acceptable use</a>
+        <a href="#no-warranty">No warranty</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    <main class="legal">
     <h1>Terms of use</h1>
     <p class="updated">Last updated: 28 October 2026</p>
     <p class="lead">These terms cover the HidePDF Content website, playground, and API at hidepdfcontent.com. By using them, you agree to this page and to the <a href="/privacy">privacy page</a>. They are written in ordinary language by the operator of the site, not as a law-firm template. If a conflict matters to a lawyer you hire, their reading of a statute wins over a sentence here.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#the-service">The service</a></li>
-        <li><a href="#your-files">Your files</a></li>
-        <li><a href="#no-promise-that-every-secret-is-found">No promise that every secret is found</a></li>
-        <li><a href="#api-limits-and-keys">API, limits, and keys</a></li>
-        <li><a href="#acceptable-use">Acceptable use</a></li>
-        <li><a href="#no-warranty">No warranty</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ol>
-    </nav>
+    
     <h2 id="the-service">The service</h2>
     <p>The playground lets you upload a PDF, review fields the software detected, and download a new PDF where the fields you kept checked are covered on a rendered page image. The API does the same job with a key. Guides, docs, and sample files are there to explain the limits. The site may show ads through Google AdSense, as described in the privacy page.</p>
 
@@ -75,8 +76,10 @@
 
     <h2 id="contact">Contact</h2>
     <p>Questions about these terms go through the <a href="/contact">contact page</a>.</p>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -87,6 +90,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

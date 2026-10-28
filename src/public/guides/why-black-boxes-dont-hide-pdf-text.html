@@ -21,14 +21,14 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
-      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
@@ -36,22 +36,23 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#try-it-on-a-number-that-is-safe-to-leak-in-a-test">Try it on a number that is safe to leak in a test</a>
+        <a href="#other-covers-that-feel-like-redaction">Other covers that feel like redaction</a>
+        <a href="#what-has-to-be-true-of-the-file">What has to be true of the file</a>
+        <a href="#what-a-dark-block-on-an-image-does-not-fix">What a dark block on an image does not fix</a>
+        <a href="#a-habit-that-survives-the-tool-you-use">A habit that survives the tool you use</a>
+      </nav>
+    <main class="legal">
     <p class="crumb"><a href="/guides">Guides</a></p>
     <h1>Why black boxes do not hide PDF text</h1>
     <p class="updated">28 October 2026</p>
     <p class="lead">A black rectangle is a drawing. The sentence underneath is still a sentence. If you have ever covered a salary in Preview, exported, and felt done, the file you sent can still be copied from. This page shows that with the fake US pay stub on the playground, then explains what has to change in the file for the text to be gone.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#try-it-on-a-number-that-is-safe-to-leak-in-a-test">Try it on a number that is safe to leak in a test</a></li>
-        <li><a href="#other-covers-that-feel-like-redaction">Other covers that feel like redaction</a></li>
-        <li><a href="#what-has-to-be-true-of-the-file">What has to be true of the file</a></li>
-        <li><a href="#what-a-dark-block-on-an-image-does-not-fix">What a dark block on an image does not fix</a></li>
-        <li><a href="#a-habit-that-survives-the-tool-you-use">A habit that survives the tool you use</a></li>
-      </ol>
-    </nav>
+    
     <h2 id="try-it-on-a-number-that-is-safe-to-leak-in-a-test">Try it on a number that is safe to leak in a test</h2>
     <p>The US dummy on the <a href="/">playground</a> is a fake Northwind pay stub for Alex Rivera. It includes the sample SSN 123-45-6789, a sample ITIN, the test card 4111 1111 1111 1111, and gross pay of USD 3,200.00. None of those are live. Download the dummy from the site or just keep it open, and also open it in whatever viewer you normally use.</p>
     <p>Draw a black rectangle over the SSN. In Preview that is the rectangle markup. In Word or Google Docs it is a shape with no border sitting on top of the number. Export or save as PDF. The page looks redacted. Now click on the black area and drag as if you were selecting text. On a lot of viewers the SSN highlights under the ink, and copy puts 123-45-6789 on the clipboard. If the viewer is stubborn, change the rectangle's fill to none, or delete the annotation, and the digits are sitting there exactly as typed.</p>
@@ -92,8 +93,10 @@
         </a>
       </div>
     </aside>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -104,6 +107,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

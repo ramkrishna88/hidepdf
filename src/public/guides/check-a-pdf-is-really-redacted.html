@@ -21,14 +21,14 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
-      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
@@ -36,22 +36,23 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#know-a-string-that-must-be-dead">Know a string that must be dead</a>
+        <a href="#copy-then-search-then-extract">Copy, then search, then extract</a>
+        <a href="#what-a-passed-text-search-does-not-prove">What a passed text search does not prove</a>
+        <a href="#the-cupboards-that-are-not-the-page">The cupboards that are not the page</a>
+        <a href="#a-checklist-you-can-reuse">A checklist you can reuse</a>
+      </nav>
+    <main class="legal">
     <p class="crumb"><a href="/guides">Guides</a></p>
     <h1>How to check a PDF is really redacted</h1>
     <p class="updated">28 October 2026</p>
     <p class="lead">A page that looks redacted has passed one test, the test a human eye does in two seconds. The tests that matter take a few minutes and do not care how the page looks. Do them on the file you are about to send. Do them once on the fake US pay stub so you know what a pass and a fail feel like.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#know-a-string-that-must-be-dead">Know a string that must be dead</a></li>
-        <li><a href="#copy-then-search-then-extract">Copy, then search, then extract</a></li>
-        <li><a href="#what-a-passed-text-search-does-not-prove">What a passed text search does not prove</a></li>
-        <li><a href="#the-cupboards-that-are-not-the-page">The cupboards that are not the page</a></li>
-        <li><a href="#a-checklist-you-can-reuse">A checklist you can reuse</a></li>
-      </ol>
-    </nav>
+    
     <h2 id="know-a-string-that-must-be-dead">Know a string that must be dead</h2>
     <p>Pick a value you intended to remove and that you can remember. On the US dummy that value is the sample SSN 123-45-6789. It is not a real SSN. It is distinctive, so a search is unambiguous. On your own file, pick the email or the account number, not the word "total", which will appear for innocent reasons. Write it on a sticky if you have to. You cannot verify a redaction against a value you have already forgotten.</p>
     <p>Run the dummy through the <a href="/">playground</a> as in the <a href="/guides/how-to-redact-a-pdf">walkthrough</a>, with the SSN left checked, and download. Also keep a second copy where you only drew a black rectangle and did not burn the page. You want both, because the eye cannot tell them apart and the checks can.</p>
@@ -100,8 +101,10 @@
         </a>
       </div>
     </aside>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -112,6 +115,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

@@ -21,65 +21,77 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+  <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
-      <a class="on" aria-current="page" href="/contact">Contact</a>
+      <a href="/contact" class="on" aria-current="page">Contact</a>
     </nav>
   </header>
-  <main class="legal wide plain">
-    <h1>Contact</h1>
-    <p class="lead">Playground questions, API keys, and privacy requests. Mail is read by the person who runs the site. There is no live chat and no account portal.</p>
-    <div class="contact-grid">
-      <section class="info-card">
-        <h2>Send a message</h2>
-        <p>This form does not post to the server. Submit opens your email app with the fields filled in. If that is blocked, use the address on the right.</p>
-        <form class="contact-form" id="contactForm">
-          <label>Name
-            <input name="name" type="text" autocomplete="name" required maxlength="120">
-          </label>
-          <label>Your email
-            <input name="email" type="email" autocomplete="email" required maxlength="200">
-          </label>
-          <label>Topic
-            <select name="topic">
-              <option>Tool</option>
-              <option>API or Zapier</option>
-              <option>Privacy</option>
-              <option>Something else</option>
-            </select>
-          </label>
-          <label>Message
-            <textarea name="message" required maxlength="4000" placeholder="What happened, and what you expected. Leave out live ID numbers, card numbers, and full statements."></textarea>
-          </label>
-          <button class="cta" type="submit">Open email to send</button>
-        </form>
-        <p id="formNote" class="updated" hidden>If a mail window did not open, write to the address in the other card.</p>
-      </section>
-      <aside class="info-card">
-        <h2>Email</h2>
-        <p>The inbox for this site:</p>
-        <a class="email" href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>
-        <h2>Include</h2>
-        <ul>
-          <li>Whether you used the tool or the API</li>
-          <li>The time, and any error code, if something failed</li>
-          <li>Page count and layout, if a field was missed</li>
-        </ul>
-        <p>Do not send live secrets, card numbers, or a full statement. The India and US dummies are invented if you need a layout to point at.</p>
-      </aside>
-    </div>
-  </main>
-    <footer>
+  <div class="shell">
+    <main class="plain">
+      <p class="kicker">Contact</p>
+      <h2>Talk to the person who runs it</h2>
+      <div class="split-2">
+        <section class="card">
+          <h3>Send a note</h3>
+          <p>The form does not store the message here. Submit opens your email app with the note filled in. You still press send there.</p>
+          <form class="contact-form" id="contactForm">
+            <label>Name
+              <input name="name" type="text" autocomplete="name" required maxlength="120">
+            </label>
+            <label>Email
+              <input name="email" type="email" autocomplete="email" required maxlength="200">
+            </label>
+            <label>Topic
+              <input name="topic" required maxlength="160" placeholder="Tool, API key, privacy">
+            </label>
+            <label>Message
+              <textarea name="message" required minlength="10" maxlength="4000" rows="5" placeholder="What you tried, the time, and any error code. Leave out live IDs and full statements."></textarea>
+            </label>
+            <button type="submit">Email hello@hidepdfcontent.com</button>
+            <p class="form-note">Nothing is saved on HidePDF when you submit.</p>
+          </form>
+          <p id="formNote" class="form-note" hidden>If a mail window did not open, use the address in the other card.</p>
+        </section>
+        <section class="card">
+          <h3>Inbox</h3>
+          <p>Playground questions, API keys, and privacy requests. There is no live chat and no account portal.</p>
+          <a class="email" href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>
+          <h3>What helps</h3>
+          <ul>
+            <li>Tool, direct API, Zapier, or RapidAPI.</li>
+            <li>The time, and any error code.</li>
+            <li>The route: <code>/v1/inspect</code> or <code>/v1/redact</code>.</li>
+            <li>The page layout, in a sentence. Skip live keys and full statements.</li>
+          </ul>
+          <p>The India and US dummies on the <a href="/">tool</a> are invented if you need a layout to point at. Shapes are on the <a href="/docs">API reference</a>.</p>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var data = new FormData(event.target);
+      var subject = 'HidePDF Content — ' + (data.get('topic') || 'message');
+      var body = 'Name: ' + data.get('name') + '
+Email: ' + data.get('email') + '
+
+' + data.get('message');
+      window.location.href = 'mailto:hello@hidepdfcontent.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      document.getElementById('formNote').hidden = false;
+    });
+  </script>
+  <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -90,18 +102,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
-  <script>
-    document.getElementById('contactForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-      var data = new FormData(event.target);
-      var subject = 'HidePDF Content — ' + (data.get('topic') || 'message');
-      var body = 'Name: ' + data.get('name') + '\nEmail: ' + data.get('email') + '\n\n' + data.get('message');
-      var href = 'mailto:hello@hidepdfcontent.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-      window.location.href = href;
-      var note = document.getElementById('formNote');
-      note.hidden = false;
-    });
-  </script>
 </body>
 </html>

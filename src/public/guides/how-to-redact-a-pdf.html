@@ -21,14 +21,14 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
+    <nav class="tabs" aria-label="Primary">
       <a href="/">Tool</a>
-      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
       <a href="/docs">API/Docs</a>
@@ -36,24 +36,25 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#start-with-a-file-that-is-safe-to-ruin">Start with a file that is safe to ruin</a>
+        <a href="#read-the-list-before-you-hide-anything">Read the list before you hide anything</a>
+        <a href="#what-hide-selected-actually-does">What Hide selected actually does</a>
+        <a href="#the-download-that-is-not-redacted">The download that is not redacted</a>
+        <a href="#the-same-job-from-the-api">The same job from the API</a>
+        <a href="#after-the-download">After the download</a>
+        <a href="#a-short-order-of-work">A short order of work</a>
+      </nav>
+    <main class="legal">
     <p class="crumb"><a href="/guides">Guides</a></p>
     <h1>How to redact a PDF properly</h1>
     <p class="updated">28 October 2026</p>
     <p class="lead">Properly, here, means the secret is gone from the file, not merely painted over. The reliable way to learn the difference is the fake invoice already on the playground, then the same steps on your own file once the list and the preview make sense.</p>
 
-    <nav class="toc" aria-label="On this page">
-      <p>On this page</p>
-      <ol>
-        <li><a href="#start-with-a-file-that-is-safe-to-ruin">Start with a file that is safe to ruin</a></li>
-        <li><a href="#read-the-list-before-you-hide-anything">Read the list before you hide anything</a></li>
-        <li><a href="#what-hide-selected-actually-does">What Hide selected actually does</a></li>
-        <li><a href="#the-download-that-is-not-redacted">The download that is not redacted</a></li>
-        <li><a href="#the-same-job-from-the-api">The same job from the API</a></li>
-        <li><a href="#after-the-download">After the download</a></li>
-        <li><a href="#a-short-order-of-work">A short order of work</a></li>
-      </ol>
-    </nav>
+    
     <h2 id="start-with-a-file-that-is-safe-to-ruin">Start with a file that is safe to ruin</h2>
     <p>Open the <a href="/">playground</a> and click India dummy. That PDF is an invented tax invoice for Rivera Traders: bill-to Priya Sharma, an address on MG Road in Bengaluru, the email priya.sharma@example.in, a mobile number, an Aadhaar, PAN ABCPE1234F, a UPI id, a GSTIN, an IFSC, and a line that says Amount: INR 48,000. The file says the values are fake. Use it. Do not practice on a customer's live invoice the first time, because the interesting part is watching which rows appear and which stay blank.</p>
     <p>The page will say it is finding fields. A moment later you get a list. Each row is a masked preview, a type, and a page number. Emails show one letter and the domain. ID numbers show the last digits. Nothing in that list is the full secret sitting in your browser's JSON view on purpose. The raw value stayed on the server long enough to draw a box, which is described on the <a href="/privacy">privacy page</a>.</p>
@@ -105,8 +106,10 @@
         </a>
       </div>
     </aside>
-  </main>
-    <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
       <a href="/">Tool</a>
       <a href="/guides">Guides</a>
@@ -117,6 +120,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

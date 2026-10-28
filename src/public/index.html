@@ -74,7 +74,7 @@
       font-weight: 600;
     }
     main {
-      width: min(1280px, 100%);
+      width: min(1240px, 100%);
       margin: 0.45rem auto 0.35rem;
       padding: 0 16px;
       display: grid;
@@ -148,7 +148,7 @@
       padding: 0.15rem 0.45rem;
       white-space: nowrap;
     }
-    .tabs { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .view-tabs { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; }
     .tab {
       background: rgba(255,255,255,0.05);
       color: var(--muted);
@@ -229,13 +229,13 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
-      <a class="on" aria-current="page" href="/">Tool</a>
+    <nav class="tabs" aria-label="Primary">
+      <a href="/" class="on" aria-current="page">Tool</a>
       <a href="/guides">Guides</a>
       <a href="/how-it-works">How it works</a>
       <a href="/faq">FAQ</a>
@@ -244,10 +244,12 @@
       <a href="/contact">Contact</a>
     </nav>
   </header>
+  <div class="shell" style="padding-bottom:6px">
   <section class="hero">
     <h1>Hide sensitive text in a PDF</h1>
     <p>Review the list, then burn the fields you keep checked out of the page.</p>
   </section>
+  </div>
   <main>
     <section class="panel upload">
       <h2>Upload</h2>
@@ -287,7 +289,7 @@
     </section>
 
     <section class="panel preview-panel">
-      <div class="tabs">
+      <div class="view-tabs">
         <button class="tab on" id="tabPreview" type="button">PDF preview</button>
         <button class="tab" id="tabJson" type="button">JSON</button>
       </div>
@@ -298,6 +300,7 @@
       </div>
     </section>
   </main>
+  <div class="shell">
   <section class="home-copy" id="home-copy">
     <p class="intro">Drop a PDF, or open an invented dummy, and uncheck anything the other person should still see. Salary, totals, and balances stay visible unless you tick them. The file is used for this request and is not kept as a library.</p>
     <div class="feature-grid">
@@ -328,6 +331,7 @@
     </div>
     <p class="home-cta">The longer version is <a href="/how-it-works">how it works</a>. Short answers are on the <a href="/faq">FAQ</a>.</p>
   </section>
+  </div>
   <footer>
     <nav>
       <a href="/">Tool</a>
@@ -339,6 +343,7 @@
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
     </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
   <script>
     const state = { file: null, items: [], labels: {}, inspect: null, result: null, hiddenUrl: null };
