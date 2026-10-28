@@ -13,7 +13,8 @@
     "dev": "tsx watch src/server.ts",
     "sample": "tsx scripts/generate-sample-pdf.ts",
     "dummy": "tsx scripts/generate-dummy-pdfs.ts",
-    "test:redact": "tsx scripts/test-redact.ts"
+    "test:redact": "tsx scripts/test-redact.ts",
+    "smoke:adsense": "node scripts/smoke-adsense.mjs"
   },
   "keywords": [
     "pdf",

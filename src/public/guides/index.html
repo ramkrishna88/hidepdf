@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1210860150241703" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-1210860150241703">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guides — HidePDF Content</title>
+  <meta name="description" content="Practical guides on redacting a PDF, why black boxes fail, scans and OCR, metadata, bank statements, and payslips.">
+  <link rel="canonical" href="https://hidepdfcontent.com/guides">
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=2">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=2">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:image" content="https://hidepdfcontent.com/og.png">
+  <meta name="theme-color" content="#0b0f19">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="/">
+      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <span class="brand-name">HidePDF Content</span>
+    </a>
+    <nav class="nav" aria-label="Site">
+      <a href="/">Playground</a>
+      <a class="on" href="/guides">Guides</a>
+      <a href="/docs">Docs</a>
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </header>
+  <main class="legal">
+    <h1>Guides</h1>
+    <p class="lead">These are written for the moment before you attach a PDF to an email. Each one uses the fake sample files on the <a href="/">playground</a> where a concrete file helps, and says what HidePDF Content actually does to that file: render the page, paint over the fields you kept, and rebuild a PDF with no text layer.</p>
+    <p>Read the one that matches the document in front of you. If you only have time for two, start with why a black box fails, then the checklist for proving a file is really redacted. None of this is legal advice. If a court, a bank, or a regulator has told you how redaction must be done, follow that instruction.</p>
+    <div class="guide-grid">
+      <a class="guide-card" href="/guides/how-to-redact-a-pdf">
+        <strong>How to redact a PDF properly</strong>
+        <span>A full pass over the India demo invoice: what to leave checked, why the rupee total stays visible, and when the download is still the original file.</span>
+      </a>
+      <a class="guide-card" href="/guides/why-black-boxes-dont-hide-pdf-text">
+        <strong>Why black boxes do not hide PDF text</strong>
+        <span>A rectangle in Preview changes the picture. The letters underneath are still operators in the file, and copy-paste still works.</span>
+      </a>
+      <a class="guide-card" href="/guides/remove-personal-data-from-pdfs">
+        <strong>Removing personal data from a PDF</strong>
+        <span>What to strip before you forward an old proposal or contract, and which names the detector will not see.</span>
+      </a>
+      <a class="guide-card" href="/guides/redact-scanned-pdfs-with-ocr">
+        <strong>Redacting a scanned PDF with OCR</strong>
+        <span>Phone photos and flat scans have no text layer. OCR runs only on sparse pages, and it misreads characters.</span>
+      </a>
+      <a class="guide-card" href="/guides/check-a-pdf-is-really-redacted">
+        <strong>How to check a PDF is really redacted</strong>
+        <span>Search, copy from the box, pdftotext, metadata, and the header this API sets when it refuses an unsafe file.</span>
+      </a>
+      <a class="guide-card" href="/guides/remove-metadata-from-pdfs">
+        <strong>Removing metadata from a PDF</strong>
+        <span>Author, title, and old revisions live outside the page. Rasterising drops them. It also drops selectable text you may have wanted to keep.</span>
+      </a>
+      <a class="guide-card" href="/guides/share-bank-statements-safely">
+        <strong>Sharing a bank statement safely</strong>
+        <span>What a letting agent actually needs, and why the account number and the closing balance are different decisions.</span>
+      </a>
+      <a class="guide-card" href="/guides/share-payslips-safely">
+        <strong>Sharing a payslip safely</strong>
+        <span>The US demo pay stub: hide the SSN and the test card, leave gross pay visible unless the money itself is the secret.</span>
+      </a>
+    </div>
+    <p>The tool is on the <a href="/">home page</a>. Endpoint parameters are in the <a href="/docs">API reference</a>. How uploads are handled is on the <a href="/privacy">privacy page</a>.</p>
+  </main>
+  <footer>
+    <nav>
+      <a href="/">Playground</a>
+      <a href="/guides">Guides</a>
+      <a href="/docs">Docs</a>
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
+  </footer>
+</body>
+</html>

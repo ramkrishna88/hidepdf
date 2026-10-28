@@ -2,7 +2,7 @@
 
 Live playground: https://hidepdfcontent.com
 
-Site pages: [About](https://hidepdfcontent.com/about) · [Privacy](https://hidepdfcontent.com/privacy) · [Terms](https://hidepdfcontent.com/terms) · [Contact](https://hidepdfcontent.com/contact)
+Site pages: [Guides](https://hidepdfcontent.com/guides) · [About](https://hidepdfcontent.com/about) · [Privacy](https://hidepdfcontent.com/privacy) · [Terms](https://hidepdfcontent.com/terms) · [Contact](https://hidepdfcontent.com/contact)
 
 Contact: hello@hidepdfcontent.com
 
@@ -22,6 +22,8 @@ npm run dev
 ```
 
 Open http://localhost:3001
+
+`npm run smoke:adsense` checks that every sitemap URL returns 200 with a canonical link and the AdSense account meta, and that none of those pages is noindex.
 
 ## API
 
