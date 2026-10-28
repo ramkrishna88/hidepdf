@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1210860150241703" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-1210860150241703">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sharing a bank statement safely — HidePDF Content</title>
+  <meta name="description" content="What to hide on a bank statement PDF before you send it to a letting agent or a lender, and what they actually need to see.">
+  <link rel="canonical" href="https://hidepdfcontent.com/guides/share-bank-statements-safely">
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=2">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=2">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:image" content="https://hidepdfcontent.com/og.png">
+  <meta name="theme-color" content="#0b0f19">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="/">
+      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <span class="brand-name">HidePDF Content</span>
+    </a>
+    <nav class="nav" aria-label="Site">
+      <a href="/">Playground</a>
+      <a class="on" href="/guides">Guides</a>
+      <a href="/docs">Docs</a>
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </header>
+  <main class="legal">
+    <p class="crumb"><a href="/guides">Guides</a></p>
+    <h1>Sharing a bank statement safely</h1>
+    <p class="updated">28 October 2026</p>
+    <p class="lead">A letting agent who asks for three months of statements is usually trying to check two things: that you are you, at an address, and that money arrives. They do not need the long number that can move money, and they do not need the name of every person you paid. Those are separate redactions. This page is the order to do them in. It is not advice about whether you should send a statement at all.</p>
+
+    <h2>Write down the purpose before you export</h2>
+    <p>Say the agent wants proof of address and proof that rent-sized money lands in the account. Then the pages they need show your name, the address the bank prints, a few credits, and maybe a closing balance. They do not need the full account number, the sort code, the IBAN, the card PAN printed on some statements, or the row that says you paid a clinic or a relative. If a lender has a form that says "unredacted statements only", believe the form. Redacting against a written instruction gets applications rejected, and this site will not argue with the lender. For the ordinary agent email, redaction is reasonable and often overdue.</p>
+    <p>Download the PDF from the bank. Do not photograph the screen unless the bank gave you no PDF. A photo is a scan, with all the OCR trouble in the <a href="/guides/redact-scanned-pdfs-with-ocr">scan guide</a>, plus your room in the background. Prefer the official PDF. Put the original in a folder you do not attach from. Work on a copy.</p>
+
+    <h2>What the detector will catch, and what it will not</h2>
+    <p>Upload the copy on the <a href="/">playground</a>. IBAN shapes that pass a checksum are listed. Card numbers that pass their checksum are listed. Emails and phones in the footer are listed. An account number is listed when it looks like one of those, not merely because it is eight digits. Sort codes are short. A sort code written as 20-00-00 may not match a phone or an IBAN. Look for it yourself. UK statements often print sort code and account number in the header in a layout that is obvious to you and only partly obvious to a pattern.</p>
+    <p>Amounts are listed and left unchecked. A closing balance of GBP 1,840.22 will appear as an amount if it is written with a currency mark or a normal money shape. Leave it checked only if you do not want the agent to see the balance. If the point of the PDF is to show that the balance, or the salary credit, exists, leave amounts unchecked. You can still hide the account number. That split is the useful one, and it is why amounts are opt-in. Tick Hide amounts and you will cover the salary credit too, which may make the PDF useless for the purpose you just wrote down. The fee on the India dummy and the gross pay on the US dummy behave the same way if you want a dry run with fake numbers before you touch a real statement.</p>
+    <p>Transaction descriptions are the hole. "Transfer to James Okonkwo" is another person's name in a sentence. The name label rule looks for lines like "Name:" and "Bill to:", not for a payee in a narrative. The tool will not list James. You have to see him. The same is true of a landlord you are not applying to, a child's savings pot, a political donation, or a pharmacy. If the page is a diary, hiding the IBAN and sending the diary is a weak privacy win. Consider sending a bank letter that states the balance, or a statement with whole description columns covered, even if that means a coarser edit than this tool's list.</p>
+
+    <h2>Cover the number, then prove the cover</h2>
+    <p>Leave the IBAN, the card, and any phone or email checked. Uncheck your own name and address if the agent must see them and they were detected from a label. Many bank PDFs print the name with no "Name:" prefix, so it may never have been in the list. That is fine when you want it visible. It is not fine when you wanted it gone and assumed the tool would notice a human name. Read the header of the preview.</p>
+    <p>Hide selected. The pages become pictures with dark blocks on the checked fields. The account number, if it was covered, should not be selectable. The balance, if you left it, should still be readable by eye and should not be selectable either, because the whole page was flattened. Tell the agent the PDF is an image if they complain they cannot copy the balance into a form. They can type it. You can also paste the balance into the email yourself, which is one number, instead of giving them a text-layer statement.</p>
+    <p>Then run the <a href="/guides/check-a-pdf-is-really-redacted">checks</a>. Search the download for the last four digits of the account and for the IBAN fragment you remember. Copy from the header. Open properties in case the bank put your name in the title, which a burn drops by building a new file, but confirm it. Rename <code>statement-january.pdf</code> if the original name included an account number. Banks do that more often than people notice.</p>
+
+    <h2>What not to send alongside</h2>
+    <p>Do not attach the original "as well, in case the redaction is too strong". The original is the leak. Do not attach three months if they asked for one, out of politeness. Extra months are extra payees. Do not forward the bank's notification email, which often repeats the account tail and your address, underneath a carefully burned PDF. Do not upload the statement to a random group chat to ask if the blocks look straight. Ask with the fake US dummy if you want a second pair of eyes, or describe the layout.</p>
+    <p>This site processes the upload in memory and does not keep a statement library. That is not a reason to be casual. Your email provider will store the message you send the agent. The agent will store it in a lettings system you do not control. Redact before that hop, not after.</p>
+    <p>A black rectangle drawn in Preview around the account number feels faster. It leaves the number extractable, which on a statement is the entire risk. The <a href="/guides/why-black-boxes-dont-hide-pdf-text">black-box guide</a> is the demonstration. Use it once, on the dummy, if you do not believe it yet. Then burn the real statement, check the last four digits, and send one file.</p>
+    <p>If the statement is a scan from a branch printer, OCR has to read the header before anything can be blocked. Zoom the preview until you can see whether the block covers every digit or only the word "Account". A block on the label is a common OCR miss and it leaves the number in the clear. Fix the crop or cover that spot before you send. A letting agent does not need to be malicious for this to matter. They need a mailbox that later gets copied, which is an ordinary Tuesday.</p>
+  </main>
+  <footer>
+    <nav>
+      <a href="/">Playground</a>
+      <a href="/guides">Guides</a>
+      <a href="/docs">Docs</a>
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
+  </footer>
+</body>
+</html>

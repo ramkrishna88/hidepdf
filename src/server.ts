@@ -27,6 +27,43 @@ const fastify = Fastify({
   requestTimeout: 180_000
 });
 
+const APEX_HOST = 'hidepdfcontent.com';
+
+function forwardedProto(header: string | string[] | undefined, fallback: string): string {
+  const raw = typeof header === 'string' && header.length > 0 ? header : fallback;
+  return raw.split(',')[0].trim().toLowerCase();
+}
+
+fastify.addHook('onRequest', async (request, reply) => {
+  if (request.method !== 'GET' && request.method !== 'HEAD') return;
+
+  const host = String(request.headers.host || '').split(':')[0].toLowerCase();
+  const proto = forwardedProto(request.headers['x-forwarded-proto'], String(request.protocol || ''));
+  const rawUrl = request.raw.url || '/';
+  const queryAt = rawUrl.indexOf('?');
+  const originalPath = queryAt === -1 ? rawUrl : rawUrl.slice(0, queryAt);
+  const search = queryAt === -1 ? '' : rawUrl.slice(queryAt);
+
+  let path = originalPath;
+  if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
+  if (/^\/(?:home|index)(?:\.html)?$/i.test(path)) {
+    path = '/';
+  } else if (/\.html$/i.test(path)) {
+    path = path.replace(/\.html$/i, '');
+    if (path === '/index' || path.endsWith('/index')) {
+      path = path.slice(0, -'/index'.length) || '/';
+    }
+  }
+
+  const onProdHost = host === APEX_HOST || host === `www.${APEX_HOST}`;
+  if (onProdHost && (host !== APEX_HOST || proto !== 'https')) {
+    return reply.redirect(`https://${APEX_HOST}${path}${search}`, 301);
+  }
+  if (path !== originalPath) {
+    return reply.redirect(`${path}${search}`, 301);
+  }
+});
+
 await fastify.register(cors, {
   origin: true,
   exposedHeaders: [
@@ -127,10 +164,30 @@ fastify.setErrorHandler((error, request, reply) => {
   });
 });
 
-const sitePages = ['about', 'privacy', 'contact', 'terms', 'docs', 'home'] as const;
+const sitePages = ['about', 'privacy', 'contact', 'terms', 'docs', 'guides'] as const;
+const guideSlugs = [
+  'how-to-redact-a-pdf',
+  'why-black-boxes-dont-hide-pdf-text',
+  'remove-personal-data-from-pdfs',
+  'redact-scanned-pdfs-with-ocr',
+  'check-a-pdf-is-really-redacted',
+  'remove-metadata-from-pdfs',
+  'share-bank-statements-safely',
+  'share-payslips-safely'
+] as const;
+
 for (const page of sitePages) {
-  fastify.get(`/${page}`, async (_request, reply) => reply.sendFile(`${page}.html`));
+  const file = page === 'guides' ? 'guides/index.html' : `${page}.html`;
+  fastify.get(`/${page}`, async (_request, reply) => reply.sendFile(file));
 }
+
+fastify.get<{ Params: { slug: string } }>('/guides/:slug', async (request, reply) => {
+  const slug = request.params.slug;
+  if (!guideSlugs.includes(slug as (typeof guideSlugs)[number])) {
+    return reply.callNotFound();
+  }
+  return reply.sendFile(`guides/${slug}.html`);
+});
 
 await healthRoutes(fastify);
 await exampleRoutes(fastify);
@@ -155,7 +212,7 @@ fastify.get('/openapi.json', async () => ({
       email: 'hello@hidepdfcontent.com'
     },
     'x-category': 'Data',
-    'x-website': 'https://hidepdfcontent.com/home'
+    'x-website': 'https://hidepdfcontent.com/'
   },
   servers: [{ url: PUBLIC_BASE_URL, description: 'Production' }],
   paths: {
@@ -231,6 +288,25 @@ fastify.get('/openapi.json', async () => ({
   },
   security: []
 }));
+
+fastify.setNotFoundHandler((request, reply) => {
+  const pathOnly = (request.raw.url || '/').split('?')[0];
+  const accept = String(request.headers.accept || '');
+  const apiRoute = pathOnly === '/v1' || pathOnly.startsWith('/v1/') || pathOnly === '/openapi.json';
+  if (!apiRoute && accept.includes('text/html')) {
+    const body = fs.readFileSync(path.join(__dirname, 'public', '404.html'));
+    return reply
+      .status(404)
+      .header('X-Robots-Tag', 'noindex')
+      .type('text/html; charset=utf-8')
+      .send(body);
+  }
+  return reply.status(404).send({
+    status: 'error',
+    error_code: 'NOT_FOUND',
+    message: 'Not found.'
+  });
+});
 
 try {
   await fastify.listen({ port: PORT, host: '0.0.0.0' });

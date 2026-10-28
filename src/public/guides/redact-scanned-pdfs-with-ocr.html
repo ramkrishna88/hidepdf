@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1210860150241703" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-1210860150241703">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redacting a scanned PDF with OCR — HidePDF Content</title>
+  <meta name="description" content="How HidePDF Content uses OCR on scanned PDF pages, when it runs, where it misreads, and how to check the blocks landed on the ink.">
+  <link rel="canonical" href="https://hidepdfcontent.com/guides/redact-scanned-pdfs-with-ocr">
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=2">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=2">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:image" content="https://hidepdfcontent.com/og.png">
+  <meta name="theme-color" content="#0b0f19">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="/">
+      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <span class="brand-name">HidePDF Content</span>
+    </a>
+    <nav class="nav" aria-label="Site">
+      <a href="/">Playground</a>
+      <a class="on" href="/guides">Guides</a>
+      <a href="/docs">Docs</a>
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </header>
+  <main class="legal">
+    <p class="crumb"><a href="/guides">Guides</a></p>
+    <h1>Redacting a scanned PDF with OCR</h1>
+    <p class="updated">28 October 2026</p>
+    <p class="lead">A scan is a picture that happens to be wrapped in a PDF. There are no letters to delete until something reads the picture. HidePDF Content runs Tesseract on pages that look empty of text, then puts whatever it managed to read into the same review list as a normal document. The list is a draft. Your eyes on the preview are the check.</p>
+
+    <h2>When OCR runs, and when it does not</h2>
+    <p>The server first pulls the real text layer, the same way a desktop viewer copies text. It counts characters that are not just whitespace. If a page has about 40 or more of those characters, it is treated as a digital page and OCR is skipped. The India dummy invoice and the US dummy pay stub are in that bucket. They have proper text. Clicking them will not show you OCR behaviour, and that is useful to know so you do not "test scans" on the wrong file.</p>
+    <p>If a page is under that bar, it is treated as sparse. The page is rendered to a PNG. That PNG is written to the server's temporary directory, OCR'd, and deleted when the OCR step ends, including when OCR throws or returns nothing. The PDF you uploaded is not saved next to it. The privacy page states the same retention in the language of a policy. The practical effect is: a photo of a letter gets a chance to produce a field list; a normal invoice does not pay the OCR cost.</p>
+    <p>Mixed files are the awkward common case. Page one is a digital cover with an email in real text. Page two is a phone photo of a PAN card. Page one is handled as text. Page two is sparse, so only page two is OCR'd. If your phone's scanner app already ran its own OCR and hid a text layer under the photo, the character count may clear 40 and our OCR will not run. You are then dependent on the quality of the text layer the scanner invented. Garbage text in, a confused list out, and the picture of the PAN card still sitting there for anyone who looks.</p>
+
+    <h2>What a misread looks like</h2>
+    <p>OCR confuses 0 and O, 1 and l, 5 and S, and it splits a number when a crease crosses a digit. A PAN is five letters, four digits, one letter. If the fourth character, which has to be one of a small set, is read as a digit, the pattern rejects the token and the PAN never appears in the list. The card is still in the image. You will stare at a review list that looks short and feel falsely finished.</p>
+    <p>Aadhaar needs twelve digits and a checksum. One broken digit and the checksum fails, so the row is dropped even though a human can see twelve boxes on the card. Phones need a plausible count of digits. An extra space that became a letter will sink them. The preview is where you notice. Zoom it. If you can read a number that has no row, it will be in the output image unless you deal with it some other way.</p>
+    <p>The other failure is a box in the wrong place. OCR returns word boxes. A dark rectangle is painted on that box at burn time. If the box hugs the wrong word, you cover "Name" and leave the number, or you cover half a digit. Half a digit is often enough to guess the rest when the font is a card font and the layout is standard. Look at the edges of every block before you download. This matters more on scans than on the dummy invoice, where the text positions come from the PDF itself and the boxes fit.</p>
+
+    <h2>A workable way to redact a phone photo</h2>
+    <p>Photograph the document on a flat surface, in light that does not blow out the digits, and crop out your table, your fingers, and the other letter that was beside it. Those extras confuse OCR and they are also more personal data. Export a PDF, or let the scanner wrap the JPEG in a PDF. Upload that file on the <a href="/">playground</a>. Wait. Sparse pages are slower because of the render and the OCR pass. A 25 MB limit still applies, and a 20-page phone album of a single form is how people hit it. One page, straight, is enough.</p>
+    <p>Read the list as a skeptic. If you know the page contains an email and the list has no email, OCR missed it or the text layer was weird. Do not click Hide selected and walk away. If the list has the email, leave it checked. Amounts, if any were read, stay unchecked until you tick them. Then hide, and use the preview at a large zoom. The output of a scan was already an image. The burn makes a new image with blocks, and it strips any text layer that OCR or the scanner had added. Someone can still OCR your output later. Blocks only help where they actually cover ink.</p>
+    <p>If a secret never made the list, this tool cannot paint a box it does not know about. Cover that spot in a tool that lets you draw, then run the file through again, or crop the region out before you upload. Drawing a box alone, without a later flatten, brings you back to the problem in <a href="/guides/why-black-boxes-dont-hide-pdf-text">why black boxes do not hide text</a>: if any text layer exists under your box, copy still works. For a pure photo with no text layer, a box you bake into the pixels really does cover those pixels. Confirm there is no text layer first, using the <a href="/guides/check-a-pdf-is-really-redacted">checklist</a>.</p>
+
+    <h2>Limits that do not go away with a better photo</h2>
+    <p>Handwriting is weaker than print. A signature is not recognised as a name. A stamp across a number can make both the stamp and the number unreadable to OCR while leaving both readable to you. Languages and fonts far from the ones Tesseract handles well on this server will come back thin. If OCR is unavailable for a moment, the page stays in the document for you to review and the list may simply have no rows from that page. An empty list plus a picture full of ID numbers is a failed run, not a clean bill of health.</p>
+    <p>The temporary PNG exists only for the OCR step. Do not confuse that with the burned PDF, which is the thing you download, or with the original scan, which stays on your phone. We do not keep the upload as a library. Your camera roll does. Delete the photo there if the photo was the sensitive object and the PDF was only a wrapper.</p>
+    <p>After you download, assume a stranger will run OCR on your file, because that is exactly what you just did to theirs, in spirit. Anything not covered by a block is publishable. Search will not find it if the text layer is gone, and that can make you over-confident. Look. The <a href="/guides/how-to-redact-a-pdf">walkthrough</a> of the digital invoice is the happy path. Scans are the path where the happy path lies.</p>
+  </main>
+  <footer>
+    <nav>
+      <a href="/">Playground</a>
+      <a href="/guides">Guides</a>
+      <a href="/docs">Docs</a>
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
+  </footer>
+</body>
+</html>

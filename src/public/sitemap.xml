@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://hidepdfcontent.com/</loc></url>
-  <url><loc>https://hidepdfcontent.com/home</loc></url>
-  <url><loc>https://hidepdfcontent.com/docs</loc></url>
-  <url><loc>https://hidepdfcontent.com/about</loc></url>
-  <url><loc>https://hidepdfcontent.com/privacy</loc></url>
-  <url><loc>https://hidepdfcontent.com/terms</loc></url>
-  <url><loc>https://hidepdfcontent.com/contact</loc></url>
+  <url><loc>https://hidepdfcontent.com/</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/guides</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/guides/how-to-redact-a-pdf</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/guides/why-black-boxes-dont-hide-pdf-text</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/guides/remove-personal-data-from-pdfs</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/guides/redact-scanned-pdfs-with-ocr</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/guides/check-a-pdf-is-really-redacted</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/guides/remove-metadata-from-pdfs</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/guides/share-bank-statements-safely</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/guides/share-payslips-safely</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/docs</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/about</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/privacy</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/terms</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://hidepdfcontent.com/contact</loc><lastmod>2026-10-28</lastmod></url>
 </urlset>
