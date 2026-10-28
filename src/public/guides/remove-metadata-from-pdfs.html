@@ -27,12 +27,12 @@
       <span class="brand-name">HidePDF Content</span>
     </a>
     <nav class="nav" aria-label="Site">
-      <a href="/">Playground</a>
-      <a class="on" href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/">Tool</a>
+      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
@@ -42,41 +42,68 @@
     <p class="updated">28 October 2026</p>
     <p class="lead">The page can be spotless and the file can still introduce you. Author, title, the company Word stamped in, a local file path, an embedded spreadsheet, the previous save of the same PDF: none of that is the paragraph you redacted. If you only needed the page text gone, read the other guides. If you also need the file to stop naming you, start here, and be honest about the cost.</p>
 
-    <h2>Where the extra copies live</h2>
+    <nav class="toc" aria-label="On this page">
+      <p>On this page</p>
+      <ol>
+        <li><a href="#where-the-extra-copies-live">Where the extra copies live</a></li>
+        <li><a href="#what-people-try-first">What people try first</a></li>
+        <li><a href="#what-hidepdf-s-burn-does-to-metadata">What HidePDF's burn does to metadata</a></li>
+        <li><a href="#when-flattening-is-the-wrong-scrub">When flattening is the wrong scrub</a></li>
+        <li><a href="#a-few-places-tools-never-scrub">A few places tools never scrub</a></li>
+      </ol>
+    </nav>
+    <h2 id="where-the-extra-copies-live">Where the extra copies live</h2>
     <p>Open any PDF you exported from a word processor and look at document properties. Title is often the first heading. Author is often the name of the laptop account, which for a lot of people is their legal name. Creator and producer name the apps in the chain, which is usually harmless and sometimes is the name of an internal tool. Keywords and subject are whatever someone typed once and forgot. That block is the info dictionary. It is not painted on the page, so a black rectangle never touches it.</p>
     <p>Beside it there is often an XMP packet, XML metadata with the same facts and sometimes a history of edits. Thumbnails, bookmarks that quote a heading, form fields, comments, and attached files are more cupboards. Incremental updates are the nasty one. Some editors save by appending. The new page says the salary is gone. The bytes at the start of the file still contain the salary, and a text search of the raw file finds it. If your check is only "look at page one", you will bless that file. The <a href="/guides/check-a-pdf-is-really-redacted">checklist</a> tells you to search the bytes for that reason.</p>
     <p>Fonts can embed the text they were subset for. A subset font is not a friendly place to read a sentence, but it is not always empty of the characters you think you deleted. You do not have to become a font engineer. You have to stop assuming the page view is the whole file.</p>
 
-    <h2>What people try first</h2>
+    <h2 id="what-people-try-first">What people try first</h2>
     <p>Word and similar editors have an inspect-document or remove-personal-information command. Use it before you export, on the document you actually own. It is the right tool for a .docx author field. It does nothing for a PDF a client already sent you, and it does nothing for a secret that is real page text. Exporting to PDF from a clean document is how you avoid putting the metadata in, which is easier than taking it out.</p>
     <p>Mac Preview and several free PDF tools have a "remove metadata" or "sanitize" checkbox. When it works, it clears the info dictionary and sometimes attachments. It does not, by itself, delete page text. People tick it, see the author field go blank, and ship a contract that still copies the salary. Metadata removal and redaction solve different problems. Do the one you mean. If you mean both, do both, and then run the checklist so you notice which one you skipped.</p>
     <p>Printing to a new PDF sometimes drops the old dictionary because the print driver builds a new file. It sometimes also builds a new text layer, so you have removed the author and kept the SSN. Look at properties and try to copy a sentence. Both results are possible from the same dialog on different systems. Do not memorise "print to PDF scrubs files". Memorise the two checks.</p>
 
-    <h2>What HidePDF's burn does to metadata</h2>
+    <h2 id="what-hidepdf-s-burn-does-to-metadata">What HidePDF's burn does to metadata</h2>
     <p>The redact step does not open your PDF and delete a metadata key. It creates a new PDF and draws each page in as a JPEG. The original info dictionary, XMP, bookmarks, forms, comments, attachments, and earlier incremental revisions are not in that new file, because nothing copied them. If your goal was "this download should not still say Author: Alex Rivera from the Word export", the burn does that as a side effect of throwing the structure away.</p>
     <p>The new file is not a blank slate in the philosophical sense. The library that writes it can set its own producer name and timestamps for the new document. If you open properties on a download from this site, expect to see a producer that is not your laptop, and dates that match the burn rather than the day you wrote the invoice. That is fresh metadata, not a leak of the old author field. It does identify the file as something a PDF library produced. For almost every ordinary send, that is fine. If you needed a file with no producer string at all, this is not a dedicated metadata scrubber and it will not pretend to be one.</p>
     <p>You only get that new file if you actually hide something. In the playground, clearing every tick and downloading gives you the original, metadata included. The status line says the original is shown. Read it. On the API, an empty selection still hides detected sensitive types, so you do get a new PDF, amounts excepted. The two paths are documented in the <a href="/docs">API reference</a> and walked through in <a href="/guides/how-to-redact-a-pdf">how to redact a PDF properly</a>.</p>
 
-    <h2>When flattening is the wrong scrub</h2>
+    <h2 id="when-flattening-is-the-wrong-scrub">When flattening is the wrong scrub</h2>
     <p>The cost of the side effect is the text layer. Every word becomes pixels, including words that were never sensitive. A 40-page report you wanted searchable, with one email in the header, becomes 40 pictures. Recipients cannot copy a quotation. Screen readers lose the text. The file gets larger or softer because the pages are JPEG at a quality meant for reading, not for print production. If the only problem was the author field, flattening is a ridiculous price. Clear the properties in a PDF tool, or export again from the source, and leave the text alone.</p>
     <p>Flattening is a fair price when the page text itself is the problem and you have already accepted an image. A payslip, a statement, a scan of an ID: you were never relying on the other person selecting text. You were relying on them not finding a hidden SSN. In that case the metadata drop is a bonus you should still verify by opening properties, not a bonus you should assume.</p>
     <p>There is a third case. The metadata is the sensitive part and the page is fine, but you do not have the source file, only the PDF. Use a real metadata remover, then run the checklist so you know the page text is still the page text you meant to share and the author field is actually empty. Do not upload that PDF here just to scrub a name in the properties. You would destroy the text layer to delete one field.</p>
 
-    <h2>A few places tools never scrub</h2>
+    <h2 id="a-few-places-tools-never-scrub">A few places tools never scrub</h2>
     <p>The filename. The email subject. The reply chain you forwarded by accident. A thumbnail your mail app built from page one before you redacted, cached on a phone. The copy in your sent folder. Removing metadata from the PDF does not chase those. Rename the file to something that does not include a customer name. Attach it to a new message rather than a forward of the original thread.</p>
     <p>If you need both a clean text PDF and a hidden email address, this site's burn is only half of a workflow you may not want. Covering the email by rasterising the whole report is coherent only when you can live with pictures. For a report, edit the source, export a new PDF, and clear properties. Use the playground when the document is short, sensitive, and better as an image than as a file that still contains the string.</p>
+      <aside class="related">
+      <h2>Related guides</h2>
+      <div class="guide-grid">
+        <a class="guide-card" href="/guides/share-bank-statements-safely">
+          <strong>Sharing a bank statement safely</strong>
+          <span>Hide the account number. Decide on the balance separately.</span>
+        </a>
+        <a class="guide-card" href="/guides/share-payslips-safely">
+          <strong>Sharing a payslip safely</strong>
+          <span>Hide the ID. Leave the salary visible.</span>
+        </a>
+        <a class="guide-card" href="/guides/how-to-redact-a-pdf">
+          <strong>How to redact a PDF properly</strong>
+          <span>The India dummy, from the list to the file you send.</span>
+        </a>
+      </div>
+    </aside>
   </main>
-  <footer>
+    <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
   </footer>
 </body>
 </html>

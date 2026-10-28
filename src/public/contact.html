@@ -27,66 +27,69 @@
       <span class="brand-name">HidePDF Content</span>
     </a>
     <nav class="nav" aria-label="Site">
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a class="on" href="/contact">Contact</a>
+      <a class="on" aria-current="page" href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <main class="legal wide plain">
     <h1>Contact</h1>
-    <p class="lead">The inbox for this site is <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>. That is the address for playground questions, API keys, privacy requests, and anything that looks broken. Mail is read by the person who runs hidepdfcontent.com. There is no live chat and no account portal.</p>
-    <a class="email" href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>
-
-    <h2>Send a message</h2>
-    <p>The form does not post to this server. Submit opens a message in your email app, addressed to the inbox above, with the fields already filled in. If your browser blocks that, use the mailto link. Either way, the text stays in your mail program until you send it.</p>
-    <form class="contact-form" id="contactForm">
-      <label>Name
-        <input name="name" type="text" autocomplete="name" required maxlength="120">
-      </label>
-      <label>Your email
-        <input name="email" type="email" autocomplete="email" required maxlength="200">
-      </label>
-      <label>Topic
-        <select name="topic">
-          <option>Playground</option>
-          <option>API or Zapier</option>
-          <option>Privacy</option>
-          <option>Something else</option>
-        </select>
-      </label>
-      <label>Message
-        <textarea name="message" required maxlength="4000" placeholder="What happened, and what you expected. Leave out live ID numbers, card numbers, and full statements."></textarea>
-      </label>
-      <button class="cta" type="submit">Open email to send</button>
-    </form>
-    <p id="formNote" class="updated" hidden>If a mail window did not open, copy your message into an email to hello@hidepdfcontent.com.</p>
-
-    <h2>What to include</h2>
-    <ul>
-      <li>Whether you used the playground or the API</li>
-      <li>The time of the request, and any error code, if something failed</li>
-      <li>The page count and a description of the layout, if a field was missed or boxed in the wrong place</li>
-    </ul>
-    <p>Do not email live secrets, card numbers, government IDs, or a customer's full statement. The dummy files on the playground (India dummy and US dummy) are invented. If you need to point at a layout, describe it or use one of those samples.</p>
-
-    <h2>Other pages</h2>
-    <p>The tool is on the <a href="/">home page</a>. How the file is handled is on the <a href="/privacy">privacy page</a>. Endpoint details are in the <a href="/docs">API reference</a>. Longer explanations of redaction, scans, and payslips are in the <a href="/guides">guides</a>.</p>
+    <p class="lead">Playground questions, API keys, and privacy requests. Mail is read by the person who runs the site. There is no live chat and no account portal.</p>
+    <div class="contact-grid">
+      <section class="info-card">
+        <h2>Send a message</h2>
+        <p>This form does not post to the server. Submit opens your email app with the fields filled in. If that is blocked, use the address on the right.</p>
+        <form class="contact-form" id="contactForm">
+          <label>Name
+            <input name="name" type="text" autocomplete="name" required maxlength="120">
+          </label>
+          <label>Your email
+            <input name="email" type="email" autocomplete="email" required maxlength="200">
+          </label>
+          <label>Topic
+            <select name="topic">
+              <option>Tool</option>
+              <option>API or Zapier</option>
+              <option>Privacy</option>
+              <option>Something else</option>
+            </select>
+          </label>
+          <label>Message
+            <textarea name="message" required maxlength="4000" placeholder="What happened, and what you expected. Leave out live ID numbers, card numbers, and full statements."></textarea>
+          </label>
+          <button class="cta" type="submit">Open email to send</button>
+        </form>
+        <p id="formNote" class="updated" hidden>If a mail window did not open, write to the address in the other card.</p>
+      </section>
+      <aside class="info-card">
+        <h2>Email</h2>
+        <p>The inbox for this site:</p>
+        <a class="email" href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>
+        <h2>Include</h2>
+        <ul>
+          <li>Whether you used the tool or the API</li>
+          <li>The time, and any error code, if something failed</li>
+          <li>Page count and layout, if a field was missed</li>
+        </ul>
+        <p>Do not send live secrets, card numbers, or a full statement. The India and US dummies are invented if you need a layout to point at.</p>
+      </aside>
+    </div>
   </main>
-  <footer>
+    <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
   </footer>
   <script>
     document.getElementById('contactForm').addEventListener('submit', function (event) {

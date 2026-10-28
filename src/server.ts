@@ -164,7 +164,7 @@ fastify.setErrorHandler((error, request, reply) => {
   });
 });
 
-const sitePages = ['about', 'privacy', 'contact', 'terms', 'docs', 'guides'] as const;
+const sitePages = ['about', 'privacy', 'contact', 'terms', 'docs', 'guides', 'faq', 'how-it-works'] as const;
 const guideSlugs = [
   'how-to-redact-a-pdf',
   'why-black-boxes-dont-hide-pdf-text',

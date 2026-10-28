@@ -27,30 +27,43 @@
       <span class="brand-name">HidePDF Content</span>
     </a>
     <nav class="nav" aria-label="Site">
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
-      <a class="on" href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
   <main class="legal">
     <h1>Privacy</h1>
     <p class="updated">Last updated: 28 October 2026</p>
-    <p class="lead">HidePDF Content processes PDFs you send to hidepdfcontent.com so it can list sensitive fields and, if you ask, return a file with those fields burned out. This page is the plain description of that handling, plus cookies and advertising. The operator of the site is the person you can reach at <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>. There is no customer account.</p>
+    <p class="lead">HidePDF Content processes PDFs you send to hidepdfcontent.com so it can list sensitive fields and, if you ask, return a file with those fields burned out. This page is the plain description of that handling, plus cookies and advertising. You can reach the operator from the <a href="/contact">contact page</a>. There is no customer account.</p>
 
-    <h2>Files you upload</h2>
+    <nav class="toc" aria-label="On this page">
+      <p>On this page</p>
+      <ol>
+        <li><a href="#files-you-upload">Files you upload</a></li>
+        <li><a href="#ocr-and-temporary-files">OCR and temporary files</a></li>
+        <li><a href="#how-long-anything-is-retained">How long anything is retained</a></li>
+        <li><a href="#api-keys">API keys</a></li>
+        <li><a href="#cookies">Cookies</a></li>
+        <li><a href="#advertising-and-google-adsense">Advertising and Google AdSense</a></li>
+        <li><a href="#what-we-do-not-do">What we do not do</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ol>
+    </nav>
+    <h2 id="files-you-upload">Files you upload</h2>
     <p>A playground or API request sends the PDF to the server for that request. The bytes are read into memory, up to the 25 MB limit. The server looks for emails, phones, cards, IBANs, country IDs, labeled names and addresses, and amounts. It then either returns a review list or builds a new PDF.</p>
     <p>The upload is not written into a document library, a user folder, or a database. It is not kept after the response is sent. The contact form on this site does not upload a file at all. It opens your email app.</p>
     <p>Inspect responses show a masked preview (a single letter of an email, the last digits of a number) so you can recognise a field without the JSON repeating the full secret. The raw value is used on the server to place the block, then dropped with the request.</p>
 
-    <h2>OCR and temporary files</h2>
+    <h2 id="ocr-and-temporary-files">OCR and temporary files</h2>
     <p>Pages that already contain a normal text layer are read from that text. A page with very little text, under about 40 characters, is treated as a scan. The server renders that page to a PNG, writes the PNG to the operating system's temporary directory under a name that starts with <code>hidepdf-ocr-</code>, runs Tesseract on it, and deletes the PNG when that step finishes, including when OCR fails or returns nothing. The PDF itself is not written beside that image.</p>
     <p>If the process is killed in the middle of OCR, a temp image can remain until the host clears its temp directory. That file is not indexed, not attached to an account, and not reused for a later request. See the <a href="/guides/redact-scanned-pdfs-with-ocr">scanned PDF guide</a> for what OCR is good at and where it misreads.</p>
 
-    <h2>How long anything is retained</h2>
+    <h2 id="how-long-anything-is-retained">How long anything is retained</h2>
     <ul>
       <li>The PDF: in memory for the request, then gone. No retention period, because it is not stored.</li>
       <li>The OCR PNG: deleted at the end of the OCR step for that page.</li>
@@ -59,14 +72,14 @@
       <li>Email you send us: kept in the hello@ inbox like any other mail, until it is deleted.</li>
     </ul>
 
-    <h2>API keys</h2>
+    <h2 id="api-keys">API keys</h2>
     <p>The playground in your browser talks to the same host, so it does not need a key. Direct API calls, RapidAPI, and Zapier do. A key is a secret we issue. It is not a user profile. We do not sell upload contents. Do not put a live secret in a support email when you ask for a key.</p>
 
-    <h2>Cookies</h2>
+    <h2 id="cookies">Cookies</h2>
     <p>HidePDF Content does not set a login cookie, a session cookie, or an analytics cookie of its own. You cannot sign in, so there is nothing to remember.</p>
     <p>The pages load fonts from Google Fonts. When you preview a PDF in the playground, the browser loads PDF.js from jsDelivr. Those are requests your browser makes to those hosts. They are not the same as storing your PDF.</p>
 
-    <h2>Advertising and Google AdSense</h2>
+    <h2 id="advertising-and-google-adsense">Advertising and Google AdSense</h2>
     <p>This site uses Google AdSense to show ads, under publisher ID <code>ca-pub-1210860150241703</code>. The AdSense script (<code>adsbygoogle.js</code>) is included on the pages, and <code>/ads.txt</code> authorises that publisher. Ads help pay for the hosting. They are not related to the contents of a PDF you upload. The PDF is not sent to Google as an ad signal, and ad code does not read the file you drop on the playground.</p>
     <p>Google, and other vendors it works with, may use cookies, mobile advertising IDs, or similar identifiers to serve and measure ads, and to show personalised ads if your Google settings allow them. That includes cookies set from Google domains when an ad or the AdSense script loads. How Google uses information from sites that use its services is described in <a href="https://policies.google.com/privacy">Google's privacy policy</a> and in <a href="https://policies.google.com/technologies/ads">Google's advertising policies and technologies page</a>.</p>
     <p>You can opt out of personalised ads, or tune the categories Google uses, without creating an account on this site:</p>
@@ -78,24 +91,23 @@
     </ul>
     <p>Browser controls that block third-party cookies will also limit what an ad can store. Where Google asks for a consent choice before personalised ads in your region, that choice is part of Google's ad flow. This site does not run a separate account system for it.</p>
 
-    <h2>What we do not do</h2>
+    <h2 id="what-we-do-not-do">What we do not do</h2>
     <p>We do not sell the contents of uploads. We do not build a marketing profile from the fields inside your PDF. We do not ask for a name or email before you use the playground. Country ID patterns exist so the tool can find those numbers on a page. Finding one does not mean we store it.</p>
 
-    <h2>Contact</h2>
-    <p>Privacy questions and requests about email you have sent us go to the same inbox.</p>
-    <a class="email" href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>
+    <h2 id="contact">Contact</h2>
+    <p>Privacy questions, and requests about mail you have already sent, go through the <a href="/contact">contact page</a>.</p>
   </main>
-  <footer>
+    <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
   </footer>
 </body>
 </html>
