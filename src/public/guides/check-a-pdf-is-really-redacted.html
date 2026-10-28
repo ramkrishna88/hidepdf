@@ -27,12 +27,12 @@
       <span class="brand-name">HidePDF Content</span>
     </a>
     <nav class="nav" aria-label="Site">
-      <a href="/">Playground</a>
-      <a class="on" href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/">Tool</a>
+      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
@@ -42,25 +42,35 @@
     <p class="updated">28 October 2026</p>
     <p class="lead">A page that looks redacted has passed one test, the test a human eye does in two seconds. The tests that matter take a few minutes and do not care how the page looks. Do them on the file you are about to send. Do them once on the fake US pay stub so you know what a pass and a fail feel like.</p>
 
-    <h2>Know a string that must be dead</h2>
+    <nav class="toc" aria-label="On this page">
+      <p>On this page</p>
+      <ol>
+        <li><a href="#know-a-string-that-must-be-dead">Know a string that must be dead</a></li>
+        <li><a href="#copy-then-search-then-extract">Copy, then search, then extract</a></li>
+        <li><a href="#what-a-passed-text-search-does-not-prove">What a passed text search does not prove</a></li>
+        <li><a href="#the-cupboards-that-are-not-the-page">The cupboards that are not the page</a></li>
+        <li><a href="#a-checklist-you-can-reuse">A checklist you can reuse</a></li>
+      </ol>
+    </nav>
+    <h2 id="know-a-string-that-must-be-dead">Know a string that must be dead</h2>
     <p>Pick a value you intended to remove and that you can remember. On the US dummy that value is the sample SSN 123-45-6789. It is not a real SSN. It is distinctive, so a search is unambiguous. On your own file, pick the email or the account number, not the word "total", which will appear for innocent reasons. Write it on a sticky if you have to. You cannot verify a redaction against a value you have already forgotten.</p>
     <p>Run the dummy through the <a href="/">playground</a> as in the <a href="/guides/how-to-redact-a-pdf">walkthrough</a>, with the SSN left checked, and download. Also keep a second copy where you only drew a black rectangle and did not burn the page. You want both, because the eye cannot tell them apart and the checks can.</p>
 
-    <h2>Copy, then search, then extract</h2>
+    <h2 id="copy-then-search-then-extract">Copy, then search, then extract</h2>
     <p>Open the burned download. Click the dark block and drag. Paste into a plain note. You want an empty paste or a paste of neighbouring text that is not the SSN. If 123-45-6789 lands on the clipboard, the text layer is alive and the block is decoration. That is the usual result on the rectangle copy, and it is the failure described in <a href="/guides/why-black-boxes-dont-hide-pdf-text">why black boxes do not hide text</a>.</p>
     <p>Use the viewer's search box on both files. The rectangle file should find the SSN even when your eyes only see ink. The burned file should not find it as text. Search for a fragment too, 6789, in case a tool split the number. Then select all, copy, paste. A burned page pastes nothing useful, or pastes nothing, because the page is a picture. A rectangle file pastes the whole pay stub, SSN included, which is a worse surprise than a failed search because you see every other field you forgot to cover.</p>
     <p>If you have a terminal, pdftotext or a similar extractor is the same test without a viewer in the way. Viewers sometimes refuse to select text that is still present. Extractors do not. Strings, or opening the PDF in a text editor and searching, is cruder and still catches a secret stored in clear ASCII. It also catches secrets stored in metadata and in XML metadata packets. Do not panic at a random hit on "PDF" or on a font name. Panic at a hit on the sticky-note value.</p>
 
-    <h2>What a passed text search does not prove</h2>
+    <h2 id="what-a-passed-text-search-does-not-prove">What a passed text search does not prove</h2>
     <p>The burned pay stub can pass every text search and still show gross pay, because you left the amount visible on purpose. The digits are pixels. A person can read them. A later OCR pass can read them. Passing pdftotext means the text layer is gone, which is what you wanted for the SSN, and it means the gross pay is also gone as text even though it is there as ink. If the SSN was never detected, it is in the same boat as the gross pay: invisible to search, obvious to the eye. Look at the block. If there is no block on the SSN, the check failed no matter what search says.</p>
     <p>White text fails the other way. Search and pdftotext succeed, the eye sees a blank, and people call it redacted because they only looked. Any check that is only visual will bless white text. Any check that is only textual will bless a scan of a passport. You need both.</p>
     <p>HidePDF's own check is textual and narrow. After the burn it extracts text and looks for the types you hid. If it still finds one, it returns an error and does not send the PDF. The header you would have seen on a success is <code>x-hidepdf-extractable: 0</code>. That header means "the types we hid are not extractable as text". It does not mean "we found every secret on the page". An empty review list plus a picture of an ID card is not a pass. The <a href="/guides/redact-scanned-pdfs-with-ocr">OCR guide</a> is full of that shape of failure.</p>
 
-    <h2>The cupboards that are not the page</h2>
+    <h2 id="the-cupboards-that-are-not-the-page">The cupboards that are not the page</h2>
     <p>Open the document properties. Author, title, subject, and keywords sometimes contain the name you just spent ten minutes covering on the page. Embedded files and attachments are a second PDF inside the first. Comments and form fields hold values that never got painted. Incremental save, the way some editors write changes onto the end of the old file, can leave the previous SSN in the bytes even after the page looks clean. A rectangle almost never clears these. A new PDF built only from page images drops the original dictionary, attachments, and old revisions, because they are not on the image. The new file can still name the library that wrote it. Read properties anyway. The <a href="/guides/remove-metadata-from-pdfs">metadata guide</a> is the longer version.</p>
     <p>Check the filename. <code>Alex-Rivera-SSN-payslip.pdf</code> undoes a perfect burn the moment it hits an inbox. Rename to something dull before you attach. Check the email body. People hide the number in the PDF and then type it in the message so the recipient "knows which file". The message is not covered by any of the tests above.</p>
 
-    <h2>A checklist you can reuse</h2>
+    <h2 id="a-checklist-you-can-reuse">A checklist you can reuse</h2>
     <ol>
       <li>Work on a copy. Keep the original offline from the message you are about to send.</li>
       <li>Choose one sticky-note value that must be dead.</li>
@@ -73,18 +83,35 @@
     </ol>
     <p>If step 4 or 5 fails, stop. You have a cover, not a redaction. Burn the page or apply a real redaction and start the checklist again. If step 7 fails, the text layer is not your problem anymore. The picture is. Cover the ink or do not send the page.</p>
     <p>None of this makes the file suitable for a formal legal production. Those processes have their own tools and their own certificates. The checklist is for the ordinary send: a recruiter, a landlord, a client, a group chat you will regret. It takes longer to read than to do, once you have failed it once on the pay stub and seen the SSN paste out of a rectangle.</p>
+      <aside class="related">
+      <h2>Related guides</h2>
+      <div class="guide-grid">
+        <a class="guide-card" href="/guides/remove-metadata-from-pdfs">
+          <strong>Removing metadata from a PDF</strong>
+          <span>Author and old revisions are not the page text.</span>
+        </a>
+        <a class="guide-card" href="/guides/share-bank-statements-safely">
+          <strong>Sharing a bank statement safely</strong>
+          <span>Hide the account number. Decide on the balance separately.</span>
+        </a>
+        <a class="guide-card" href="/guides/share-payslips-safely">
+          <strong>Sharing a payslip safely</strong>
+          <span>Hide the ID. Leave the salary visible.</span>
+        </a>
+      </div>
+    </aside>
   </main>
-  <footer>
+    <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
   </footer>
 </body>
 </html>

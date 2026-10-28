@@ -27,12 +27,12 @@
       <span class="brand-name">HidePDF Content</span>
     </a>
     <nav class="nav" aria-label="Site">
-      <a href="/">Playground</a>
-      <a class="on" href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/">Tool</a>
+      <a class="on" aria-current="page" href="/guides">Guides</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
@@ -42,38 +42,64 @@
     <p class="updated">28 October 2026</p>
     <p class="lead">A recruiter who asks for a payslip is usually checking that a salary you named is a salary you are paid. They need your name, the employer, the period, and the gross or net figure. They do not need a national identifier, a bank account, a home address, or an employee number that unlocks an HR portal. You can hide those and leave the money visible. The fake US pay stub on the playground is a safe place to practise the split before you touch your own.</p>
 
-    <h2>Rehearse on the dummy</h2>
+    <nav class="toc" aria-label="On this page">
+      <p>On this page</p>
+      <ol>
+        <li><a href="#rehearse-on-the-dummy">Rehearse on the dummy</a></li>
+        <li><a href="#what-to-cover-on-a-real-stub">What to cover on a real stub</a></li>
+        <li><a href="#why-a-marker-pen-on-a-printout-still-needs-a-second-look">Why a marker pen on a printout still needs a second look</a></li>
+        <li><a href="#check-rename-send-once">Check, rename, send once</a></li>
+      </ol>
+    </nav>
+    <h2 id="rehearse-on-the-dummy">Rehearse on the dummy</h2>
     <p>Click US dummy on the <a href="/">playground</a>. The file is a made-up Northwind stub for Alex Rivera, period 1 to 15 September 2026. It has an email, a phone, the sample SSN 123-45-6789, a sample ITIN, the test card 4111 1111 1111 1111, gross pay USD 3,200.00, and net pay USD 2,540.18. The PDF says the values are invented. Treat the SSN as the thing you would never send, and the gross pay as the thing a recruiter asked for.</p>
     <p>The list should show the SSN, the ITIN, the card, the email, the phone, and the name if it was picked up from the "Employee:" label. Gross and net are amounts, so their boxes start empty. Leave them empty. Leave the identifier rows checked. Hide selected. In the preview, the SSN sits under a dark block and the gross pay is still readable. Download. Search the download for 123-45-6789 and for 4111. Those searches should fail. You can still see 3,200 with your eyes. You should not be able to select it, because the page is now a picture. That is the shape you want from your real stub: money legible, identifiers dead as text and covered as ink.</p>
     <p>If you tick Hide amounts, the gross pay disappears and the PDF no longer does the recruiter's job. People do this by clicking Hide all without looking. Hide all checks every row, including money. Use it only when the money is also a secret, which is a different request from "prove your salary".</p>
 
-    <h2>What to cover on a real stub</h2>
+    <h2 id="what-to-cover-on-a-real-stub">What to cover on a real stub</h2>
     <p>Export the PDF from payroll. Screenshots feel easier and they catch your desktop, the next stub in the folder listing, and a chat in the corner. Work on a copy of the export.</p>
     <p>Check, and cover if they appear: national identifiers (SSN, ITIN, National Insurance number, and the other country IDs the tool knows), bank account and sort code or IBAN, card numbers, home address, personal email, personal mobile, employee number, tax code if you are not willing to share it, and date of birth. National Insurance numbers and SSNs are the ones that hurt for years. A tax code is easier to change and still more than a recruiter needs. When a row is in the list, leave it checked unless you have a reason.</p>
     <p>Leave visible: your name, the employer name, the pay period, and the figure they asked for. If they said "gross", you do not also have to reveal every deduction line. If a deduction line embeds an identifier, cover that line even if it is an amount. The amount detector does not know that a deduction labeled with an NI number is more sensitive than the net pay. You do.</p>
     <p>Names in the middle of a sentence will not be listed. "Paid in lieu to Samira Khan" on a weird stub is Samira's data. Read the lines. Employer addresses are often fine to leave. Your own address is often printed in the same font right above it, and the address label rule only fires when the line is actually labeled. Look at the header with the preview zoomed. The <a href="/guides/remove-personal-data-from-pdfs">personal data guide</a> explains the label rule in more detail.</p>
 
-    <h2>Why a marker pen on a printout still needs a second look</h2>
+    <h2 id="why-a-marker-pen-on-a-printout-still-needs-a-second-look">Why a marker pen on a printout still needs a second look</h2>
     <p>Printing, striking the SSN with a pen, and scanning is a real redaction of those pixels if the pen is opaque and you scan the marked page rather than the original file. It is also how people miss the second place the SSN is printed, in a small font in the footer, and how they leave the bank details because the pen was aimed at the top. If you go that way, scan at a size you can read, and run the scan through the checklist. Do not then attach the unmarked PDF because it "looks cleaner".</p>
     <p>A black rectangle in a viewer is not that pen. The pen destroyed ink. The rectangle added a drawing. The <a href="/guides/why-black-boxes-dont-hide-pdf-text">black-box guide</a> uses this same pay stub to show the SSN copying out from under the ink. If you have already drawn boxes on your real stub, do not send that file. Burn a fresh copy from the original export, or flatten in a tool that truly removes text, and throw the boxed draft away so it cannot be the one you attach at 11pm.</p>
 
-    <h2>Check, rename, send once</h2>
+    <h2 id="check-rename-send-once">Check, rename, send once</h2>
     <p>Use the <a href="/guides/check-a-pdf-is-really-redacted">checklist</a> on the download. Sticky-note the SSN or the NI number and search. Copy from the header. Open properties. Payroll systems love to put the employee name and number in the PDF title. A burn builds a new PDF from images, so the old title is not copied, and you should still look. The producer on the new file may name a PDF library. That is not your employee number.</p>
     <p>Rename the file. <code>payslip.pdf</code> is enough. <code>Rivera-SSN-Sept.pdf</code> is a leak in the attachment list, which some mail clients show before anyone opens the PDF. Send it to the recruiter who asked, not to a personal mailing list, not to a group thread with three agencies. One month is enough unless they named a range. Extra months multiply the chance of a one-off payment you did not mean to explain.</p>
     <p>Do not send the original if they reply "the text won't copy". Tell them the figures are visible and the identifiers were removed on purpose. If they insist on an unredacted payroll file, decide whether you trust that inbox with a national ID. The tool cannot make that decision. It can keep you from making it by accident, which is how most payslip leaks actually happen: the whole PDF, because it was the file on disk, attached in a hurry.</p>
     <p>Your upload is processed for the request and not stored as a library here. The recruiter's mailbox is the copy that lasts. Redact the identifiers before it exists. Keep your own original in payroll's portal or your own disk, not in the sent folder next to a version you meant to be the only one.</p>
+      <aside class="related">
+      <h2>Related guides</h2>
+      <div class="guide-grid">
+        <a class="guide-card" href="/guides/how-to-redact-a-pdf">
+          <strong>How to redact a PDF properly</strong>
+          <span>The India dummy, from the list to the file you send.</span>
+        </a>
+        <a class="guide-card" href="/guides/why-black-boxes-dont-hide-pdf-text">
+          <strong>Why black boxes do not hide PDF text</strong>
+          <span>Covered text can still be copied out.</span>
+        </a>
+        <a class="guide-card" href="/guides/remove-personal-data-from-pdfs">
+          <strong>Removing personal data from a PDF</strong>
+          <span>What the patterns catch, and what they skip.</span>
+        </a>
+      </div>
+    </aside>
   </main>
-  <footer>
+    <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
   </footer>
 </body>
 </html>
