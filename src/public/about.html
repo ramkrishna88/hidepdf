@@ -21,57 +21,70 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
-      <a href="/">Playground</a>
+    <nav class="tabs" aria-label="Primary">
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
-      <a class="on" href="/about">About</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
+      <a href="/about" class="on" aria-current="page">About</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#why-it-exists">Why it exists</a>
+        <a href="#who-it-is-for">Who it is for</a>
+        <a href="#what-the-tool-will-and-will-not-claim">What the tool will and will not claim</a>
+        <a href="#how-to-reach-the-person-who-runs-it">How to reach the person who runs it</a>
+      </nav>
+    <main class="legal">
     <h1>About HidePDF Content</h1>
     <p class="updated">Updated 28 October 2026</p>
-    <p class="lead">HidePDF Content is a one-person project run by the operator of hidepdfcontent.com. The public contact is <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>. There is no separate product company, no customer login, and no support desk hiding behind a ticket form.</p>
+    <p class="lead">HidePDF Content is a one-person project run by the operator of hidepdfcontent.com. The way to reach the operator is the <a href="/contact">contact page</a>. There is no separate product company, no customer login, and no support desk hiding behind a ticket form.</p>
 
-    <h2>Why it exists</h2>
+    
+    <h2 id="why-it-exists">Why it exists</h2>
     <p>People keep "redacting" a PDF by drawing a black rectangle in Preview, Word, or a browser extension. The page looks clean. The email, salary, or national ID is still in the file, and anyone who selects the box, or runs a text extractor, can read it. That failure mode is common enough that it needed a small tool aimed at it, not another editor with a highlighter.</p>
     <p>HidePDF Content takes a different route. It finds likely secrets, lets you review the list, paints a dark block over the ones you keep checked, and rebuilds every page as a picture in a new PDF. The old text layer is not copied across. Before the file is returned, the server reads the result back and refuses to send it if a value it just hid is still extractable as text. The <a href="/guides/why-black-boxes-dont-hide-pdf-text">black-box guide</a> shows the difference with a file you can try yourself.</p>
     <p>The site started as a playground for that job and an API for the same job from another app. It is deliberately narrow. It does not edit paragraphs, sign documents, or merge files. If you need a general PDF editor, this is the wrong product.</p>
 
-    <h2>Who it is for</h2>
+    <h2 id="who-it-is-for">Who it is for</h2>
     <p>The playground is for a person who has one PDF and needs to send it somewhere today: a payslip for a recruiter, a bank statement for a letting agent, an invoice with a phone number and a tax ID in the header. The API and the Zapier action are for someone who already has a key and wants the same burn step on a file they host at a public URL. Keys are issued by email. The website itself does not ask you to create an account.</p>
     <p>This product is separate from TableJSON, which extracts tables into JSON. They share a contact address only in the sense that both are small tools from the same operator. They do not share uploaded files.</p>
 
-    <h2>What the tool will and will not claim</h2>
+    <h2 id="what-the-tool-will-and-will-not-claim">What the tool will and will not claim</h2>
     <p>It looks for emails, phone numbers, card numbers, IBANs, a set of country IDs (India Aadhaar, PAN, UPI, GSTIN, and IFSC; US SSN and ITIN; and others listed in the <a href="/docs">API reference</a>), plus names and addresses when they sit on a labeled line such as "Bill to" or "Address". Amounts stay visible unless you tick them. Scanned pages with almost no text are read with OCR first. Details and the awkward cases are in the <a href="/guides">guides</a>.</p>
     <p>It will miss a name written in the middle of a sentence, a handwritten note, and a number in a shape the patterns do not know. The download is a picture of the pages, so text you left visible is still readable by eye and can be OCR'd again by someone else. It is not a certified redaction product for a court or a regulator. You review the list and the preview. The <a href="/terms">terms</a> say the same thing in plainer legal language, and the <a href="/privacy">privacy page</a> says what happens to the upload (short version: memory for the request, not a library).</p>
 
-    <h2>How to reach the person who runs it</h2>
-    <p>Email <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a> or use the form on the <a href="/contact">contact page</a>. That form opens your own email app. It does not store the message on this server. Privacy requests, API key requests, and "the preview looks wrong" notes all go to the same inbox. Please do not attach a live ID, card, or full bank statement. Describe the page instead.</p>
+    <h2 id="how-to-reach-the-person-who-runs-it">How to reach the person who runs it</h2>
+    <p>Use the <a href="/contact">contact page</a>. The form opens your email app and does not store the message on this server. Privacy requests, API key requests, and notes that the preview looks wrong all go there. Do not attach a live ID, card, or full bank statement. Describe the page instead.</p>
     <div class="cta-row">
       <a class="cta" href="/">Open the playground</a>
       <a class="cta-ghost" href="/guides">Read the guides</a>
     </div>
-  </main>
-  <footer>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

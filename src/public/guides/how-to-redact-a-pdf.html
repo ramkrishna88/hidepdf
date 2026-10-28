@@ -21,52 +21,65 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
-      <a href="/">Playground</a>
-      <a class="on" href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+    <nav class="tabs" aria-label="Primary">
+      <a href="/">Tool</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#start-with-a-file-that-is-safe-to-ruin">Start with a file that is safe to ruin</a>
+        <a href="#read-the-list-before-you-hide-anything">Read the list before you hide anything</a>
+        <a href="#what-hide-selected-actually-does">What Hide selected actually does</a>
+        <a href="#the-download-that-is-not-redacted">The download that is not redacted</a>
+        <a href="#the-same-job-from-the-api">The same job from the API</a>
+        <a href="#after-the-download">After the download</a>
+        <a href="#a-short-order-of-work">A short order of work</a>
+      </nav>
+    <main class="legal">
     <p class="crumb"><a href="/guides">Guides</a></p>
     <h1>How to redact a PDF properly</h1>
     <p class="updated">28 October 2026</p>
     <p class="lead">Properly, here, means the secret is gone from the file, not merely painted over. The reliable way to learn the difference is the fake invoice already on the playground, then the same steps on your own file once the list and the preview make sense.</p>
 
-    <h2>Start with a file that is safe to ruin</h2>
+    
+    <h2 id="start-with-a-file-that-is-safe-to-ruin">Start with a file that is safe to ruin</h2>
     <p>Open the <a href="/">playground</a> and click India dummy. That PDF is an invented tax invoice for Rivera Traders: bill-to Priya Sharma, an address on MG Road in Bengaluru, the email priya.sharma@example.in, a mobile number, an Aadhaar, PAN ABCPE1234F, a UPI id, a GSTIN, an IFSC, and a line that says Amount: INR 48,000. The file says the values are fake. Use it. Do not practice on a customer's live invoice the first time, because the interesting part is watching which rows appear and which stay blank.</p>
     <p>The page will say it is finding fields. A moment later you get a list. Each row is a masked preview, a type, and a page number. Emails show one letter and the domain. ID numbers show the last digits. Nothing in that list is the full secret sitting in your browser's JSON view on purpose. The raw value stayed on the server long enough to draw a box, which is described on the <a href="/privacy">privacy page</a>.</p>
 
-    <h2>Read the list before you hide anything</h2>
+    <h2 id="read-the-list-before-you-hide-anything">Read the list before you hide anything</h2>
     <p>Sensitive types are checked. The amount is not. That split is the whole product in one screen. PAN, Aadhaar, UPI, GSTIN, IFSC, the email, the phone, the labeled name, and the labeled address are the sort of thing you usually do not want in a file you are about to forward. The rupee total is often the thing the other person is allowed to see. If you are sending this invoice as a portfolio sample, you might want the total hidden too. Tick Hide amounts, or tick that row. If you are sending it to someone who must check the price, leave the amount alone.</p>
     <p>Uncheck anything the recipient truly needs. An accountant chasing GST may need the GSTIN and must not need the Aadhaar. A designer showing layout in a blog post needs neither. There is no preset called "for accountants". You are the preset. The software cannot know the relationship.</p>
     <p>Names and addresses are only picked up when the line is labeled. "Bill to: Priya Sharma" matches. "Address: 14 MG Road…" matches. If the same name appears again in a sentence such as "Thanks, Priya, for the chairs", that second mention is ordinary prose and will not be in the list. Scroll the preview later and look for it. The same limit applies to an account number written as "acct 004918" with no pattern the detector knows. More on that class of miss is in the <a href="/guides/remove-personal-data-from-pdfs">personal data guide</a>.</p>
 
-    <h2>What Hide selected actually does</h2>
+    <h2 id="what-hide-selected-actually-does">What Hide selected actually does</h2>
     <p>Click Hide selected. The server renders each page, paints a dark rectangle over every box you left checked, and embeds those pictures in a brand-new PDF. JPEG quality is high enough to read, not high enough to pretend it is still a vector invoice. The old text operators, the old bookmarks, form fields, and the original info dictionary are not copied. Then the server reads the new file as text and looks again for the types you hid. If one of those values is still extractable, you get an error and no download. The point of that refusal is a black box that only looks redacted. The <a href="/guides/why-black-boxes-dont-hide-pdf-text">black-box guide</a> is the long version of why the check exists.</p>
     <p>The preview should show dark blocks where the checked fields were. Download PDF. Open the download, not the original. Try to select the PAN. You should not be able to. You also should not be able to select "Office chairs". The chairs were never a secret, but the page is now a picture, so the whole text layer is gone, including words you intended to keep readable by copy-paste. If the recipient must search the PDF or a screen reader must read the line items, this output is the wrong shape. Say so before you send it. A flattened image is a feature when the risk is hidden text, and a drawback when the reader needed real text.</p>
 
-    <h2>The download that is not redacted</h2>
+    <h2 id="the-download-that-is-not-redacted">The download that is not redacted</h2>
     <p>Click Show all, then Hide selected, and read the status line. It tells you nothing was selected, so the original PDF is shown. The download button will save that original. Every secret is still in it. This is easy to miss if you are moving quickly and the preview looks like "the file". The status line is the difference. If you wanted a flattened file and also wanted every detected secret covered, use Hide all (that checks amounts too) or check the rows you mean, then Hide selected. Hiding at least those rows is what triggers the burn. Hiding none of them returns the file you uploaded.</p>
-    <h2>The same job from the API</h2>
+    <h2 id="the-same-job-from-the-api">The same job from the API</h2>
     <p>The playground sends the ids you checked to <code>POST /v1/redact</code>. If you call that endpoint yourself and you leave item ids, types, and countries empty, the default is different from a careless click in the browser: every detected sensitive type is hidden, and amounts are not, unless you set <code>hide_amounts</code> to true. That default is documented in the <a href="/docs">API reference</a>. The public URL of the India dummy is fine for a test call because the file is already on this site and is fake. Do not point the API at a private network address. Those hosts are rejected.</p>
     <p>Response headers are worth a glance. <code>x-hidepdf-hidden</code> is how many fields were burned. <code>x-hidepdf-text-removed</code> is 1 when the text layer was stripped. <code>x-hidepdf-extractable</code> should be 0. If the server thought the result was unsafe, you do not get a PDF at all.</p>
 
-    <h2>After the download</h2>
+    <h2 id="after-the-download">After the download</h2>
     <p>Search the download for ABCPE1234F, for the example.in address, and for 48,000 if you chose to hide the amount. The search box in Preview finding nothing is a good sign and not the whole test. Copy-paste from the dark block should fail. A text extractor should fail. The picture of a digit that you left uncovered can still be read by a person or by another OCR pass. The <a href="/guides/check-a-pdf-is-really-redacted">checklist</a> goes through that in order.</p>
     <p>Keep the original invoice somewhere you control. Send the download. The upload you made to this site is not kept as a library after the response, but your mail provider will keep whatever you attach. Redaction of the file does not redact the sent folder.</p>
     <p>File size stops at 25 MB. A signed contract will lose the signature because the new PDF is pictures, not the signed byte range. A scan of this same invoice, with no text layer, takes the path in the <a href="/guides/redact-scanned-pdfs-with-ocr">OCR guide</a> instead of the path you just used. The India dummy has real text, so OCR does not run on it.</p>
 
-    <h2>A short order of work</h2>
+    <h2 id="a-short-order-of-work">A short order of work</h2>
     <ol>
       <li>Duplicate the original and put the duplicate aside.</li>
       <li>Run the duplicate through the playground, or the API if you already have a key.</li>
@@ -76,18 +89,38 @@
       <li>Send the download. Do not also attach the original "for reference".</li>
     </ol>
     <p>That is the whole habit. The tool is the middle two steps. The rest is you deciding what the other person is allowed to know, which no pattern matcher should decide for you.</p>
-  </main>
-  <footer>
+      <aside class="related">
+      <h2>Related guides</h2>
+      <div class="guide-grid">
+        <a class="guide-card" href="/guides/why-black-boxes-dont-hide-pdf-text">
+          <strong>Why black boxes do not hide PDF text</strong>
+          <span>Covered text can still be copied out.</span>
+        </a>
+        <a class="guide-card" href="/guides/remove-personal-data-from-pdfs">
+          <strong>Removing personal data from a PDF</strong>
+          <span>What the patterns catch, and what they skip.</span>
+        </a>
+        <a class="guide-card" href="/guides/redact-scanned-pdfs-with-ocr">
+          <strong>Redacting a scanned PDF with OCR</strong>
+          <span>Sparse pages are read, and digits get missed.</span>
+        </a>
+      </div>
+    </aside>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

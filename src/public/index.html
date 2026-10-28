@@ -8,70 +8,6 @@
   <title>HidePDF Content — Hide sensitive data in PDFs</title>
   <meta name="description" content="Upload a PDF, review emails, phones, IDs, and other sensitive fields, then download a file where those values are burned out of the page instead of only covered.">
   <link rel="canonical" href="https://hidepdfcontent.com/">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Does HidePDF delete the text or only cover it?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The download is a new PDF of page images, with a dark block on each field you left checked. Nothing under the block can be copied. A rectangle drawn in Preview leaves the original words in the file."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Are uploaded PDFs stored?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The PDF stays in memory for that request and is not saved to a library or database. OCR may write a temporary image and deletes it when that step finishes. Logs record the request, not the file."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Will salary, invoice totals, or balances be hidden?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Not unless you ask. Amounts are listed and left unchecked until you tick them or turn on Hide amounts. The API hides them only if you send hide_amounts or include amount in types."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does this work on a scanned PDF?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Pages with under about 40 characters of real text are rendered and read with Tesseract before the list is built. If OCR misses a value, it stays visible, so check the preview."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What if a sensitive value is missed?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Patterns miss names in ordinary sentences, handwriting, and odd number formats. Look at the preview. The server refuses the download only when a value it did hide is still extractable as text."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I use the download for a court or a regulated filing?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Treat it as a privacy tool and check the output yourself. It is not a certified redaction product. Follow any rule a court or regulator already gave you, and do not destroy records you must keep."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Do I need an account?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. The playground does not ask you to sign in. API calls need a key, which you can request from hello@hidepdfcontent.com."
-        }
-      }
-    ]
-  }
-  </script>
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
@@ -138,32 +74,34 @@
       font-weight: 600;
     }
     main {
-      width: 100%;
-      margin: 1.25rem auto 2rem;
-      padding: 0 1.5rem;
+      width: min(1240px, 100%);
+      margin: 0.45rem auto 0.35rem;
+      padding: 0 16px;
       display: grid;
-      grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+      grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
       grid-template-areas:
         "upload fields"
         "preview preview";
-      gap: 1rem;
+      gap: 0.7rem;
+      align-items: start;
       flex: 1;
     }
     .panel {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 1.2rem;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+      padding: 0.9rem 1rem;
       min-width: 0;
     }
     .upload { grid-area: upload; }
-    .fields-panel { grid-area: fields; display: flex; flex-direction: column; min-height: 420px; }
+    .fields-panel { grid-area: fields; display: flex; flex-direction: column; min-height: 0; }
     .preview-panel { grid-area: preview; }
     .panel h2 { font-size: 1rem; margin-bottom: 0.85rem; }
     .drop {
       border: 1.5px dashed rgba(255,255,255,0.16);
       border-radius: 12px;
-      padding: 2rem 1rem;
+      padding: 1.05rem 0.8rem;
       text-align: center;
       color: var(--muted);
       cursor: pointer;
@@ -210,7 +148,7 @@
       padding: 0.15rem 0.45rem;
       white-space: nowrap;
     }
-    .tabs { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .view-tabs { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; }
     .tab {
       background: rgba(255,255,255,0.05);
       color: var(--muted);
@@ -219,7 +157,7 @@
     }
     .tab.on { background: rgba(255,255,255,0.12); color: var(--text); }
     .preview-wrap {
-      min-height: 420px;
+      min-height: 160px;
       background: #060911;
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -246,7 +184,7 @@
     .preview-wrap.json-on .pages, .preview-wrap.json-on .empty { display: none !important; }
     .preview-wrap.json-on .json { display: block; }
     .empty {
-      min-height: 360px;
+      min-height: 120px;
       display: grid;
       place-items: center;
       color: var(--muted);
@@ -277,36 +215,41 @@
       background: var(--card);
     }
     .seo .faq h3 { margin: 0 0 0.35rem; font-size: 1rem; }
+    @media (min-width: 800px) {
+      main { padding: 0 28px; }
+    }
     @media (max-width: 860px) {
-      header { align-items: flex-start; }
-      .header-end, .nav { width: 100%; justify-content: flex-start; }
       main {
         grid-template-columns: 1fr;
         grid-template-areas: "upload" "fields" "preview";
-        padding: 0 0.85rem;
+        padding: 0 16px;
       }
     }
   </style>
+  <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png" width="36" height="36" alt="HidePDF Content">
-      <h1>HidePDF Content</h1>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <div class="header-end">
-      <nav class="nav">
-        <a class="on" href="/">Playground</a>
-        <a href="/guides">Guides</a>
-        <a href="/docs">Docs</a>
-        <a href="/about">About</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
-        <a href="/contact">Contact</a>
-      </nav>
-      <span class="badge">API playground</span>
-    </div>
+    <nav class="tabs" aria-label="Primary">
+      <a href="/" class="on" aria-current="page">Tool</a>
+      <a href="/guides">Guides</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </nav>
   </header>
+  <div class="shell" style="padding-bottom:6px">
+  <section class="hero">
+    <h1>Hide sensitive text in a PDF</h1>
+    <p>Review the list, then burn the fields you keep checked out of the page.</p>
+  </section>
+  </div>
   <main>
     <section class="panel upload">
       <h2>Upload</h2>
@@ -346,7 +289,7 @@
     </section>
 
     <section class="panel preview-panel">
-      <div class="tabs">
+      <div class="view-tabs">
         <button class="tab on" id="tabPreview" type="button">PDF preview</button>
         <button class="tab" id="tabJson" type="button">JSON</button>
       </div>
@@ -357,77 +300,50 @@
       </div>
     </section>
   </main>
-  <article class="seo" id="learn">
-    <h2>What this page does with a PDF</h2>
-    <p>The tool above finds values that usually should not travel with a file, shows them to you in a masked list, and, for the ones you leave checked, builds a new PDF where those spots are covered on a picture of the page. The old text is not sitting underneath the block. Emails, phone numbers, card numbers, IBANs, and a set of country IDs are checked for you. Names and addresses are included when they sit on a labeled line, such as Bill to or Address. Money is listed and left unchecked, because a salary or an invoice total is often the reason you are sending the PDF.</p>
-    <p>India dummy and US dummy are invented files you can click before you upload anything of your own. The limit is 25 MB. There is no account.</p>
-
-    <h2>Do it in this order</h2>
-    <ol>
-      <li>Drop a PDF on the upload panel, or click a dummy. A scan with almost no text takes longer, because those pages are read with OCR first.</li>
-      <li>Read every row. Uncheck anything the recipient is supposed to see. Leave amounts unchecked unless the figure itself is the secret.</li>
-      <li>Click Hide selected. The server paints a dark rectangle on the checked boxes and rebuilds the PDF from page images. If a hidden value is still extractable as text, you get an error and no file.</li>
-      <li>Zoom the preview, download, and search the download for one value you meant to remove.</li>
-    </ol>
-    <p>Show all, then Hide selected, shows the original file. That download is not a redaction. The field-by-field version is <a href="/guides/how-to-redact-a-pdf">how to redact a PDF properly</a>.</p>
-
-    <h2>Situations people actually bring here</h2>
-    <p>A recruiter checking a salary needs your name, the employer, the period, and the gross figure, not a national ID or the bank account in the footer. Leave the money unchecked. <a href="/guides/share-payslips-safely">Sharing a payslip</a> uses the US dummy for that split. A letting agent proving address and income needs a different cut: hide the account number, and still read payee names the patterns miss. See <a href="/guides/share-bank-statements-safely">bank statements</a> and <a href="/guides/remove-personal-data-from-pdfs">personal data</a>.</p>
-
-    <h2>Hiding, redaction, and the limits</h2>
-    <p>A black rectangle in Preview changes the picture and leaves the letters in the file, so copy-paste still works. <a href="/guides/why-black-boxes-dont-hide-pdf-text">Why black boxes do not hide PDF text</a> shows that on the sample SSN. Hide selected is closer to redaction: the download has no text layer, and a dark block sits on the fields you kept. It still misses names in ordinary sentences, handwriting, and odd number formats. Text you did not cover stays readable in the picture, and someone can OCR it later. The whole page is an image, so harmless words are not selectable either, and a digital signature does not survive. If a rule tells you how to redact, follow the rule.</p>
-    <p>Search the download, try to copy from the block, and open document properties. <a href="/guides/check-a-pdf-is-really-redacted">How to check a PDF is really redacted</a> is that checklist. <a href="/guides/remove-metadata-from-pdfs">Removing metadata</a> explains what the new file drops, and the producer name it can still carry.</p>
-
-    <h2>Scanned pages</h2>
-    <p>Pages that already have a text layer are read from that text, and OCR is skipped. A page under about 40 characters is treated as a scan. The server renders it, writes a temporary PNG, runs Tesseract, and deletes the PNG when that step finishes, including when OCR fails. A misread digit can drop a PAN or an Aadhaar from the list while the number stays visible. An empty list on a page of ID numbers is a failed read. Zoom the preview. The <a href="/guides/redact-scanned-pdfs-with-ocr">scan guide</a> goes further.</p>
-
-    <h2>What happens to the upload</h2>
-    <p>The PDF is held in memory for this request. It is not written into a library or a database, and it is not kept after the response is sent. The only file written on purpose is the temporary OCR image, removed when that step ends. Request logs can include the time, path, and status. They do not include the PDF. Cookies and the AdSense disclosure are on the <a href="/privacy">privacy page</a>.</p>
-
-    <h2>Questions people ask before they upload</h2>
-    <div class="faq">
-      <article>
-        <h3>Does HidePDF delete the text or only cover it?</h3>
-        <p>The download is a new PDF of page images, with a dark block on each field you left checked. Nothing under the block can be copied. A rectangle drawn in Preview leaves the original words in the file.</p>
-      </article>
-      <article>
-        <h3>Are uploaded PDFs stored?</h3>
-        <p>The PDF stays in memory for that request and is not saved to a library or database. OCR may write a temporary image and deletes it when that step finishes. Logs record the request, not the file.</p>
-      </article>
-      <article>
-        <h3>Will salary, invoice totals, or balances be hidden?</h3>
-        <p>Not unless you ask. Amounts are listed and left unchecked until you tick them or turn on Hide amounts. The API hides them only if you send hide_amounts or include amount in types.</p>
-      </article>
-      <article>
-        <h3>Does this work on a scanned PDF?</h3>
-        <p>Pages with under about 40 characters of real text are rendered and read with Tesseract before the list is built. If OCR misses a value, it stays visible, so check the preview.</p>
-      </article>
-      <article>
-        <h3>What if a sensitive value is missed?</h3>
-        <p>Patterns miss names in ordinary sentences, handwriting, and odd number formats. Look at the preview. The server refuses the download only when a value it did hide is still extractable as text.</p>
-      </article>
-      <article>
-        <h3>Can I use the download for a court or a regulated filing?</h3>
-        <p>Treat it as a privacy tool and check the output yourself. It is not a certified redaction product. Follow any rule a court or regulator already gave you, and do not destroy records you must keep.</p>
-      </article>
-      <article>
-        <h3>Do I need an account?</h3>
-        <p>No. The playground does not ask you to sign in. API calls need a key, which you can request from hello@hidepdfcontent.com.</p>
-      </article>
+  <div class="shell">
+  <section class="home-copy" id="home-copy">
+    <p class="intro">Drop a PDF, or open an invented dummy, and uncheck anything the other person should still see. Salary, totals, and balances stay visible unless you tick them. The file is used for this request and is not kept as a library.</p>
+    <div class="feature-grid">
+      <a class="feature" href="/how-it-works">
+        <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h10M4 17h13"/></svg></span>
+        <strong>How it works</strong>
+        <span>Pages become images, with a dark block on each field you left checked. The old text is not copied underneath.</span>
+      </a>
+      <a class="feature" href="/guides/remove-personal-data-from-pdfs">
+        <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></span>
+        <strong>What gets removed</strong>
+        <span>Emails, phones, cards, IBANs, and IDs such as PAN or SSN. Labeled names too. Money stays unless you ask.</span>
+      </a>
+      <a class="feature" href="/privacy">
+        <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        <strong>Privacy</strong>
+        <span>No document library. OCR may write a temp image for a sparse scan, then deletes it.</span>
+      </a>
     </div>
-    <p>More on each of those limits lives in the <a href="/guides">guides</a>. The endpoint parameters are in the <a href="/docs">API reference</a>.</p>
-  </article>
+    <h2>Guides</h2>
+    <div class="guide-row">
+      <a class="mini-guide" href="/guides/how-to-redact-a-pdf"><strong>How to redact a PDF properly</strong><span>The India dummy, from the list to the file you send.</span></a>
+      <a class="mini-guide" href="/guides/why-black-boxes-dont-hide-pdf-text"><strong>Why black boxes fail</strong><span>Covered text can still be copied out.</span></a>
+      <a class="mini-guide" href="/guides/remove-personal-data-from-pdfs"><strong>Personal data in a PDF</strong><span>What the patterns catch, and what they skip.</span></a>
+      <a class="mini-guide" href="/guides/redact-scanned-pdfs-with-ocr"><strong>Scans and OCR</strong><span>Sparse pages are read, and digits get missed.</span></a>
+      <a class="mini-guide" href="/guides/check-a-pdf-is-really-redacted"><strong>Check the download</strong><span>Search and copy before you attach it.</span></a>
+      <a class="mini-guide" href="/guides/share-payslips-safely"><strong>Payslips and statements</strong><span>Hide the ID. Decide separately about the money.</span></a>
+    </div>
+    <p class="home-cta">The longer version is <a href="/how-it-works">how it works</a>. Short answers are on the <a href="/faq">FAQ</a>.</p>
+  </section>
+  </div>
   <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Uploads are processed in memory for the request and are not kept as a library. Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
   <script>
     const state = { file: null, items: [], labels: {}, inspect: null, result: null, hiddenUrl: null };

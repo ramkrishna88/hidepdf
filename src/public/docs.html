@@ -21,56 +21,71 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+  <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
-      <a href="/">Playground</a>
+    <nav class="tabs" aria-label="Primary">
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a class="on" href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs" class="on" aria-current="page">API/Docs</a>
       <a href="/about">About</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
-    <h1>API reference</h1>
-    <p>HidePDF Content finds emails, phones, cards, names, addresses, and country IDs in a PDF, then burns selected values out of the file so they cannot be copied or extracted. Base URL: <code>https://hidepdfcontent.com</code>. Machine-readable spec: <a href="/openapi.json">/openapi.json</a>. For a walkthrough of what the burn step does and does not do, start with the <a href="/guides">guides</a> and the <a href="/">playground</a>.</p>
-
-    <h2>Authentication</h2>
-    <p>The <a href="/">playground</a> is same-origin and does not need a key. Direct API, RapidAPI, and Zapier calls do.</p>
-    <ul>
-      <li>Direct API: send <code>X-API-Key: YOUR_KEY</code> or <code>Authorization: Bearer YOUR_KEY</code></li>
-      <li>RapidAPI: send only <code>X-RapidAPI-Key</code></li>
-      <li>Zapier: paste the same API key in the integration connection</li>
-    </ul>
-    <p>Request a key at <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>. There is no customer login. Keys are issued to callers; the website itself does not require an account.</p>
-
-    <h2>GET /v1/health</h2>
-    <p>Confirms the API is up. No file and no key required.</p>
+  <div class="shell">
+    <div class="docs-shell">
+      <nav class="sidemenu" aria-label="API sections">
+        <p class="toc-label">On this page</p>
+        <a href="#overview">Overview</a>
+        <a href="#auth">Authentication</a>
+        <a href="#health">Health</a>
+        <a href="#example">Example</a>
+        <a href="#types">Hide types</a>
+        <a href="#inspect">Inspect</a>
+        <a href="#redact">Redact</a>
+        <a href="#errors">Errors</a>
+        <a href="#zapier">Zapier</a>
+      </nav>
+      <div class="docs-main">
+        <section class="card" id="overview">
+          <p class="kicker">API</p>
+          <h2>Reference</h2>
+          <p>HidePDF Content finds emails, phones, cards, names, addresses, and country IDs in a PDF, then burns the ones you keep checked out of the file. Base URL: <code>https://hidepdfcontent.com</code>. Machine-readable spec: <a href="/openapi.json">/openapi.json</a>. The idea behind the burn step is on <a href="/how-it-works">how it works</a>.</p>
+        </section>
+        <div class="endpoint-grid pairs">
+          <section class="card endpoint" id="auth">
+            <h3>Authentication</h3>
+            <p>The <a href="/">playground</a> is same-origin and does not need a key. Direct API, RapidAPI, and Zapier calls do.</p>
+            <ul>
+              <li>Direct API: <code>X-API-Key</code> or <code>Authorization: Bearer</code></li>
+              <li>RapidAPI: <code>X-RapidAPI-Key</code> only</li>
+              <li>Zapier: the same key in the connection</li>
+            </ul>
+            <p>Request a key from the <a href="/contact">contact page</a>. There is no customer login.</p>
+          </section>
+          <section class="card endpoint" id="health">
+            <h3>GET /v1/health</h3>
+            <p>Confirms the API is up. No file and no key.</p>
 <pre class="sample">curl https://hidepdfcontent.com/v1/health</pre>
-<pre class="sample">{
-  "status": "ok"
-}</pre>
-
-    <h2>GET /v1/example</h2>
-    <p>Returns a small inspect JSON sample so testers can see the field list without uploading a PDF.</p>
+<pre class="sample">{ "status": "ok" }</pre>
+          </section>
+          <section class="card endpoint" id="example">
+            <h3>GET /v1/example</h3>
+            <p>A small inspect JSON sample, so you can see the field list without uploading a PDF.</p>
 <pre class="sample">curl https://hidepdfcontent.com/v1/example</pre>
-
-    <h2>GET /v1/hide-types</h2>
-    <p>Lists hide types and country codes. Amounts stay visible unless you send <code>hide_amounts=true</code> or include <code>types=amount</code>.</p>
-
-    <h2>POST /v1/inspect</h2>
-    <p>Finds sensitive fields and returns them for review. Scanned pages with little text use OCR.</p>
-    <p><strong>Parameters</strong></p>
-    <ul>
-      <li><code>file</code> (required) — multipart PDF upload, or JSON <code>{"file":"https://…"}</code></li>
-      <li><code>countries</code> (optional) — comma-separated codes such as <code>IN,US</code></li>
-      <li><code>types</code> (optional) — comma-separated hide types</li>
-    </ul>
+          </section>
+          <section class="card endpoint" id="types">
+            <h3>GET /v1/hide-types</h3>
+            <p>Lists hide types and country codes. Amounts stay visible unless you send <code>hide_amounts=true</code> or include <code>types=amount</code>.</p>
+          </section>
+        </div>
+        <section class="card endpoint" id="inspect">
+          <h3>POST /v1/inspect</h3>
+          <p>Finds sensitive fields and returns them for review. Scanned pages with little text use OCR. <code>file</code> is a multipart PDF or JSON <code>{"file":"https://…"}</code>. Optional <code>countries</code> such as <code>IN,US</code>, and optional <code>types</code>.</p>
 <pre class="sample">curl -X POST https://hidepdfcontent.com/v1/inspect \
   -H "X-API-Key: YOUR_KEY" \
   -H "Content-Type: application/json" \
@@ -82,48 +97,55 @@
     { "id": "email-1", "type": "email", "page": 1, "optional": false }
   ]
 }</pre>
-
-    <h2>POST /v1/redact</h2>
-    <p>Hides selected or all detected fields and returns a PDF with the text removed. This is the endpoint the Zapier action uses.</p>
-    <p><strong>Parameters</strong></p>
-    <ul>
-      <li><code>file</code> (required) — multipart PDF upload, or JSON <code>{"file":"https://…"}</code> with a public HTTP(S) URL</li>
-      <li><code>item_ids</code> (optional) — comma-separated IDs from inspect. Empty means hide all detected sensitive types except amounts</li>
-      <li><code>types</code> (optional) — comma-separated hide types. Include <code>amount</code> to hide money values</li>
-      <li><code>countries</code> (optional) — comma-separated country codes such as <code>IN,US</code></li>
-      <li><code>hide_amounts</code> (optional, default false) — set <code>true</code> to also hide totals, salary, and invoice values</li>
-    </ul>
-    <p><strong>Example request</strong></p>
+        </section>
+        <section class="card endpoint" id="redact">
+          <h3>POST /v1/redact</h3>
+          <p>Hides selected fields, or every detected sensitive type except amounts when you send no selection, and returns a PDF whose text layer is gone. This is the call the Zapier action uses.</p>
+          <ul>
+            <li><code>file</code> — multipart PDF, or JSON <code>{"file":"https://…"}</code></li>
+            <li><code>item_ids</code> — comma-separated ids from inspect</li>
+            <li><code>types</code> — include <code>amount</code> to hide money</li>
+            <li><code>countries</code> — such as <code>IN,US</code></li>
+            <li><code>hide_amounts</code> — default false</li>
+          </ul>
 <pre class="sample">curl -X POST https://hidepdfcontent.com/v1/redact \
   -H "X-API-Key: YOUR_KEY" \
   -H "Accept: application/pdf" \
   -H "Content-Type: application/json" \
   -d '{"file":"https://hidepdfcontent.com/dummy-india-invoice.pdf","hide_amounts":false}' \
   --output hidden.pdf</pre>
-    <p>Successful responses are <code>application/pdf</code>. Headers include <code>x-hidepdf-hidden</code>, <code>x-hidepdf-mode</code>, <code>x-hidepdf-text-removed</code>, and <code>x-hidepdf-extractable</code>. If a hidden value is still extractable, the API returns an error and does not send the PDF.</p>
-
-    <h2>Errors</h2>
-    <ul>
-      <li><code>400</code> — missing file, not a PDF, empty file, or download failed</li>
-      <li><code>401</code> — missing or invalid API key on protected routes</li>
-      <li><code>404</code> — unknown API path, as JSON</li>
-      <li><code>413</code> — file larger than 25 MB</li>
-    </ul>
-
-    <h2>Zapier</h2>
-    <p>The HidePDF Content Zapier action calls <code>POST /v1/redact</code> with a public PDF URL and an optional Hide amounts flag. Connect with an API key from <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>.</p>
-  </main>
+          <p>Success is <code>application/pdf</code>. Headers: <code>x-hidepdf-hidden</code>, <code>x-hidepdf-mode</code>, <code>x-hidepdf-text-removed</code>, <code>x-hidepdf-extractable</code>. If a hidden value is still extractable, the API returns an error and does not send the PDF.</p>
+        </section>
+        <div class="endpoint-grid pairs">
+          <section class="card endpoint" id="errors">
+            <h3>Errors</h3>
+            <ul>
+              <li><code>400</code> — missing file, not a PDF, empty file, or download failed</li>
+              <li><code>401</code> — missing or invalid API key</li>
+              <li><code>404</code> — unknown API path, as JSON</li>
+              <li><code>413</code> — file larger than 25 MB</li>
+            </ul>
+          </section>
+          <section class="card endpoint" id="zapier">
+            <h3>Zapier</h3>
+            <p>The action calls <code>POST /v1/redact</code> with a public PDF URL and an optional Hide amounts flag. Connect with an API key from the <a href="/contact">contact page</a>.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
   <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

@@ -21,61 +21,92 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
-      <a href="/">Playground</a>
-      <a class="on" href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+    <nav class="tabs" aria-label="Primary">
+      <a href="/">Tool</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#decide-what-the-next-person-is-allowed-to-know">Decide what the next person is allowed to know</a>
+        <a href="#what-this-tool-is-able-to-see">What this tool is able to see</a>
+        <a href="#what-you-still-have-to-read">What you still have to read</a>
+        <a href="#remove-it-from-the-file-not-from-the-screen">Remove it from the file, not from the screen</a>
+        <a href="#keep-the-original-send-the-minimum">Keep the original, send the minimum</a>
+      </nav>
+    <main class="legal">
     <p class="crumb"><a href="/guides">Guides</a></p>
     <h1>Removing personal data from a PDF</h1>
     <p class="updated">28 October 2026</p>
     <p class="lead">Personal data is bigger than a password. A name next to an address, a payslip, a photo of a passport, the email in an invoice header: if it identifies a person, or could with a second fact, think before you forward the PDF. This is a practical pass, not a legal opinion. GDPR and similar laws are why the habit matters. They are not something a website can apply for you.</p>
 
-    <h2>Decide what the next person is allowed to know</h2>
+    
+    <h2 id="decide-what-the-next-person-is-allowed-to-know">Decide what the next person is allowed to know</h2>
     <p>Suppose you are a freelance designer and a new client wants "an example of a past proposal". The PDF in your archive is a real one. It names the old client, their office address, the account manager's mobile, a project fee, and a scanned signature. The new client needs to see the structure of the proposal. They do not need the old client's mobile, and they may not need the fee. Those are different decisions. Write them down in a sentence before you open a tool: "They may see the section headings and the timeline. They may not see contact details or the price."</p>
     <p>Data minimisation is that sentence. Collect and pass on what the purpose needs, and not the rest of the file because it was already in the file. A tool that hides every detected field except amounts is a reasonable default for a proposal you are turning into a sample. It is a bad default for a proposal you are sending back to the same client, who needs their own address to be right. The <a href="/">playground</a> shows you the list so you can uncheck. The API, with an empty selection, hides the detected sensitive types and leaves amounts. Know which one you are using. The <a href="/docs">API reference</a> spells out the empty-selection rule.</p>
 
-    <h2>What this tool is able to see</h2>
+    <h2 id="what-this-tool-is-able-to-see">What this tool is able to see</h2>
     <p>It looks for shapes. Email addresses. Phone numbers with enough digits. Card numbers that pass a checksum. IBANs that pass theirs. Country identifiers it knows the shape of: India Aadhaar (with a checksum), PAN, UPI handles on known banks, GSTIN, IFSC, US SSN and ITIN, UK National Insurance numbers, and a longer list you can fetch from <code>GET /v1/hide-types</code>. Names are included when a line is labeled Bill to, Employee, Customer, Client, Patient, Name, or Attn, and the value looks like a capitalised name. Addresses are included when the line is labeled Address or a close variant.</p>
     <p>The India dummy is a clean example because almost every secret is labeled or shaped like an ID. Priya Sharma is on a "Bill to" line, so she is listed. The MG Road line is on an "Address" line, so it is listed. The PAN matches the PAN pattern. If you deleted the labels and left the same words in a paragraph, the name and the street would drop out of the list and the PAN would remain, because the PAN does not need a label. Run that experiment on a copy if you want to feel the difference in your stomach. It is the difference between "the tool scanned my document" and "the tool scanned for patterns".</p>
     <p>Amounts are detected and then left unchecked. A fee of INR 48,000 on the dummy, or USD 3,200.00 of gross pay on the US dummy, will sit in the list with an empty box. Personal data absolutely includes salary. The reason it is opt-in is that many legitimate shares exist specifically to prove the salary or the invoice total. Tick it when the money is the part you are not willing to share. Leave it when the money is the point of the email. The <a href="/guides/share-payslips-safely">payslip guide</a> and the <a href="/guides/share-bank-statements-safely">bank statement guide</a> are those two decisions in more detail.</p>
 
-    <h2>What you still have to read</h2>
+    <h2 id="what-you-still-have-to-read">What you still have to read</h2>
     <p>A person's face on a scanned letterhead is personal data. This tool does not find faces. A handwritten phone number in the margin is personal data. OCR might read it on a sparse page and might turn a 5 into an S and then fail the phone check, so the number stays visible in the image. A customer name inside "as discussed with James Okonkwo on Tuesday" is personal data and will not match the name label rule.</p>
     <p>Indirect identifiers add up. A project code plus a city plus a rare job title can identify someone even after you have removed the email. The tool will not flag that combination. You will, if you read the page once as the recipient. If the combination is still too specific, do not send the PDF. Send a rewritten one-page summary you typed yourself. Redaction is for a document that is almost shareable. It is a bad way to rescue a document that is intimate on every line.</p>
     <p>Other people's data is in your file more often than you think. An invoice "from" you still names the buyer. A bank statement names payees. A group email exported to PDF names every address. Hiding your own mobile and leaving thirty client emails is not a finished job. The list will usually show those emails, because emails are an easy pattern. Confirm the count feels plausible. Twelve emails on a two-page proposal is a prompt to look, not a prompt to trust the number twelve.</p>
 
-    <h2>Remove it from the file, not from the screen</h2>
+    <h2 id="remove-it-from-the-file-not-from-the-screen">Remove it from the file, not from the screen</h2>
     <p>Once you know which rows stay checked, hide them with the burn step described in <a href="/guides/how-to-redact-a-pdf">how to redact a PDF properly</a>. A black rectangle is not removal. The <a href="/guides/why-black-boxes-dont-hide-pdf-text">black-box guide</a> shows the SSN still copying off the US dummy. After the burn, the page is an image. Text you did not cover is still legible. Text you covered should be a dark block, and neither kind of text should be selectable. Search the download for one email you meant to remove before you attach it.</p>
     <p>Metadata can identify you even when the page is clean: the author field still saying your legal name, the company name from Word, a local file path in an old revision. Rasterising drops the original info dictionary. It does not stop you from emailing the PDF from your named account. The <a href="/guides/remove-metadata-from-pdfs">metadata guide</a> covers the file. Your mailbox is a separate disclosure.</p>
 
-    <h2>Keep the original, send the minimum</h2>
+    <h2 id="keep-the-original-send-the-minimum">Keep the original, send the minimum</h2>
     <p>Do not redact your only copy if you still need the proposal for the old client. HidePDF processes the upload in memory for the request and does not keep a library of your files. That protects you from this site holding the archive. It also means the site is not your backup. Keep the original in your own storage. Send the download, and only the download, to the new client.</p>
     <p>If the purpose does not survive minimisation, decline. "They asked for the PDF" is not a purpose. "They need to see how I structure a timeline, and they can see that on pages two and three with the cover page removed" is a purpose. The cover page was where the address lived. Sometimes the redaction is deleting a page in a PDF tool you already own, and this site never enters into it. Use the smaller hammer when it is enough.</p>
-    <p>If you are handling this under a real obligation, a DPA, a court order, a bank's instruction, read that obligation. Nothing here replaces it. If you are unsure whether a field is personal data in your situation, ask someone who is allowed to advise you, and do not email the live PDF to hello@hidepdfcontent.com while you ask. Describe the page.</p>
-  </main>
-  <footer>
+    <p>If you are handling this under a real obligation, a DPA, a court order, a bank's instruction, read that obligation. Nothing here replaces it. If you are unsure whether a field is personal data in your situation, ask someone who is allowed to advise you, and do not paste a live PDF into a message. Describe the page on the <a href="/contact">contact page</a>.</p>
+      <aside class="related">
+      <h2>Related guides</h2>
+      <div class="guide-grid">
+        <a class="guide-card" href="/guides/redact-scanned-pdfs-with-ocr">
+          <strong>Redacting a scanned PDF with OCR</strong>
+          <span>Sparse pages are read, and digits get missed.</span>
+        </a>
+        <a class="guide-card" href="/guides/check-a-pdf-is-really-redacted">
+          <strong>How to check a PDF is really redacted</strong>
+          <span>Search and copy before you attach it.</span>
+        </a>
+        <a class="guide-card" href="/guides/remove-metadata-from-pdfs">
+          <strong>Removing metadata from a PDF</strong>
+          <span>Author and old revisions are not the page text.</span>
+        </a>
+      </div>
+    </aside>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

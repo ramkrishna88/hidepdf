@@ -21,61 +21,76 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
-      <a href="/">Playground</a>
+    <nav class="tabs" aria-label="Primary">
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
-      <a href="/privacy">Privacy</a>
-      <a class="on" href="/terms">Terms</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#the-service">The service</a>
+        <a href="#your-files">Your files</a>
+        <a href="#no-promise-that-every-secret-is-found">No promise that every secret is found</a>
+        <a href="#api-limits-and-keys">API, limits, and keys</a>
+        <a href="#acceptable-use">Acceptable use</a>
+        <a href="#no-warranty">No warranty</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    <main class="legal">
     <h1>Terms of use</h1>
     <p class="updated">Last updated: 28 October 2026</p>
     <p class="lead">These terms cover the HidePDF Content website, playground, and API at hidepdfcontent.com. By using them, you agree to this page and to the <a href="/privacy">privacy page</a>. They are written in ordinary language by the operator of the site, not as a law-firm template. If a conflict matters to a lawyer you hire, their reading of a statute wins over a sentence here.</p>
 
-    <h2>The service</h2>
+    
+    <h2 id="the-service">The service</h2>
     <p>The playground lets you upload a PDF, review fields the software detected, and download a new PDF where the fields you kept checked are covered on a rendered page image. The API does the same job with a key. Guides, docs, and sample files are there to explain the limits. The site may show ads through Google AdSense, as described in the privacy page.</p>
 
-    <h2>Your files</h2>
+    <h2 id="your-files">Your files</h2>
     <p>You may only upload PDFs you have the right to process, including the right to send them to a third-party service for the time it takes to answer the request. Do not upload a file if a contract, a court order, or your employer forbids that. Do not use the tool to destroy a record you are required to keep. Hiding a number on a copy does not change your duty to hold the original.</p>
     <p>Uploads are handled as the privacy page describes: in memory for the request, not stored as a library. You are still the person responsible for the copy you download and for where you send it.</p>
 
-    <h2>No promise that every secret is found</h2>
+    <h2 id="no-promise-that-every-secret-is-found">No promise that every secret is found</h2>
     <p>Detection is best-effort pattern matching. Review the field list and the preview before you share the download. Amounts stay visible unless you choose them. A name in a sentence, handwriting, and odd account formats are often missed. The download is a picture of the pages, so text you did not cover is still readable and can be OCR'd by someone else. If a rule tells you how redaction must be done for a filing, follow that rule. This is not a certified redaction product.</p>
     <p>If you leave every box unchecked and download, the playground gives you the original file back. That is not a hidden file. Read the status line.</p>
 
-    <h2>API, limits, and keys</h2>
+    <h2 id="api-limits-and-keys">API, limits, and keys</h2>
     <p>The hosted playground is for trying the tool on this site. API access may require a key and is subject to rate limits and a 25 MB file limit. Keys are for the caller they were sent to. Do not publish a key in a page or a public repository. We may change, pause, or stop the playground, the API, or a sample file.</p>
 
-    <h2>Acceptable use</h2>
+    <h2 id="acceptable-use">Acceptable use</h2>
     <p>Do not use the service to break the law, to hide evidence you must produce, to probe the server, or to overload it. Do not send files that contain malware. Sample PDFs on the site are fake and are for testing. Do not present them as real invoices or pay stubs.</p>
 
-    <h2>No warranty</h2>
+    <h2 id="no-warranty">No warranty</h2>
     <p>The service is provided as is. To the extent the law allows, we are not liable for missed fields, for text you can still see in a page image, for a file you edit again after download, for downtime, or for ads. You check the output before you share it. Nothing on the site is legal, tax, or employment advice.</p>
 
-    <h2>Contact</h2>
-    <p>Questions about these terms:</p>
-    <a class="email" href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a>
-  </main>
-  <footer>
+    <h2 id="contact">Contact</h2>
+    <p>Questions about these terms go through the <a href="/contact">contact page</a>.</p>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

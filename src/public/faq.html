@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1210860150241703" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-1210860150241703">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — HidePDF Content</title>
+  <meta name="description" content="Short answers about HidePDF Content: what the download removes, whether uploads are stored, amounts, scans, and accounts.">
+  <link rel="canonical" href="https://hidepdfcontent.com/faq">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does HidePDF delete the text or only cover it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The download is a new PDF of page images, with a dark block on each field you left checked. Nothing under the block can be copied. A rectangle drawn in Preview leaves the original words in the file."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are uploaded PDFs stored?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The PDF stays in memory for that request and is not saved to a library or database. OCR may write a temporary image and deletes it when that step finishes. Logs record the request, not the file."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Will salary, invoice totals, or balances be hidden?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Not unless you ask. Amounts are listed and left unchecked until you tick them or turn on Hide amounts. The API hides them only if you send hide_amounts or include amount in types."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this work on a scanned PDF?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pages with under about 40 characters of real text are rendered and read with Tesseract before the list is built. If OCR misses a value, it stays visible, so check the preview."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if a sensitive value is missed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Patterns miss names in ordinary sentences, handwriting, and odd number formats. Look at the preview. The server refuses the download only when a value it did hide is still extractable as text."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use the download for a court or a regulated filing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Treat it as a privacy tool and check the output yourself. It is not a certified redaction product. Follow any rule a court or regulator already gave you, and do not destroy records you must keep."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need an account?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The playground does not ask you to sign in. API calls need a key, which you can request from the contact page."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=2">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=2">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:image" content="https://hidepdfcontent.com/og.png">
+  <meta name="theme-color" content="#0b0f19">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
+</head>
+<body>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
+    </a>
+    <nav class="tabs" aria-label="Primary">
+      <a href="/">Tool</a>
+      <a href="/guides">Guides</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq" class="on" aria-current="page">FAQ</a>
+      <a href="/docs">API/Docs</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </header>
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#q-cover">Does HidePDF delete the text or only cover it?</a>
+        <a href="#q-stored">Are uploaded PDFs stored?</a>
+        <a href="#q-amounts">Will salary, invoice totals, or balances be hidden?</a>
+        <a href="#q-scan">Does this work on a scanned PDF?</a>
+        <a href="#q-missed">What if a sensitive value is missed?</a>
+        <a href="#q-court">Can I use the download for a court or a regulated filing?</a>
+        <a href="#q-account">Do I need an account?</a>
+      </nav>
+    <main class="legal">
+    <h1>FAQ</h1>
+    <p class="lead">Short answers. The walkthrough with the limits spelled out is on <a href="/how-it-works">how it works</a>, and the <a href="/guides">guides</a> go further on payslips, statements, and scans.</p>
+    
+    
+      <details class="faq" id="q-cover">
+        <summary>Does HidePDF delete the text or only cover it?</summary>
+        <p>The download is a new PDF of page images, with a dark block on each field you left checked. Nothing under the block can be copied. A rectangle drawn in Preview leaves the original words in the file.</p>
+      </details>
+      <details class="faq" id="q-stored">
+        <summary>Are uploaded PDFs stored?</summary>
+        <p>The PDF stays in memory for that request and is not saved to a library or database. OCR may write a temporary image and deletes it when that step finishes. Logs record the request, not the file.</p>
+      </details>
+      <details class="faq" id="q-amounts">
+        <summary>Will salary, invoice totals, or balances be hidden?</summary>
+        <p>Not unless you ask. Amounts are listed and left unchecked until you tick them or turn on Hide amounts. The API hides them only if you send hide_amounts or include amount in types.</p>
+      </details>
+      <details class="faq" id="q-scan">
+        <summary>Does this work on a scanned PDF?</summary>
+        <p>Pages with under about 40 characters of real text are rendered and read with Tesseract before the list is built. If OCR misses a value, it stays visible, so check the preview.</p>
+      </details>
+      <details class="faq" id="q-missed">
+        <summary>What if a sensitive value is missed?</summary>
+        <p>Patterns miss names in ordinary sentences, handwriting, and odd number formats. Look at the preview. The server refuses the download only when a value it did hide is still extractable as text.</p>
+      </details>
+      <details class="faq" id="q-court">
+        <summary>Can I use the download for a court or a regulated filing?</summary>
+        <p>Treat it as a privacy tool and check the output yourself. It is not a certified redaction product. Follow any rule a court or regulator already gave you, and do not destroy records you must keep.</p>
+      </details>
+      <details class="faq" id="q-account">
+        <summary>Do I need an account?</summary>
+        <p>No. The playground does not ask you to sign in. API calls need a key, which you can request from the contact page.</p>
+      </details>
+    
+    </main>
+  </div>
+</div>
+      <footer>
+    <nav>
+      <a href="/">Tool</a>
+      <a href="/guides">Guides</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+    </nav>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
+  </footer>
+</body>
+</html>

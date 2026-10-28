@@ -21,62 +21,93 @@
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">
-      <img class="mark" src="/icon-192.png?v=2" width="36" height="36" alt="">
-      <span class="brand-name">HidePDF Content</span>
+    <header class="topbar">
+    <a class="logo-container" href="/">
+      <img class="logo-icon" src="/icon-192.png?v=2" width="36" height="36" alt="">
+      <div class="logo-text">HidePDF Content</div>
     </a>
-    <nav class="nav" aria-label="Site">
-      <a href="/">Playground</a>
-      <a class="on" href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+    <nav class="tabs" aria-label="Primary">
+      <a href="/">Tool</a>
+      <a href="/guides" class="on" aria-current="page">Guides</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
       <a href="/contact">Contact</a>
     </nav>
   </header>
-  <main class="legal">
+  <div class="shell">
+  <div class="read-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="toc-label">On this page</p>
+        <a href="#try-it-on-a-number-that-is-safe-to-leak-in-a-test">Try it on a number that is safe to leak in a test</a>
+        <a href="#other-covers-that-feel-like-redaction">Other covers that feel like redaction</a>
+        <a href="#what-has-to-be-true-of-the-file">What has to be true of the file</a>
+        <a href="#what-a-dark-block-on-an-image-does-not-fix">What a dark block on an image does not fix</a>
+        <a href="#a-habit-that-survives-the-tool-you-use">A habit that survives the tool you use</a>
+      </nav>
+    <main class="legal">
     <p class="crumb"><a href="/guides">Guides</a></p>
     <h1>Why black boxes do not hide PDF text</h1>
     <p class="updated">28 October 2026</p>
     <p class="lead">A black rectangle is a drawing. The sentence underneath is still a sentence. If you have ever covered a salary in Preview, exported, and felt done, the file you sent can still be copied from. This page shows that with the fake US pay stub on the playground, then explains what has to change in the file for the text to be gone.</p>
 
-    <h2>Try it on a number that is safe to leak in a test</h2>
+    
+    <h2 id="try-it-on-a-number-that-is-safe-to-leak-in-a-test">Try it on a number that is safe to leak in a test</h2>
     <p>The US dummy on the <a href="/">playground</a> is a fake Northwind pay stub for Alex Rivera. It includes the sample SSN 123-45-6789, a sample ITIN, the test card 4111 1111 1111 1111, and gross pay of USD 3,200.00. None of those are live. Download the dummy from the site or just keep it open, and also open it in whatever viewer you normally use.</p>
     <p>Draw a black rectangle over the SSN. In Preview that is the rectangle markup. In Word or Google Docs it is a shape with no border sitting on top of the number. Export or save as PDF. The page looks redacted. Now click on the black area and drag as if you were selecting text. On a lot of viewers the SSN highlights under the ink, and copy puts 123-45-6789 on the clipboard. If the viewer is stubborn, change the rectangle's fill to none, or delete the annotation, and the digits are sitting there exactly as typed.</p>
     <p>That is not a bug in the rectangle tool. The tool did what it claims. It added an appearance. PDF text is stored as positioning commands and character codes, separate from anything you draw later. A highlighter, a comment, and a filled square are annotations or extra drawing commands. They do not delete the earlier commands. Search still finds the SSN. A script using the same ideas as pdftotext still prints it. Someone who unzips the PDF structure and looks for the string finds it without opening a viewer at all.</p>
 
-    <h2>Other covers that feel like redaction</h2>
+    <h2 id="other-covers-that-feel-like-redaction">Other covers that feel like redaction</h2>
     <p>White text on a white background is the same trick in a crueller form, because there is no box to make you suspicious. The text is invisible on a white page and fully extractable. Changing the font size to zero, or moving the text off the crop box, is the same family. A screenshot pasted back into Word is different: the letters may truly be pixels, until someone runs OCR, and you have also thrown away every other property of the document without meaning to.</p>
     <p>Printing to paper and scanning back in does remove the text layer, because a scanner does not see operators. It sees ink. It also picks up blur, skew, and the back of the page if the paper is thin. The scan is a new document. Treat it as a picture, which means the next person can OCR it. And if you "print to PDF" through a driver that preserves text, you may have created another text PDF and not a scan at all. Check, using the steps in <a href="/guides/check-a-pdf-is-really-redacted">how to check a PDF is really redacted</a>, instead of trusting the print dialog.</p>
     <p>Acrobat's actual redaction tool, when you apply the redactions and save, is in a different category from the rectangle tool. Applied redaction is supposed to remove the content from the page and from related objects. People still skip the apply step and send the marked-up file, comments and all. A mark that says "redact this" is an advertisement for the secret, not a removal. If you use a desktop tool, the test is the same as here: after you save a copy, can you extract the string?</p>
 
-    <h2>What has to be true of the file</h2>
+    <h2 id="what-has-to-be-true-of-the-file">What has to be true of the file</h2>
     <p>The string has to be absent, not hidden. For a born-digital PDF that means the text showing those glyphs is gone, and so are copies in annotations, bookmarks, form values, embedded files, and earlier revisions of an incrementally saved PDF. Covering the glyphs on screen does none of that list.</p>
     <p>HidePDF Content does not edit the original content stream in place. It renders the page, paints a dark block over the fields you kept checked, and writes a new PDF whose pages are those images. There is no text operator left to copy, for the secret or for anything else on that page. The server then extracts text from the result and will not return the PDF if a type you hid is still found as text. That is a check against a failed burn, not a promise that a human cannot read a digit you left visible in the picture.</p>
     <p>You can see the contrast on the pay stub. Run US dummy, leave the SSN checked, leave gross pay unchecked, click Hide selected, and download. Search the download for 123-45-6789. It should not be a text hit. Search for 3,200. It also should not be a text hit, even though you can still see the gross pay in the image, because the whole page was flattened. The amount is visible to your eyes and dead to copy-paste. If you had only drawn a box, both searches would still hit.</p>
 
-    <h2>What a dark block on an image does not fix</h2>
+    <h2 id="what-a-dark-block-on-an-image-does-not-fix">What a dark block on an image does not fix</h2>
     <p>If the detector never found the SSN, it never painted over it. The number remains in the picture, easy to read, easy to OCR later. A black box you draw by hand has the same hole, plus the original text underneath. Flattening does not invent judgment. A payee name written as "Transfer from Alex" in a sentence is the sort of thing patterns miss. Look at the page.</p>
     <p>The dark block can also be slightly smaller than the ink if the text was unusual, a font with a wild bounding box, or a scan where OCR framed the word badly. Zoom the preview before you download. A descender sticking out from under a block is still a clue, and on a scan it may be enough for a person to reconstruct a digit. The <a href="/guides/redact-scanned-pdfs-with-ocr">OCR guide</a> is about that framing problem.</p>
     <p>Metadata is a separate cupboard. Author, title, and the name of the laptop that exported the file are not on the page, so a rectangle never touched them. Building a new image PDF drops the original info dictionary, which the <a href="/guides/remove-metadata-from-pdfs">metadata guide</a> explains, including the producer string the new file may still carry.</p>
 
-    <h2>A habit that survives the tool you use</h2>
+    <h2 id="a-habit-that-survives-the-tool-you-use">A habit that survives the tool you use</h2>
     <p>Whatever you used, open the file you are about to send, not the file you started with. Select all. Copy. Paste into a plain text note. If the secret appears, you covered pixels and left the text. Search for a distinctive fragment, not the whole number, in case of spacing. Then send one file. The original with a box on it, plus a "clean" copy, is how the secret goes out anyway as the first attachment.</p>
     <p>On this site the matching habit is in <a href="/guides/how-to-redact-a-pdf">how to redact a PDF properly</a>: review the list, do not download the original by accident by clearing every tick, and search the download for one value you meant to kill. The rectangle tool is fine for telling a colleague "look here" on a draft you are not publishing. It is the wrong tool for a payslip, a statement, or an ID number leaving your machine.</p>
-  </main>
-  <footer>
+      <aside class="related">
+      <h2>Related guides</h2>
+      <div class="guide-grid">
+        <a class="guide-card" href="/guides/remove-personal-data-from-pdfs">
+          <strong>Removing personal data from a PDF</strong>
+          <span>What the patterns catch, and what they skip.</span>
+        </a>
+        <a class="guide-card" href="/guides/redact-scanned-pdfs-with-ocr">
+          <strong>Redacting a scanned PDF with OCR</strong>
+          <span>Sparse pages are read, and digits get missed.</span>
+        </a>
+        <a class="guide-card" href="/guides/check-a-pdf-is-really-redacted">
+          <strong>How to check a PDF is really redacted</strong>
+          <span>Search and copy before you attach it.</span>
+        </a>
+      </div>
+    </aside>
+    </main>
+  </div>
+</div>
+      <footer>
     <nav>
-      <a href="/">Playground</a>
+      <a href="/">Tool</a>
       <a href="/guides">Guides</a>
-      <a href="/docs">Docs</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/faq">FAQ</a>
+      <a href="/docs">API/Docs</a>
       <a href="/about">About</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
     </nav>
-    <p>Contact: <a href="mailto:hello@hidepdfcontent.com">hello@hidepdfcontent.com</a></p>
+    <p>Uploads stay in memory for the request and are not kept as a library.</p>
   </footer>
 </body>
 </html>

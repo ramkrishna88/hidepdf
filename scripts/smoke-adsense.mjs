@@ -153,7 +153,7 @@ try {
     const loc = `https://hidepdfcontent.com/guides/${slug}`;
     if (!locs.includes(loc)) fail(`sitemap missing ${loc}`);
   }
-  for (const required of ['https://hidepdfcontent.com/', 'https://hidepdfcontent.com/guides', 'https://hidepdfcontent.com/about', 'https://hidepdfcontent.com/privacy', 'https://hidepdfcontent.com/terms', 'https://hidepdfcontent.com/contact', 'https://hidepdfcontent.com/docs']) {
+  for (const required of ['https://hidepdfcontent.com/', 'https://hidepdfcontent.com/guides', 'https://hidepdfcontent.com/how-it-works', 'https://hidepdfcontent.com/faq', 'https://hidepdfcontent.com/about', 'https://hidepdfcontent.com/privacy', 'https://hidepdfcontent.com/terms', 'https://hidepdfcontent.com/contact', 'https://hidepdfcontent.com/docs']) {
     if (!locs.includes(required)) fail(`sitemap missing ${required}`);
   }
 
@@ -174,14 +174,26 @@ try {
     if (!page.body.includes('pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1210860150241703')) {
       problems.push('missing adsbygoogle script');
     }
-    if (pathname === '/') {
-      const words = wordCount(sliceBalanced(page.body, /<article class="seo"/, 'article'));
-      console.log(`words / ${words}`);
-      if (words < 700 || words > 1000) problems.push(`home words ${words}`);
-      if (!page.body.includes('FAQPage')) problems.push('missing FAQPage');
+    if (!page.body.includes('>How it works<') || !page.body.includes('>FAQ<')) {
+      problems.push('missing nav tabs');
     }
+    if (pathname === '/') {
+      const words = wordCount(
+        (page.body.match(/<section class="hero"[\s\S]*?<\/section>/i) || [''])[0]
+        + (page.body.match(/<section class="home-copy"[\s\S]*?<\/section>/i) || [''])[0]
+      );
+      console.log(`words / ${words}`);
+      if (words < 150 || words > 250) problems.push(`home words ${words}`);
+      if (page.body.includes('FAQPage')) problems.push('home still has FAQPage');
+      if (page.body.includes('mailto:hello@hidepdfcontent.com')) problems.push('home has contact email');
+    }
+    if (pathname === '/faq' && !page.body.includes('FAQPage')) problems.push('faq missing FAQPage');
+    if (pathname === '/faq' && !page.body.includes('<details')) problems.push('faq missing details');
     if (pathname.startsWith('/guides/') && pathname !== '/guides/') {
-      const words = wordCount(sliceBalanced(page.body, /<main\b/, 'main'));
+      let main = sliceBalanced(page.body, /<main\b/, 'main');
+      main = main.replace(/<nav class="toc"[\s\S]*?<\/nav>/i, ' ');
+      main = main.replace(/<aside class="related"[\s\S]*?<\/aside>/i, ' ');
+      const words = wordCount(main);
       console.log(`words ${pathname} ${words}`);
       if (words < 900 || words > 1300) problems.push(`guide words ${words}`);
     }
@@ -238,7 +250,7 @@ try {
   });
   if (html404.status !== 404) fail(`html 404 status ${html404.status}`);
   if (!/text\/html/i.test(String(html404.headers['content-type'] || ''))) fail(`html 404 type ${html404.headers['content-type']}`);
-  if (!html404.body.includes('<h1>That page is not here</h1>')) fail('html 404 body');
+  if (!html404.body.includes('That page is not here')) fail('html 404 body');
   if (!hasAdsense(html404.body)) fail('html 404 missing AdSense meta');
 
   const api404 = await request({
